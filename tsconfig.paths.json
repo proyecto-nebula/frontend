@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "paths": {
+      // Core
+      "@core/*": ["./src/app/core/*"],
+      "@config/*": ["./src/app/core/config/*"],
+      "@guards/*": ["./src/app/core/guards/*"],
+      "@interceptors/*": ["./src/app/core/interceptors/*"],
+      "@services/*": ["./src/app/core/services/*"],
+      // Features
+      "@features/*": ["./src/app/features/*"],
+      "@admin/*": ["./src/app/features/admin/*"],
+      "@auth/*": ["./src/app/features/auth/*"],
+      "@main/*": ["./src/app/features/main/*"],
+      // Models
+      "@models/*": ["./src/app/models/*"],
+      // Shared
+      "@shared/*": ["./src/app/shared/*"],
+      "@components/*": ["./src/app/shared/components/*"],
+      "@pipes/*": ["./src/app/shared/pipes/*"]
+    }
+  }
+}

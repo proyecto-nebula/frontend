@@ -1,0 +1,49 @@
+@use 'variables';
+
+// Reset básico para evitar márgenes extraños del navegador
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color: variables.$bg;
+  color: variables.$text;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+// Estilos básicos para enlaces (puedes ajustarlos luego)
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+// Configuración de scrollbars estilo "Dark Nebula"
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: variables.$bg;
+}
+
+::-webkit-scrollbar-thumb {
+  background: variables.$surface;
+  border-radius: 4px;
+
+  &:hover {
+    background: variables.$accent;
+  }
+}

@@ -1,0 +1,28 @@
+// src/app/services/auth.service.ts
+import { HttpClient } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { AuthResponse, Usuario } from '@models/usuario.model';
+import { tap } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private http = inject(HttpClient);
+  private readonly API_URL = 'http://127.0.0.1:8000/api/v1/auth';
+
+  private _user = signal<Usuario | null>(null);
+  isAuthenticated = computed(() => !!this._user() || !!this.getToken());
+  isAdmin = computed(() => this._user()?.id_rol === 1);
+  isUser = computed(() => this._user()?.id_rol === 4);
+
+  login(alias: string, password: string) {
+    return this.http.post<AuthResponse>(this.API_URL, { alias, password }).pipe(
+      tap(res => {
+        if (res.token) localStorage.setItem('api-key', res.token);
+      }),
+    );
+  }
+
+  getToken() {
+    return localStorage.getItem('api-key');
+  }
+}
