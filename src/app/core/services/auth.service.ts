@@ -14,10 +14,13 @@ export class AuthService {
   isAdmin = computed(() => this._user()?.id_rol === 1);
   isUser = computed(() => this._user()?.id_rol === 4);
 
-  login(alias: string, password: string) {
-    return this.http.post<AuthResponse>(this.API_URL, { alias, password }).pipe(
+  login(email_usuario: string, password_usuario: string) {
+    return this.http.post<AuthResponse>(this.API_URL, { email_usuario, password_usuario }).pipe(
       tap(res => {
-        if (res.token) localStorage.setItem('api-key', res.token);
+        if (res.token) {
+          localStorage.setItem('api-key', res.token);
+          //this._user.set({ alias } as Usuario);
+        }
       }),
     );
   }

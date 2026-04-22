@@ -1,7 +1,16 @@
-<div class="catalog-container">
-  <h2>Explorar Juegos</h2>
+<div class="layout-container main">
+  <aside class="sidebar">
+    <nav>
+      <a routerLink="/">Catálogo</a>
+      <a routerLink="/auth">Cuenta</a>
+    </nav>
+  </aside>
 
-  <router-outlet />
+  <main class="content">
+    <header class="top-bar">
+      <span>Nebula Cloud</span>
+    </header>
 
-  <div class="games-grid"></div>
+    <router-outlet />
+  </main>
 </div>

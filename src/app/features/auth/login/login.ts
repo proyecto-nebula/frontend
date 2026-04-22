@@ -1,10 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { LoginCredentials } from '@models/usuario.model';
+import { AuthService } from '@services/auth.service';
 import { firstValueFrom } from 'rxjs';
-import { LoginCredentials } from '../../../models/usuario.model';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   imports: [ReactiveFormsModule],
   templateUrl: './login.html',
 })
-export class LoginComponent {
+export class LoginPage {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
   private router = inject(Router);
@@ -22,8 +22,8 @@ export class LoginComponent {
   errorMessage = signal('');
 
   loginForm = this.fb.nonNullable.group({
-    alias: ['', [Validators.required]],
-    password: ['', [Validators.required]],
+    email_usuario: ['', [Validators.required]],
+    password_usuario: ['', [Validators.required]],
   });
 
   async onLogin() {
@@ -36,14 +36,14 @@ export class LoginComponent {
 
     try {
       // 1. Convertimos a promesa pero con un timeout o manejo claro
-      const response = await firstValueFrom(this.auth.login(credentials.alias, credentials.password));
+      const response = await firstValueFrom(this.auth.login(credentials.email_usuario, credentials.password_usuario));
 
       console.log('Respuesta del servidor:', response);
 
       if (response && response.result === 'ok') {
         // 2. Si todo va bien, redirigimos
         console.log('Login OK, redirigiendo...');
-        await this.router.navigate(['/test-usuarios']);
+        await this.router.navigate(['/']);
       } else {
         this.errorMessage.set('Respuesta inesperada del servidor');
       }

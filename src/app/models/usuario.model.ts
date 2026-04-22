@@ -17,8 +17,8 @@ export interface AuthResponse {
 }
 
 export interface LoginCredentials {
-  alias: string;
-  password: string;
+  email_usuario: string;
+  password_usuario: string;
 }
 
 export interface UsuariosResponse {

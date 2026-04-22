@@ -1,0 +1,28 @@
+<div class="header-wrapper shadow-2">
+  <p-menubar [model]="items">
+    <ng-template pTemplate="start">
+      <div class="flex align-items-center mr-4 cursor-pointer" routerLink="/">
+        <img src="assets/logo-nebula.png" alt="Nebula" class="h-2rem" />
+        <span class="ml-2 font-bold text-xl hidden sm:inline">NEBULA</span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="end">
+      <div class="flex align-items-center gap-3">
+        <button class="p-link text-700 hover:text-900 transition-colors">
+          <i class="pi pi-search text-xl"></i>
+        </button>
+
+        <div class="profile-section flex align-items-center gap-2 ml-2">
+          <p-avatar
+            [image]="auth.getUser()?.url_avatar || 'assets/default-avatar.png'"
+            shape="circle"
+            styleClass="cursor-pointer border-1 border-300"
+            (click)="menuPerfil.toggle($event)"
+          ></p-avatar>
+          <p-tieredMenu #menuPerfil [model]="profileItems" [popup]="true"></p-tieredMenu>
+        </div>
+      </div>
+    </ng-template>
+  </p-menubar>
+</div>
