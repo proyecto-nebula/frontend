@@ -29,15 +29,15 @@ import { Usuario, UsuariosResponse } from '../../models/usuario.model';
           </tr>
         </thead>
         <tbody>
-          @for (user of usuarios(); track user.id_usuario) {
+          @for (user of usuarios(); track user.idUsuario) {
             <tr>
-              <td>{{ user.id_usuario }}</td>
+              <td>{{ user.idUsuario }}</td>
               <td>
                 <strong>{{ user.alias }}</strong>
               </td>
               <td>{{ user.nombre }} {{ user.apellidos }}</td>
               <td>{{ user.email }}</td>
-              <td>{{ user.id_rol }}</td>
+              <td>{{ user.idRol }}</td>
             </tr>
           } @empty {
             <tr>
@@ -87,9 +87,7 @@ export class UsuariosTestComponent implements OnInit {
     // El interceptor añadirá el token automáticamente
     this.http.get<UsuariosResponse>('http://localhost:8000/api/v1/usuarios').subscribe({
       next: res => {
-        if (res.result === 'ok') {
-          this.usuarios.set(res.items);
-        }
+        this.usuarios.set(res);
         this.loading.set(false);
       },
       error: err => {

@@ -11,14 +11,14 @@ export class AuthService {
 
   private _user = signal<Usuario | null>(null);
   isAuthenticated = computed(() => !!this._user() || !!this.getToken());
-  isAdmin = computed(() => this._user()?.id_rol === 1);
-  isUser = computed(() => this._user()?.id_rol === 4);
+  isAdmin = computed(() => this._user()?.idRol === 1);
+  isUser = computed(() => this._user()?.idRol === 4);
 
   login(email_usuario: string, password_usuario: string) {
     return this.http.post<AuthResponse>(this.API_URL, { email_usuario, password_usuario }).pipe(
       tap(res => {
         if (res.token) {
-          localStorage.setItem('api-key', res.token);
+          localStorage.setItem('token', res.token);
           //this._user.set({ alias } as Usuario);
         }
       }),
@@ -26,6 +26,6 @@ export class AuthService {
   }
 
   getToken() {
-    return localStorage.getItem('api-key');
+    return localStorage.getItem('token');
   }
 }

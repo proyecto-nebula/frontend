@@ -1,18 +1,17 @@
 // src/app/models/usuario.model.ts
 export interface Usuario {
-  id_usuario: number;
-  id_rol: number;
+  idUsuario: number;
+  idRol: number;
   alias: string;
   nombre: string;
   apellidos: string;
   email: string;
-  id_avatar: number;
-  id_suscripcion?: string;
-  fecha_creacion?: string;
+  idAvatar: number;
+  idSuscripcion?: string;
+  fechaCreacion?: string;
 }
 
 export interface AuthResponse {
-  result: string;
   token: string;
 }
 
@@ -21,7 +20,4 @@ export interface LoginCredentials {
   password_usuario: string;
 }
 
-export interface UsuariosResponse {
-  result: string;
-  items: Usuario[];
-}
+export type UsuariosResponse = Usuario[];

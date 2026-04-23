@@ -40,7 +40,7 @@ export class LoginPage {
 
       console.log('Respuesta del servidor:', response);
 
-      if (response && response.result === 'ok') {
+      if (response?.token) {
         // 2. Si todo va bien, redirigimos
         console.log('Login OK, redirigiendo...');
         await this.router.navigate(['/']);
