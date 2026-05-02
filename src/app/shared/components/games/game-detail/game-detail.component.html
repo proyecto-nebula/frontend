@@ -20,7 +20,10 @@
           <strong>Desarrollador:</strong>
           <span>{{ game()?.developer?.name }}</span>
           @if (game()?.developer?.website) {
-            <span> | <a [href]="game()?.developer?.website" target="_blank">Sitio web</a></span>
+            <span>
+              |
+              <a [href]="game()?.developer?.website" target="_blank">Sitio web</a>
+            </span>
           }
         </div>
       }
@@ -29,7 +32,10 @@
           <strong>Publisher:</strong>
           <span>{{ game()?.publisher?.name }}</span>
           @if (game()?.publisher?.website) {
-            <span> | <a [href]="game()?.publisher?.website" target="_blank">Sitio web</a></span>
+            <span>
+              |
+              <a [href]="game()?.publisher?.website" target="_blank">Sitio web</a>
+            </span>
           }
         </div>
       }
