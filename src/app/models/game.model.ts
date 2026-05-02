@@ -1,3 +1,5 @@
+import { Category } from './category.model';
+import { Studio } from './studio.model';
 export interface Game {
   id: number | string;
   title: string;
@@ -16,4 +18,7 @@ export interface Game {
   isFeatured?: boolean | string;
   isActive?: boolean | string;
   slug?: string | null;
+  categories?: Category[];
+  developer?: Studio | null;
+  publisher?: Studio | null;
 }
