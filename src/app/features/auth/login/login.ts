@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoginCredentials } from '@models/usuario.model';
+import { LoginCredentials } from '@models/user.model';
 import { AuthService } from '@services/auth.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -22,8 +22,8 @@ export class LoginPage {
   errorMessage = signal('');
 
   loginForm = this.fb.nonNullable.group({
-    email_usuario: ['', [Validators.required]],
-    password_usuario: ['', [Validators.required]],
+    email: ['', [Validators.required]],
+    password: ['', [Validators.required]],
   });
 
   async onLogin() {
@@ -36,14 +36,14 @@ export class LoginPage {
 
     try {
       // 1. Convertimos a promesa pero con un timeout o manejo claro
-      const response = await firstValueFrom(this.auth.login(credentials.email_usuario, credentials.password_usuario));
+      const response = await firstValueFrom(this.auth.login(credentials.email, credentials.password));
 
       console.log('Respuesta del servidor:', response);
 
       if (response?.token) {
-        // 2. Si todo va bien, redirigimos
-        console.log('Login OK, redirigiendo...');
-        await this.router.navigate(['/']);
+        // 2. Si todo va bien, redirigimos a la lista de juegos
+        console.log('Login OK, redirigiendo a /games...');
+        await this.router.navigate(['/games']);
       } else {
         this.errorMessage.set('Respuesta inesperada del servidor');
       }

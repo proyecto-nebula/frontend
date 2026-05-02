@@ -1,16 +1,16 @@
 <div class="layout-container main">
-  <aside class="sidebar">
-    <nav>
-      <a routerLink="/">Catálogo</a>
-      <a routerLink="/auth">Cuenta</a>
-    </nav>
-  </aside>
+  <header>
+    <span>Nebula Cloud</span>
+    <aside class="sidebar">
+      <nav>
+        <a routerLink="/">Catálogo</a>
+        <a routerLink="/auth">Cuenta</a>
+        <a routerLink="/games">Juegos</a>
+      </nav>
+    </aside>
+  </header>
 
   <main class="content">
-    <header class="top-bar">
-      <span>Nebula Cloud</span>
-    </header>
-
     <router-outlet />
   </main>
 </div>

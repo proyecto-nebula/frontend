@@ -17,7 +17,11 @@
       // Shared
       "@shared/*": ["./src/app/shared/*"],
       "@components/*": ["./src/app/shared/components/*"],
-      "@pipes/*": ["./src/app/shared/pipes/*"]
+      "@pipes/*": ["./src/app/shared/pipes/*"],
+      // SRC
+      "@env/*": ["./src/environments/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@assets/*": ["./src/assets/*"]
     }
   }
 }

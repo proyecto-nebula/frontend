@@ -1,0 +1,8 @@
+<h1>Juegos</h1>
+@if (isLoading()) {
+  <p>Cargando juegos...</p>
+} @else if (errorMessage()) {
+  <p class="error">{{ errorMessage() }}</p>
+} @else {
+  <app-games-list [games]="games()"></app-games-list>
+}

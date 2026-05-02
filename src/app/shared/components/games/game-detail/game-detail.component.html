@@ -1,0 +1,21 @@
+@if (isLoading()) {
+  <div>Cargando...</div>
+} @else {
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  } @else {
+    <div class="game-detail">
+      <h1>{{ game()?.title }}</h1>
+      @if (game()?.coverUrl) {
+        <img [src]="game()?.coverUrl" [alt]="game()?.title" class="game-cover" />
+      }
+      @if (game()?.summary) {
+        <p>{{ game()?.summary }}</p>
+      }
+      @if (game()?.description) {
+        <p>{{ game()?.description }}</p>
+      }
+      <!-- Más detalles aquí -->
+    </div>
+  }
+}

@@ -2,26 +2,42 @@ import { Routes } from '@angular/router';
 import { authGuard } from '@guards/auth.guard';
 
 export const routes: Routes = [
-  // BLOQUE 1: RUTAS PRIVADAS (App Principal)
+  // BLOQUE 1: RUTAS PÚBLICAS (Home, juegos)
   {
     path: '',
-    canActivate: [authGuard], // El guard solo protege este bloque
     loadComponent: () => import('@main/main').then(m => m.MainLayout),
     children: [
-      {
-        path: 'dashboard', // Es mejor que la home tenga un path interno o sea la raíz protegida
-        loadComponent: () => import('@main/main').then(m => m.MainLayout),
-      },
-      // Si quieres que la raíz / vaya a main después de pasar el guard:
       {
         path: '',
         pathMatch: 'full',
         loadComponent: () => import('@main/home/home').then(m => m.HomePage),
       },
+      {
+        path: 'games',
+        loadComponent: () => import('@main/games/games-list-page/games-list-page').then(m => m.GamesListPage),
+      },
+      {
+        path: 'games/:slug',
+        loadComponent: () => import('@main/games/game-detail-page/game-detail-page').then(m => m.GameDetailPage),
+      },
     ],
   },
 
-  // BLOQUE 2: ADMIN
+  // BLOQUE 2: RUTAS PRIVADAS (dashboard, etc)
+  {
+    path: '',
+    canActivate: [authGuard],
+    loadComponent: () => import('@main/main').then(m => m.MainLayout),
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () => import('@main/main').then(m => m.MainLayout),
+      },
+      // Aquí puedes añadir más rutas privadas
+    ],
+  },
+
+  // BLOQUE 3: ADMIN
   {
     path: 'admin',
     canActivate: [authGuard],
@@ -34,7 +50,7 @@ export const routes: Routes = [
     ],
   },
 
-  // BLOQUE 3: RUTAS PÚBLICAS (Login, etc.)
+  // BLOQUE 4: RUTAS DE AUTENTICACIÓN (Login, etc.)
   {
     path: '',
     loadComponent: () => import('@auth/auth').then(m => m.AuthLayout),
@@ -43,7 +59,6 @@ export const routes: Routes = [
         path: 'login',
         loadComponent: () => import('@auth/login/login').then(m => m.LoginPage),
       },
-      // Si quieres que el usuario vea el login al entrar a la raíz Y no esté logueado:
       { path: '', redirectTo: 'login', pathMatch: 'full' },
     ],
   },

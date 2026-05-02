@@ -1,0 +1,9 @@
+@if (games.length > 0) {
+  <div class="games-list">
+    @for (game of games; track game.id) {
+      <app-game-card [title]="game.title" [coverUrl]="game.coverUrl" [slug]="game.slug ?? ''"></app-game-card>
+    }
+  </div>
+} @else {
+  <p class="empty-message">No hay juegos para mostrar.</p>
+}
