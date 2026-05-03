@@ -22,10 +22,12 @@
           <div class="lightbox-content" style="display:flex;align-items:center;justify-content:center;gap:12px">
             <button pButton type="button" icon="pi pi-chevron-left" (click)="prev()" [disabled]="activeIndex() === 0"></button>
             <div style="max-width:86%;text-align:center;">
-              @if (loadingIndex === activeIndex()) {
-                <div style="position:absolute;left:50%;transform:translateX(-50%);">Cargando...</div>
+              @if (loadingIndex() === activeIndex()) {
+                <div style="position:absolute;left:50%;transform:translateX(-50%);">
+                  <p-progressSpinner style="width:48px;height:48px"></p-progressSpinner>
+                </div>
               }
-              <img [src]="currentImageUrl()" (load)="onFullLoad()" style="max-width:100%;height:auto;border:none;display:block;margin:0 auto" />
+              <img [src]="currentImageUrl()" (load)="onFullLoad()" [class.loading-image]="loadingIndex() === activeIndex()" style="max-width:100%;height:auto;border:none;display:block;margin:0 auto" />
               <div style="margin-top:8px;color:#666;font-size:0.9rem">{{ game()?.releaseDate }} {{ game()?.publishedAt }}</div>
             </div>
             <button pButton type="button" icon="pi pi-chevron-right" (click)="next()" [disabled]="activeIndex() === ((game()?.screenshots?.length || 1) - 1)"></button>

@@ -5,11 +5,13 @@ import { GameService } from '@services/game.service';
 import { GalleriaModule } from 'primeng/galleria';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-game-detail',
   standalone: true,
-  imports: [CommonModule, GalleriaModule, DialogModule, ButtonModule],
+  imports: [CommonModule, GalleriaModule, DialogModule, ButtonModule, ProgressSpinnerModule],
+  styles: [`.lightbox-content img{transition:opacity .35s ease-in-out}.loading-image{opacity:0}`],
   templateUrl: './game-detail.component.html',
 })
 export class GameDetailComponent implements OnChanges {
@@ -99,6 +101,7 @@ export class GameDetailComponent implements OnChanges {
     const idx = (typeof index === 'number' && !isNaN(index)) ? index : 0;
     this.activeIndex.set(idx);
     this.showGallery.set(true);
+    this.loadingIndex.set(idx);
     // prefetch nearby images
     const imgs = this.game()?.screenshots ?? [];
     [idx - 1, idx + 1].forEach(i => {
@@ -124,8 +127,8 @@ export class GameDetailComponent implements OnChanges {
   }
 
   onFullLoad() {
-    // could be used to hide spinner; handled via loadingIndex
-    this.loadingIndex = -1;
+    // hide spinner
+    this.loadingIndex.set(-1);
   }
 
   // navigation
@@ -133,7 +136,7 @@ export class GameDetailComponent implements OnChanges {
     const imgs = this.game()?.screenshots ?? [];
     const nextIdx = Math.min(this.activeIndex() + 1, imgs.length - 1);
     this.activeIndex.set(nextIdx);
-    this.loadingIndex = nextIdx;
+    this.loadingIndex.set(nextIdx);
     // prefetch following images
     for (let i = nextIdx + 1; i <= nextIdx + 3 && i < imgs.length; i++) {
       this.prefetchFull(imgs[i].imageUrl);
@@ -143,11 +146,11 @@ export class GameDetailComponent implements OnChanges {
   prev() {
     const prevIdx = Math.max(this.activeIndex() - 1, 0);
     this.activeIndex.set(prevIdx);
-    this.loadingIndex = prevIdx;
+    this.loadingIndex.set(prevIdx);
   }
 
-  // loading indicator index
-  private loadingIndex: number = -1;
+  // loading indicator index (signal)
+  loadingIndex = signal<number>(-1);
 
   // IntersectionObserver for thumbnails prefetch
   private observer: IntersectionObserver | null = null;
