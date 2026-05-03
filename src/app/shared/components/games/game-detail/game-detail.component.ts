@@ -169,18 +169,16 @@ export class GameDetailComponent implements OnChanges {
   }
 
   private openGalleriaFullscreen() {
-    // prefer using component API
+    // open gallery via visible signal and try Fullscreen API on rendered element as fallback
     try {
-      (this.galleriaRef as any)?.show?.();
-      // slight delay then try fullscreen on the rendered gallery element as a fallback
+      this.galleriaVisible.set(true);
       setTimeout(() => {
         try {
           const hostEl = this.host?.nativeElement as HTMLElement;
           if (!hostEl) return;
           const gEl = hostEl.querySelector('.p-galleria') as HTMLElement | null;
           if (!gEl) return;
-          const fs =
-            (gEl as any).requestFullscreen ?? (gEl as any).webkitRequestFullscreen ?? (gEl as any).msRequestFullscreen;
+          const fs = (gEl as any).requestFullscreen ?? (gEl as any).webkitRequestFullscreen ?? (gEl as any).msRequestFullscreen;
           if (fs) fs.call(gEl);
         } catch (e) {}
       }, 200);
