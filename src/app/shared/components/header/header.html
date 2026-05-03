@@ -1,28 +1,91 @@
-<div class="header-wrapper shadow-2">
-  <p-menubar [model]="items">
-    <ng-template pTemplate="start">
-      <div class="flex align-items-center mr-4 cursor-pointer" routerLink="/">
-        <img src="assets/logo-nebula.png" alt="Nebula" class="h-2rem" />
-        <span class="ml-2 font-bold text-xl hidden sm:inline">NEBULA</span>
-      </div>
-    </ng-template>
-
-    <ng-template pTemplate="end">
-      <div class="flex align-items-center gap-3">
-        <button class="p-link text-700 hover:text-900 transition-colors">
-          <i class="pi pi-search text-xl"></i>
+<header class="header-wrapper">
+  <div class="header-content">
+    <div class="header-row">
+      <!-- Left: hamburger (mobile) + logo -->
+      <div class="left">
+        <button
+          type="button"
+          class="mobile-hamburger"
+          (click)="drawerVisible = !drawerVisible"
+          aria-label="Toggle menu"
+        >
+          <i class="pi pi-bars" aria-hidden="true"></i>
         </button>
 
-        <div class="profile-section flex align-items-center gap-2 ml-2">
+        <a class="desktop-logo" routerLink="/">
+          <img src="assets/logo-nebula.png" alt="Nebula" class="logo-img" />
+        </a>
+      </div>
+
+      <!-- Center: manual nav -->
+      <nav class="center">
+        <ul class="nav-list">
+          @for (it of items; track it.label) {
+            <li class="nav-item" [ngClass]="it.styleClass">
+              <a [routerLink]="it.routerLink" class="nav-link">
+                @if (it.icon) {
+                  <i [class]="it.icon + ' nav-icon'"></i>
+                }
+                <span class="nav-text">{{ it.label }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
+
+      <!-- Right: avatar -->
+      <div class="right">
+        @if (auth.isAuthenticated()) {
           <p-avatar
-            [image]="auth.getUser()?.url_avatar || 'assets/default-avatar.png'"
+            image="assets/default-avatar.png"
             shape="circle"
             styleClass="cursor-pointer border-1 border-300"
             (click)="menuPerfil.toggle($event)"
           ></p-avatar>
           <p-tieredMenu #menuPerfil [model]="profileItems" [popup]="true"></p-tieredMenu>
-        </div>
+        } @else {
+          <a routerLink="/auth">
+            <p-avatar
+              image="assets/default-avatar.png"
+              shape="circle"
+              styleClass="cursor-pointer border-1 border-300"
+            ></p-avatar>
+          </a>
+        }
       </div>
-    </ng-template>
-  </p-menubar>
-</div>
+    </div>
+
+    <!-- Mobile centered logo (when desktop logo hidden) -->
+    <div class="mobile-logo" aria-hidden="true">
+      <a routerLink="/">
+        <img src="assets/logo-nebula.png" alt="Nebula" class="logo-img" />
+      </a>
+    </div>
+
+    <!-- Manual drawer + overlay for mobile -->
+    <div
+      class="overlay"
+      [class.open]="drawerVisible"
+      role="button"
+      aria-label="Cerrar menú"
+      tabindex="0"
+      (click)="drawerVisible = false"
+      (keydown.enter)="drawerVisible = false"
+      (keydown.space)="drawerVisible = false"
+    ></div>
+
+    <aside class="drawer-panel" [class.open]="drawerVisible" role="dialog" aria-hidden="{{ !drawerVisible }}">
+      <nav>
+        <ul class="drawer-list">
+          @for (it of items; track it.label) {
+            <li class="drawer-item">
+              <a [routerLink]="it.routerLink" (click)="drawerVisible = false" class="drawer-link">
+                <span>{{ it.label }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
+    </aside>
+  </div>
+</header>

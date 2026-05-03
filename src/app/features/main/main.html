@@ -1,16 +1,7 @@
 <div class="layout-container main">
-  <header>
-    <span>Nebula Cloud</span>
-    <aside class="sidebar">
-      <nav>
-        <a routerLink="/">Catálogo</a>
-        <a routerLink="/auth">Cuenta</a>
-        <a routerLink="/games">Juegos</a>
-      </nav>
-    </aside>
-  </header>
+  <app-header></app-header>
 
-  <main class="content">
+  <main class="content" style="padding-top: 5rem; max-width: 1200px; margin: 0 auto; width: 100%">
     <router-outlet />
   </main>
 </div>

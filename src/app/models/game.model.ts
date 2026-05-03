@@ -3,7 +3,9 @@ import { Studio } from './studio.model';
 export interface Game {
   id: number | string;
   title: string;
+  logoUrl?: string;
   coverUrl: string;
+  heroUrl: string;
   bannerUrl?: string;
   developerId?: number | string | null;
   publisherId?: number | string | null;

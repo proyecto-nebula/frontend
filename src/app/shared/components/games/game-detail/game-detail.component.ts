@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnChanges, signal } from '@angular/core';
+import { Component, computed, inject, Input, OnChanges, signal } from '@angular/core';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
+import { GalleriaModule } from 'primeng/galleria';
 
 @Component({
   selector: 'app-game-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, GalleriaModule],
   templateUrl: './game-detail.component.html',
 })
 export class GameDetailComponent implements OnChanges {
@@ -15,8 +16,22 @@ export class GameDetailComponent implements OnChanges {
   readonly game = signal<Game | null>(null);
   readonly isLoading = signal(true);
   readonly error = signal<string | null>(null);
+  readonly galleryVisible = signal(false);
+  readonly activeGalleryIndex = signal(0);
+  readonly galleryImages = computed(() =>
+    (this.game()?.screenshots ?? []).map((screenshot, index) => ({
+      itemImageSrc: screenshot.imageUrl,
+      thumbnailImageSrc: screenshot.thumbUrl,
+      alt: `${this.game()?.title ?? 'Screenshot'} ${index + 1}`,
+    })),
+  );
 
   private readonly gameService = inject(GameService);
+
+  openGallery(index: number): void {
+    this.activeGalleryIndex.set(index);
+    this.galleryVisible.set(true);
+  }
 
   ngOnChanges(): void {
     if (!this.slug) {
@@ -35,6 +50,8 @@ export class GameDetailComponent implements OnChanges {
           this.game.set(null);
         } else {
           this.game.set(g);
+          this.activeGalleryIndex.set(0);
+          this.galleryVisible.set(false);
         }
         this.isLoading.set(false);
       },
