@@ -86,12 +86,13 @@ export class GameDetailComponent implements OnChanges {
   }
 
   // Open gallery dialog at index
-  openGallery(index: number) {
-    this.activeIndex.set(index);
+  openGallery(index?: number) {
+    const idx = (typeof index === 'number' && !isNaN(index)) ? index : 0;
+    this.activeIndex.set(idx);
     this.showGallery.set(true);
     // prefetch nearby images
     const imgs = this.game()?.screenshots ?? [];
-    [index - 1, index + 1].forEach(i => {
+    [idx - 1, idx + 1].forEach(i => {
       if (i >= 0 && i < imgs.length) this.prefetchFull(imgs[i].imageUrl);
     });
   }
