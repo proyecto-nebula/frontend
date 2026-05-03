@@ -18,8 +18,6 @@ export class GameDetailComponent implements OnChanges {
 
   private readonly gameService = inject(GameService);
 
-  constructor() {}
-
   ngOnChanges(): void {
     if (!this.slug) {
       this.isLoading.set(false);
