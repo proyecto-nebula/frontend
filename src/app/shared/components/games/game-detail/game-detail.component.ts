@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, OnChanges, inject, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnChanges, signal, ViewChild } from '@angular/core';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
 import { ButtonModule } from 'primeng/button';
-import { GalleriaModule } from 'primeng/galleria';
-import { Galleria } from 'primeng/galleria';
+import { Galleria, GalleriaModule } from 'primeng/galleria';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
@@ -28,7 +27,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         z-index: 5;
       }
       /* hide galleria thumbnails (use fullscreen overlay) */
-      ::ng-deep .p-galleria-thumbnails { display: none !important; }
+      ::ng-deep .p-galleria-thumbnails {
+        display: none !important;
+      }
     `,
   ],
   templateUrl: './game-detail.component.html',
@@ -133,8 +134,8 @@ export class GameDetailComponent implements OnChanges {
   openGallery(index?: number) {
     const idx = typeof index === 'number' && !isNaN(index) ? index : 0;
     this.activeIndex.set(idx);
-    // if galleria instance available, show full screen overlay
-    setTimeout(() => (this.galleriaRef as any)?.show?.(), 0);
+    // open galleria in fullscreen using Fullscreen API
+    setTimeout(() => this.openGalleriaFullscreen(), 0);
     this.loadingIndex.set(idx);
     // prefetch nearby images
     const imgs = this.game()?.screenshots ?? [];
@@ -160,7 +161,27 @@ export class GameDetailComponent implements OnChanges {
     // ensure dialog is opened first, then set active index to ensure correct image
     const target = idx >= 0 ? idx : 0;
     this.activeIndex.set(target);
-    setTimeout(() => (this.galleriaRef as any)?.show?.(), 0);
+    setTimeout(() => this.openGalleriaFullscreen(), 0);
+  }
+
+  private openGalleriaFullscreen() {
+    try {
+      const hostEl = this.host?.nativeElement as HTMLElement;
+      if (!hostEl) return;
+      // find the nearest p-galleria element inside this component
+      const gEl = hostEl.querySelector('.p-galleria') as HTMLElement | null;
+      if (!gEl) return;
+      // prefer the standardized API
+      const fs = (gEl as any).requestFullscreen ?? (gEl as any).webkitRequestFullscreen ?? (gEl as any).msRequestFullscreen;
+      if (fs) {
+        fs.call(gEl);
+      } else {
+        // as fallback, try calling show() on component if available
+        (this.galleriaRef as any)?.show?.();
+      }
+    } catch (e) {
+      // ignore errors
+    }
   }
 
   currentImageUrl(): string | undefined {
