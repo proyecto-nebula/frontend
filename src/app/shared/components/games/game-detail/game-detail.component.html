@@ -36,12 +36,20 @@
           (activeIndexChange)="onActiveIndexChange($event)"
           [circular]="true"
           [showItemNavigators]="true"
+          [showItemNavigatorsOnHover]="false"
+          [showIndicators]="true"
+          [showThumbnails]="false"
           [fullScreen]="true"
           [baseZIndex]="10000"
           style="width: 100%"
           [visible]="galleriaVisible()"
           (visibleChange)="onGalleriaVisibleChange($event)"
         >
+          <ng-template pTemplate="header">
+            <div style="display:flex;justify-content:flex-end;padding:8px;">
+              <button type="button" class="p-button p-button-text" (click)="galleriaVisible.set(false)">Cerrar</button>
+            </div>
+          </ng-template>
           <ng-template pTemplate="item" let-item>
             <div style="position: relative; display: flex; align-items: center; justify-content: center">
               @if (loadingIndex() === activeIndex()) {
