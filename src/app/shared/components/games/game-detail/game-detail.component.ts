@@ -3,7 +3,6 @@ import { Component, ElementRef, inject, Input, OnChanges, signal } from '@angula
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
 import { ButtonModule } from 'primeng/button';
-import { GalleriaModule } from 'primeng/galleria';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
@@ -59,9 +58,7 @@ export class GameDetailComponent implements OnChanges {
     this.loadingIndex.set(-1);
   }
 
-  onGalleriaHide() {
-    this.loadingIndex.set(-1);
-  }
+        // Gallery state (removed)
 
   onGalleriaVisibleChange(visible: boolean) {
     if (!visible) this.loadingIndex.set(-1);
@@ -70,18 +67,8 @@ export class GameDetailComponent implements OnChanges {
   onActiveIndexChange(idx: number) {
     this.activeIndex.set(idx);
     this.loadingIndex.set(idx);
-  }
-
-  ngOnChanges(): void {
     if (!this.slug) {
-      this.isLoading.set(false);
-      this.error.set('No se ha proporcionado slug.');
-      this.game.set(null);
-      return;
-    }
-    this.isLoading.set(true);
-    this.error.set(null);
-    this.gameService.getGameBySlug(this.slug).subscribe({
+        // Gallery methods removed
       next: game => {
         if (!game) {
           this.error.set('Juego no encontrado.');
@@ -145,57 +132,7 @@ export class GameDetailComponent implements OnChanges {
     const imgs = this.game()?.screenshots ?? [];
     // prefetch 3 previous and 3 next
     for (let i = idx - 3; i <= idx + 3; i++) {
-      if (i >= 0 && i < imgs.length) this.prefetchFull(imgs[i].imageUrl);
-    }
-    // ensure that if the image is already in cache and complete we hide spinner
-    setTimeout(() => {
-      const hostEl = this.host?.nativeElement as HTMLElement;
-      if (!hostEl) return;
-      const img = hostEl.querySelector('.lightbox-content img') as HTMLImageElement | null;
-      if (img && img.complete) {
-        this.onFullLoad();
-      }
-    }, 50);
-  }
-
-  // Open gallery by shot object (safer than indexOf in templates)
-  openGalleryByShot(shot: { imageUrl?: string }) {
-    const imgs = this.game()?.screenshots ?? [];
-    const idx = imgs.findIndex(s => s.imageUrl === shot.imageUrl);
-    // ensure dialog is opened first, then set active index to ensure correct image
-    const target = idx >= 0 ? idx : 0;
-    this.activeIndex.set(target);
-    setTimeout(() => this.galleriaVisible.set(true), 0);
-  }
-
-  private openGalleriaFullscreen() {
-    // open gallery via visible signal and try Fullscreen API on rendered element as fallback
-    try {
-      this.galleriaVisible.set(true);
-      setTimeout(() => {
-        try {
-          const hostEl = this.host?.nativeElement as HTMLElement;
-          if (!hostEl) return;
-          const gEl = hostEl.querySelector('.p-galleria') as HTMLElement | null;
-          if (!gEl) return;
-          const fs = (gEl as any).requestFullscreen ?? (gEl as any).webkitRequestFullscreen ?? (gEl as any).msRequestFullscreen;
-          if (fs) fs.call(gEl);
-        } catch (e) {}
-      }, 200);
-    } catch (e) {
-      // ignore
-    }
-  }
-
-  currentImageUrl(): string | undefined {
-    return this.game()?.screenshots?.[this.activeIndex()]?.imageUrl;
-  }
-
-  onFullLoad() {
-    // hide spinner
-    this.loadingIndex.set(-1);
-  }
-
+        // Gallery methods removed
   // navigation
   next() {
     const imgs = this.game()?.screenshots ?? [];
