@@ -48,6 +48,8 @@ export class GameDetailComponent implements OnChanges {
           this.game.set(null);
         } else {
           this.game.set(game);
+          // setup intersection observer for thumbnails after setting game
+          this.setupObserver();
         }
         this.isLoading.set(false);
       },
@@ -108,8 +110,44 @@ export class GameDetailComponent implements OnChanges {
   openGalleryByShot(shot: { imageUrl?: string }) {
     const imgs = this.game()?.screenshots ?? [];
     const idx = imgs.findIndex(s => s.imageUrl === shot.imageUrl);
-    this.openGallery(idx >= 0 ? idx : 0);
+    // ensure dialog is opened first, then set active index to ensure correct image
+    const target = idx >= 0 ? idx : 0;
+    this.showGallery.set(true);
+    // small delay so dialog initializes
+    setTimeout(() => {
+      this.openGallery(target);
+    }, 0);
   }
+
+  currentImageUrl(): string | undefined {
+    return this.game()?.screenshots?.[this.activeIndex()]?.imageUrl;
+  }
+
+  onFullLoad() {
+    // could be used to hide spinner; handled via loadingIndex
+    this.loadingIndex = -1;
+  }
+
+  // navigation
+  next() {
+    const imgs = this.game()?.screenshots ?? [];
+    const nextIdx = Math.min(this.activeIndex() + 1, imgs.length - 1);
+    this.activeIndex.set(nextIdx);
+    this.loadingIndex = nextIdx;
+    // prefetch following images
+    for (let i = nextIdx + 1; i <= nextIdx + 3 && i < imgs.length; i++) {
+      this.prefetchFull(imgs[i].imageUrl);
+    }
+  }
+
+  prev() {
+    const prevIdx = Math.max(this.activeIndex() - 1, 0);
+    this.activeIndex.set(prevIdx);
+    this.loadingIndex = prevIdx;
+  }
+
+  // loading indicator index
+  private loadingIndex: number = -1;
 
   // IntersectionObserver for thumbnails prefetch
   private observer: IntersectionObserver | null = null;

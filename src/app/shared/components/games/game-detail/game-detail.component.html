@@ -19,14 +19,17 @@
         </div>
 
         <p-dialog header="Galería" [visible]="showGallery()" [modal]="true" [style]="{width: '90vw', maxWidth: '1000px'}" (onHide)="showGallery.set(false)">
-          <p-galleria [value]="game()?.screenshots" [activeIndex]="activeIndex()" (activeIndexChange)="activeIndex.set($event)" [circular]="true" [showItemNavigators]="true" style="width:100%">
-            <ng-template pTemplate="item" let-item>
-              <img [src]="item.imageUrl" [alt]="game()?.title" style="width:100%;height:auto;display:block;margin:0 auto" />
-            </ng-template>
-            <ng-template pTemplate="thumbnail" let-item>
-              <img [src]="item.thumbUrl" [alt]="game()?.title" style="width:64px;height:40px;object-fit:cover" />
-            </ng-template>
-          </p-galleria>
+          <div class="lightbox-content" style="display:flex;align-items:center;justify-content:center;gap:12px">
+            <button pButton type="button" icon="pi pi-chevron-left" (click)="prev()" [disabled]="activeIndex() === 0"></button>
+            <div style="max-width:86%;text-align:center;">
+              @if (loadingIndex === activeIndex()) {
+                <div style="position:absolute;left:50%;transform:translateX(-50%);">Cargando...</div>
+              }
+              <img [src]="currentImageUrl()" (load)="onFullLoad()" style="max-width:100%;height:auto;border:none;display:block;margin:0 auto" />
+              <div style="margin-top:8px;color:#666;font-size:0.9rem">{{ game()?.releaseDate }} {{ game()?.publishedAt }}</div>
+            </div>
+            <button pButton type="button" icon="pi pi-chevron-right" (click)="next()" [disabled]="activeIndex() === ((game()?.screenshots?.length || 1) - 1)"></button>
+          </div>
         </p-dialog>
       }
       @if (game()?.summary) {
