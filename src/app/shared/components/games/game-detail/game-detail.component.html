@@ -39,6 +39,7 @@
           [fullScreen]="true"
           [baseZIndex]="10000"
           style="width: 100%"
+          [visible]="galleriaVisible()"
           (visibleChange)="onGalleriaVisibleChange($event)"
         >
           <ng-template pTemplate="item" let-item>

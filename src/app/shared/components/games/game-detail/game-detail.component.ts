@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, Input, OnChanges, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnChanges, signal } from '@angular/core';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
 import { ButtonModule } from 'primeng/button';
-import { Galleria, GalleriaModule } from 'primeng/galleria';
+import { GalleriaModule } from 'primeng/galleria';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
@@ -49,7 +49,7 @@ export class GameDetailComponent implements OnChanges {
   private readonly MAX_CONCURRENCY = 3;
 
   // Gallery state
-  @ViewChild('galleria') galleriaRef?: Galleria;
+  galleriaVisible = signal(false);
   activeIndex = signal(0);
 
   constructor(private host: ElementRef) {}
@@ -65,6 +65,7 @@ export class GameDetailComponent implements OnChanges {
 
   onGalleriaVisibleChange(visible: boolean) {
     if (!visible) this.loadingIndex.set(-1);
+    this.galleriaVisible.set(visible);
   }
   onActiveIndexChange(idx: number) {
     this.activeIndex.set(idx);
@@ -137,8 +138,8 @@ export class GameDetailComponent implements OnChanges {
   openGallery(index?: number) {
     const idx = typeof index === 'number' && !isNaN(index) ? index : 0;
     this.activeIndex.set(idx);
-    // ask the PrimeNG Galleria component to show (fullscreen when configured)
-    setTimeout(() => (this.galleriaRef as any)?.show?.(), 0);
+    // set the visible signal to true so galleria opens
+    setTimeout(() => this.galleriaVisible.set(true), 0);
     this.loadingIndex.set(idx);
     // prefetch nearby images
     const imgs = this.game()?.screenshots ?? [];
@@ -164,7 +165,7 @@ export class GameDetailComponent implements OnChanges {
     // ensure dialog is opened first, then set active index to ensure correct image
     const target = idx >= 0 ? idx : 0;
     this.activeIndex.set(target);
-    setTimeout(() => (this.galleriaRef as any)?.show?.(), 0);
+    setTimeout(() => this.galleriaVisible.set(true), 0);
   }
 
   private openGalleriaFullscreen() {
@@ -178,7 +179,8 @@ export class GameDetailComponent implements OnChanges {
           if (!hostEl) return;
           const gEl = hostEl.querySelector('.p-galleria') as HTMLElement | null;
           if (!gEl) return;
-          const fs = (gEl as any).requestFullscreen ?? (gEl as any).webkitRequestFullscreen ?? (gEl as any).msRequestFullscreen;
+          const fs =
+            (gEl as any).requestFullscreen ?? (gEl as any).webkitRequestFullscreen ?? (gEl as any).msRequestFullscreen;
           if (fs) fs.call(gEl);
         } catch (e) {}
       }, 200);
