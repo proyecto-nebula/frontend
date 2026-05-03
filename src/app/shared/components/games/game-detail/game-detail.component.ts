@@ -134,7 +134,7 @@ export class GameDetailComponent implements OnChanges {
     const idx = typeof index === 'number' && !isNaN(index) ? index : 0;
     this.activeIndex.set(idx);
     // if galleria instance available, show full screen overlay
-    setTimeout(() => this.galleriaRef?.show(), 0);
+    setTimeout(() => (this.galleriaRef as any)?.show?.(), 0);
     this.loadingIndex.set(idx);
     // prefetch nearby images
     const imgs = this.game()?.screenshots ?? [];
@@ -160,7 +160,7 @@ export class GameDetailComponent implements OnChanges {
     // ensure dialog is opened first, then set active index to ensure correct image
     const target = idx >= 0 ? idx : 0;
     this.activeIndex.set(target);
-    setTimeout(() => this.galleriaRef?.show(), 0);
+    setTimeout(() => (this.galleriaRef as any)?.show?.(), 0);
   }
 
   currentImageUrl(): string | undefined {
