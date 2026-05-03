@@ -134,8 +134,8 @@ export class GameDetailComponent implements OnChanges {
   openGallery(index?: number) {
     const idx = typeof index === 'number' && !isNaN(index) ? index : 0;
     this.activeIndex.set(idx);
-    // open galleria in fullscreen using Fullscreen API
-    setTimeout(() => this.openGalleriaFullscreen(), 0);
+    // ask the PrimeNG Galleria component to show (fullscreen when configured)
+    setTimeout(() => (this.galleriaRef as any)?.show?.(), 0);
     this.loadingIndex.set(idx);
     // prefetch nearby images
     const imgs = this.game()?.screenshots ?? [];
@@ -161,26 +161,26 @@ export class GameDetailComponent implements OnChanges {
     // ensure dialog is opened first, then set active index to ensure correct image
     const target = idx >= 0 ? idx : 0;
     this.activeIndex.set(target);
-    setTimeout(() => this.openGalleriaFullscreen(), 0);
+    setTimeout(() => (this.galleriaRef as any)?.show?.(), 0);
   }
 
   private openGalleriaFullscreen() {
+    // prefer using component API
     try {
-      const hostEl = this.host?.nativeElement as HTMLElement;
-      if (!hostEl) return;
-      // find the nearest p-galleria element inside this component
-      const gEl = hostEl.querySelector('.p-galleria') as HTMLElement | null;
-      if (!gEl) return;
-      // prefer the standardized API
-      const fs = (gEl as any).requestFullscreen ?? (gEl as any).webkitRequestFullscreen ?? (gEl as any).msRequestFullscreen;
-      if (fs) {
-        fs.call(gEl);
-      } else {
-        // as fallback, try calling show() on component if available
-        (this.galleriaRef as any)?.show?.();
-      }
+      (this.galleriaRef as any)?.show?.();
+      // slight delay then try fullscreen on the rendered gallery element as a fallback
+      setTimeout(() => {
+        try {
+          const hostEl = this.host?.nativeElement as HTMLElement;
+          if (!hostEl) return;
+          const gEl = hostEl.querySelector('.p-galleria') as HTMLElement | null;
+          if (!gEl) return;
+          const fs = (gEl as any).requestFullscreen ?? (gEl as any).webkitRequestFullscreen ?? (gEl as any).msRequestFullscreen;
+          if (fs) fs.call(gEl);
+        } catch (e) {}
+      }, 200);
     } catch (e) {
-      // ignore errors
+      // ignore
     }
   }
 
