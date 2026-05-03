@@ -34,6 +34,11 @@ export class GameDetailComponent implements OnChanges {
 
   constructor(private host: ElementRef) {}
 
+  onDialogHide() {
+    this.showGallery.set(false);
+    this.loadingIndex.set(-1);
+  }
+
   ngOnChanges(): void {
     if (!this.slug) {
       this.isLoading.set(false);
