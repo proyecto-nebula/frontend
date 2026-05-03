@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, OnChanges, inject, signal } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, inject, signal, ViewChild } from '@angular/core';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
 import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
 import { GalleriaModule } from 'primeng/galleria';
+import { Galleria } from 'primeng/galleria';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-game-detail',
   standalone: true,
-  imports: [CommonModule, GalleriaModule, DialogModule, ButtonModule, ProgressSpinnerModule],
+  imports: [CommonModule, GalleriaModule, ButtonModule, ProgressSpinnerModule],
   styles: [
     `
       .lightbox-content img {
@@ -27,8 +27,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         justify-content: center;
         z-index: 5;
       }
-      /* hide galleria thumbnails inside dialog */
-      ::ng-deep .lightbox-content .p-galleria-thumbnails { display: none !important; }
+      /* hide galleria thumbnails (use fullscreen overlay) */
+      ::ng-deep .p-galleria-thumbnails { display: none !important; }
     `,
   ],
   templateUrl: './game-detail.component.html',
@@ -47,14 +47,18 @@ export class GameDetailComponent implements OnChanges {
   private concurrent = 0;
   private readonly MAX_CONCURRENCY = 3;
 
-  // Dialog / gallery state
-  showGallery = signal(false);
+  // Gallery state
+  @ViewChild('galleria') galleriaRef?: Galleria;
   activeIndex = signal(0);
 
   constructor(private host: ElementRef) {}
 
   onDialogHide() {
-    this.showGallery.set(false);
+    // compatibility: keep available but hide spinner
+    this.loadingIndex.set(-1);
+  }
+
+  onGalleriaHide() {
     this.loadingIndex.set(-1);
   }
 
@@ -129,7 +133,8 @@ export class GameDetailComponent implements OnChanges {
   openGallery(index?: number) {
     const idx = typeof index === 'number' && !isNaN(index) ? index : 0;
     this.activeIndex.set(idx);
-    this.showGallery.set(true);
+    // if galleria instance available, show full screen overlay
+    setTimeout(() => this.galleriaRef?.show(), 0);
     this.loadingIndex.set(idx);
     // prefetch nearby images
     const imgs = this.game()?.screenshots ?? [];
@@ -154,11 +159,8 @@ export class GameDetailComponent implements OnChanges {
     const idx = imgs.findIndex(s => s.imageUrl === shot.imageUrl);
     // ensure dialog is opened first, then set active index to ensure correct image
     const target = idx >= 0 ? idx : 0;
-    this.showGallery.set(true);
-    // small delay so dialog initializes
-    setTimeout(() => {
-      this.openGallery(target);
-    }, 0);
+    this.activeIndex.set(target);
+    setTimeout(() => this.galleriaRef?.show(), 0);
   }
 
   currentImageUrl(): string | undefined {

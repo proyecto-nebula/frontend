@@ -28,42 +28,43 @@
           }
         </div>
 
-        <p-dialog
-          header=""
-          [visible]="showGallery()"
-          [modal]="true"
-          [dismissableMask]="true"
-          [closeOnEscape]="true"
-          [style]="{ width: '90vw', maxWidth: '1000px', padding: '0' }"
-          (onHide)="onDialogHide()"
+        <!-- full screen galleria outside of any dialog -->
+        <p-galleria
+          #galleria
+          [value]="game()?.screenshots"
+          [activeIndex]="activeIndex()"
+          (activeIndexChange)="onActiveIndexChange($event)"
+          [circular]="true"
+          [showItemNavigators]="true"
+          [fullScreen]="true"
+          [baseZIndex]="10000"
+          style="width: 100%"
+          (onHide)="onGalleriaHide()"
         >
-          <div class="lightbox-content" style="position: relative;">
-              <p-galleria
-                [value]="game()?.screenshots"
-                [activeIndex]="activeIndex()"
-                (activeIndexChange)="onActiveIndexChange($event)"
-                [circular]="true"
-                [showItemNavigators]="true"
-                style="width:100%"
-              >
-              <ng-template pTemplate="item" let-item>
-                <div style="position:relative;display:flex;align-items:center;justify-content:center;">
-                  @if (loadingIndex() === activeIndex()) {
-                    <div class="lightbox-overlay" style="background: transparent">
-                      <p-progressSpinner style="width:56px;height:56px;color:white"></p-progressSpinner>
-                    </div>
-                  }
-                  <img
-                    [src]="item.imageUrl"
-                    (load)="onFullLoad()"
-                    [class.loading-image]="loadingIndex() === activeIndex()"
-                    style="max-width:100%;height:auto;border:none;display:block;margin:0 auto;position:relative;z-index:1"
-                  />
+          <ng-template pTemplate="item" let-item>
+            <div style="position: relative; display: flex; align-items: center; justify-content: center">
+              @if (loadingIndex() === activeIndex()) {
+                <div class="lightbox-overlay" style="background: transparent">
+                  <p-progressSpinner style="width: 56px; height: 56px; color: white"></p-progressSpinner>
                 </div>
-              </ng-template>
-            </p-galleria>
-          </div>
-        </p-dialog>
+              }
+              <img
+                [src]="item.imageUrl"
+                (load)="onFullLoad()"
+                [class.loading-image]="loadingIndex() === activeIndex()"
+                style="
+                  max-width: 100%;
+                  height: auto;
+                  border: none;
+                  display: block;
+                  margin: 0 auto;
+                  position: relative;
+                  z-index: 1;
+                "
+              />
+            </div>
+          </ng-template>
+        </p-galleria>
       }
       @if (game()?.summary) {
         <p>{{ game()?.summary }}</p>
