@@ -15,6 +15,6 @@ export class GameService {
   // No mapping or extraction needed since backend matches Game interface
 
   getGameBySlug(slug: string): Observable<Game> {
-    return this.http.get<Game>(`${API_ROUTES.games}?slug=${encodeURIComponent(slug)}`);
+    return this.http.get<Game>(`${API_ROUTES.games}?slug=${encodeURIComponent(slug)}&view=detail`);
   }
 }

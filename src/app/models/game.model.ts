@@ -8,8 +8,8 @@ export interface Game {
   developerId?: number | string | null;
   publisherId?: number | string | null;
   pegiId?: number | string | null;
-  steamId?: string | null;
-  igdbId?: string | null;
+  steamId?: number | null;
+  igdbId?: number | null;
   summary?: string | null;
   description?: string | null;
   metacriticScore?: number | string | null;
@@ -21,4 +21,5 @@ export interface Game {
   categories?: Category[];
   developer?: Studio | null;
   publisher?: Studio | null;
+  screenshots?: { thumbUrl: string; imageUrl: string }[];
 }
