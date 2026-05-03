@@ -1,17 +1,36 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, inject, signal, ElementRef } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, inject, signal } from '@angular/core';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
-import { GalleriaModule } from 'primeng/galleria';
-import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { GalleriaModule } from 'primeng/galleria';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-game-detail',
   standalone: true,
   imports: [CommonModule, GalleriaModule, DialogModule, ButtonModule, ProgressSpinnerModule],
-  styles: [`.lightbox-content img{transition:opacity .35s ease-in-out}.loading-image{opacity:0}.lightbox-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:5}`],
+  styles: [
+    `
+      .lightbox-content img {
+        transition: opacity 0.35s ease-in-out;
+      }
+      .loading-image {
+        opacity: 0;
+      }
+      .lightbox-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+      }
+      /* hide galleria thumbnails inside dialog */
+      ::ng-deep .lightbox-content .p-galleria-thumbnails { display: none !important; }
+    `,
+  ],
   templateUrl: './game-detail.component.html',
 })
 export class GameDetailComponent implements OnChanges {
@@ -37,6 +56,11 @@ export class GameDetailComponent implements OnChanges {
   onDialogHide() {
     this.showGallery.set(false);
     this.loadingIndex.set(-1);
+  }
+
+  onActiveIndexChange(idx: number) {
+    this.activeIndex.set(idx);
+    this.loadingIndex.set(idx);
   }
 
   ngOnChanges(): void {
@@ -103,7 +127,7 @@ export class GameDetailComponent implements OnChanges {
 
   // Open gallery dialog at index
   openGallery(index?: number) {
-    const idx = (typeof index === 'number' && !isNaN(index)) ? index : 0;
+    const idx = typeof index === 'number' && !isNaN(index) ? index : 0;
     this.activeIndex.set(idx);
     this.showGallery.set(true);
     this.loadingIndex.set(idx);
@@ -182,16 +206,19 @@ export class GameDetailComponent implements OnChanges {
       this.observer = null;
     }
     if (typeof IntersectionObserver === 'undefined') return;
-    this.observer = new IntersectionObserver(entries => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          const el = entry.target as HTMLElement;
-          const url = el.getAttribute('data-full') || '';
-          if (url) this.prefetchFull(url);
-          this.observer?.unobserve(el);
+    this.observer = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            const url = el.getAttribute('data-full') || '';
+            if (url) this.prefetchFull(url);
+            this.observer?.unobserve(el);
+          }
         }
-      }
-    }, { rootMargin: '200px', threshold: 0.1 });
+      },
+      { rootMargin: '200px', threshold: 0.1 },
+    );
 
     // observe current thumbnails
     // run after render
