@@ -18,19 +18,16 @@
           }
         </div>
 
-        <p-dialog header="Galería" [visible]="showGallery()" [modal]="true" [style]="{width: '90vw', maxWidth: '1000px'}" (onHide)="showGallery.set(false)">
-          <div class="lightbox-content" style="display:flex;align-items:center;justify-content:center;gap:12px">
-            <button pButton type="button" icon="pi pi-chevron-left" (click)="prev()" [disabled]="activeIndex() === 0"></button>
-            <div style="max-width:86%;text-align:center;">
-              @if (loadingIndex() === activeIndex()) {
-                <div class="lightbox-overlay">
-                  <p-progressSpinner style="width:56px;height:56px"></p-progressSpinner>
-                </div>
-              }
-              <img [src]="currentImageUrl()" (load)="onFullLoad()" [class.loading-image]="loadingIndex() === activeIndex()" style="max-width:100%;height:auto;border:none;display:block;margin:0 auto;position:relative;z-index:1" />
-              <div style="margin-top:8px;color:#666;font-size:0.9rem">{{ game()?.releaseDate }} {{ game()?.publishedAt }}</div>
-            </div>
-            <button pButton type="button" icon="pi pi-chevron-right" (click)="next()" [disabled]="activeIndex() === ((game()?.screenshots?.length || 1) - 1)"></button>
+        <p-dialog header="" [visible]="showGallery()" [modal]="true" [dismissableMask]="true" [closeOnEscape]="true" [style]="{width: '90vw', maxWidth: '1000px', padding: '0'}" (onHide)="{ showGallery.set(false); loadingIndex.set(-1) }">
+          <div class="lightbox-content" style="position:relative;display:flex;align-items:center;justify-content:center;">
+            <button pButton type="button" icon="pi pi-chevron-left" class="lightbox-nav left" (click)="prev()" style="position:absolute;left:8px;top:50%;transform:translateY(-50%);z-index:3;opacity:0.85;background:transparent;border:none;color:white"></button>
+            @if (loadingIndex() === activeIndex()) {
+              <div class="lightbox-overlay" style="background:transparent">
+                <p-progressSpinner style="width:56px;height:56px;color:white"></p-progressSpinner>
+              </div>
+            }
+            <img [src]="currentImageUrl()" (load)="onFullLoad()" [class.loading-image]="loadingIndex() === activeIndex()" style="max-width:100%;height:auto;border:none;display:block;margin:0 auto;position:relative;z-index:1" />
+            <button pButton type="button" icon="pi pi-chevron-right" class="lightbox-nav right" (click)="next()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);z-index:3;opacity:0.85;background:transparent;border:none;color:white"></button>
           </div>
         </p-dialog>
       }

@@ -11,7 +11,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   selector: 'app-game-detail',
   standalone: true,
   imports: [CommonModule, GalleriaModule, DialogModule, ButtonModule, ProgressSpinnerModule],
-  styles: [`.lightbox-content img{transition:opacity .35s ease-in-out}.loading-image{opacity:0}.lightbox-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:5}`],
+  styles: [`.lightbox-content img{transition:opacity .35s ease-in-out}.loading-image{opacity:0}.lightbox-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:5}`],
   templateUrl: './game-detail.component.html',
 })
 export class GameDetailComponent implements OnChanges {
@@ -108,6 +108,15 @@ export class GameDetailComponent implements OnChanges {
     for (let i = idx - 3; i <= idx + 3; i++) {
       if (i >= 0 && i < imgs.length) this.prefetchFull(imgs[i].imageUrl);
     }
+    // ensure that if the image is already in cache and complete we hide spinner
+    setTimeout(() => {
+      const hostEl = this.host?.nativeElement as HTMLElement;
+      if (!hostEl) return;
+      const img = hostEl.querySelector('.lightbox-content img') as HTMLImageElement | null;
+      if (img && img.complete) {
+        this.onFullLoad();
+      }
+    }, 50);
   }
 
   // Open gallery by shot object (safer than indexOf in templates)
@@ -135,21 +144,23 @@ export class GameDetailComponent implements OnChanges {
   // navigation
   next() {
     const imgs = this.game()?.screenshots ?? [];
-    const nextIdx = Math.min(this.activeIndex() + 1, imgs.length - 1);
+    const nextIdx = imgs.length ? (this.activeIndex() + 1) % imgs.length : 0;
     this.activeIndex.set(nextIdx);
     this.loadingIndex.set(nextIdx);
     // prefetch following images
-    for (let i = nextIdx - 3; i <= nextIdx + 3; i++) {
+    for (let offset = -3; offset <= 3; offset++) {
+      const i = (nextIdx + offset + imgs.length) % imgs.length;
       if (i >= 0 && i < imgs.length) this.prefetchFull(imgs[i].imageUrl);
     }
   }
 
   prev() {
-    const prevIdx = Math.max(this.activeIndex() - 1, 0);
+    const imgs = this.game()?.screenshots ?? [];
+    const prevIdx = imgs.length ? (this.activeIndex() - 1 + imgs.length) % imgs.length : 0;
     this.activeIndex.set(prevIdx);
     this.loadingIndex.set(prevIdx);
-    const imgs = this.game()?.screenshots ?? [];
-    for (let i = prevIdx - 3; i <= prevIdx + 3; i++) {
+    for (let offset = -3; offset <= 3; offset++) {
+      const i = (prevIdx + offset + imgs.length) % imgs.length;
       if (i >= 0 && i < imgs.length) this.prefetchFull(imgs[i].imageUrl);
     }
   }
