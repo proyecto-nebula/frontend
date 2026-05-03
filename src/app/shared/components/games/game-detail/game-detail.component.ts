@@ -63,6 +63,9 @@ export class GameDetailComponent implements OnChanges {
     this.loadingIndex.set(-1);
   }
 
+  onGalleriaVisibleChange(visible: boolean) {
+    if (!visible) this.loadingIndex.set(-1);
+  }
   onActiveIndexChange(idx: number) {
     this.activeIndex.set(idx);
     this.loadingIndex.set(idx);

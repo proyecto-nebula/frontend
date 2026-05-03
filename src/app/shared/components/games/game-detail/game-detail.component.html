@@ -39,7 +39,7 @@
           [fullScreen]="true"
           [baseZIndex]="10000"
           style="width: 100%"
-          (onHide)="onGalleriaHide()"
+          (visibleChange)="onGalleriaVisibleChange($event)"
         >
           <ng-template pTemplate="item" let-item>
             <div style="position: relative; display: flex; align-items: center; justify-content: center">
