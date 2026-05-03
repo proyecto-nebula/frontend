@@ -60,6 +60,13 @@ export class GameDetailComponent implements OnChanges {
 
   // Prefetch a full image in background with concurrency limit
   prefetchFull(url: string) {
+    // Avoid prefetch on very slow connections
+    try {
+      const conn = (navigator as any)?.connection;
+      if (conn && typeof conn.effectiveType === 'string' && conn.effectiveType.includes('2g')) return;
+    } catch (e) {
+      // ignore
+    }
     if (!url || this.prefetchCache.has(url)) return;
     this.prefetchQueue.push(url);
     this.processQueue();
@@ -95,5 +102,42 @@ export class GameDetailComponent implements OnChanges {
     [idx - 1, idx + 1].forEach(i => {
       if (i >= 0 && i < imgs.length) this.prefetchFull(imgs[i].imageUrl);
     });
+  }
+
+  // Open gallery by shot object (safer than indexOf in templates)
+  openGalleryByShot(shot: { imageUrl?: string }) {
+    const imgs = this.game()?.screenshots ?? [];
+    const idx = imgs.findIndex(s => s.imageUrl === shot.imageUrl);
+    this.openGallery(idx >= 0 ? idx : 0);
+  }
+
+  // IntersectionObserver for thumbnails prefetch
+  private observer: IntersectionObserver | null = null;
+
+  private setupObserver() {
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = null;
+    }
+    if (typeof IntersectionObserver === 'undefined') return;
+    this.observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const el = entry.target as HTMLElement;
+          const url = el.getAttribute('data-full') || '';
+          if (url) this.prefetchFull(url);
+          this.observer?.unobserve(el);
+        }
+      }
+    }, { rootMargin: '200px', threshold: 0.1 });
+
+    // observe current thumbnails
+    // run after render
+    setTimeout(() => {
+      const hostEl = this.host?.nativeElement as HTMLElement;
+      if (!hostEl) return;
+      const thumbs = hostEl.querySelectorAll('.thumb[data-full]');
+      thumbs.forEach(t => this.observer?.observe(t));
+    }, 50);
   }
 }
