@@ -11,7 +11,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   selector: 'app-game-detail',
   standalone: true,
   imports: [CommonModule, GalleriaModule, DialogModule, ButtonModule, ProgressSpinnerModule],
-  styles: [`.lightbox-content img{transition:opacity .35s ease-in-out}.loading-image{opacity:0}`],
+  styles: [`.lightbox-content img{transition:opacity .35s ease-in-out}.loading-image{opacity:0}.lightbox-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:5}`],
   templateUrl: './game-detail.component.html',
 })
 export class GameDetailComponent implements OnChanges {
@@ -104,9 +104,10 @@ export class GameDetailComponent implements OnChanges {
     this.loadingIndex.set(idx);
     // prefetch nearby images
     const imgs = this.game()?.screenshots ?? [];
-    [idx - 1, idx + 1].forEach(i => {
+    // prefetch 3 previous and 3 next
+    for (let i = idx - 3; i <= idx + 3; i++) {
       if (i >= 0 && i < imgs.length) this.prefetchFull(imgs[i].imageUrl);
-    });
+    }
   }
 
   // Open gallery by shot object (safer than indexOf in templates)
@@ -138,8 +139,8 @@ export class GameDetailComponent implements OnChanges {
     this.activeIndex.set(nextIdx);
     this.loadingIndex.set(nextIdx);
     // prefetch following images
-    for (let i = nextIdx + 1; i <= nextIdx + 3 && i < imgs.length; i++) {
-      this.prefetchFull(imgs[i].imageUrl);
+    for (let i = nextIdx - 3; i <= nextIdx + 3; i++) {
+      if (i >= 0 && i < imgs.length) this.prefetchFull(imgs[i].imageUrl);
     }
   }
 
@@ -147,6 +148,10 @@ export class GameDetailComponent implements OnChanges {
     const prevIdx = Math.max(this.activeIndex() - 1, 0);
     this.activeIndex.set(prevIdx);
     this.loadingIndex.set(prevIdx);
+    const imgs = this.game()?.screenshots ?? [];
+    for (let i = prevIdx - 3; i <= prevIdx + 3; i++) {
+      if (i >= 0 && i < imgs.length) this.prefetchFull(imgs[i].imageUrl);
+    }
   }
 
   // loading indicator index (signal)
