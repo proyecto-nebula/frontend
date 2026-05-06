@@ -10,7 +10,7 @@ import { GamesListComponent } from '../../components/games-list/games-list.compo
   standalone: true,
   imports: [CommonModule, GamesListComponent],
   templateUrl: './games-list.page.html',
-  styleUrls: ['./games-list.page.scss'],
+  
 })
 export class GamesListPage {
   protected readonly games = signal<Game[]>([]);

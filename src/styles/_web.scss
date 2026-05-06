@@ -1,3 +1,6 @@
+/* Consolidated styles for feature: web */
+
+/* From: src/app/features/web/components/game-card/game-card.component.scss */
 .game-card {
   width: 180px;
   border-radius: 10px;
@@ -25,4 +28,22 @@
   padding: 0.75rem;
   font-weight: 600;
   text-align: center;
+}
+
+/* From: src/app/features/web/components/games-list/games-list.component.scss */
+.games-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: flex-start;
+}
+
+.empty-message {
+  margin: 0;
+  color: #666;
+}
+
+/* From: src/app/features/web/pages/games-list/games-list.page.scss */
+h1 {
+  margin-bottom: 2rem;
 }
