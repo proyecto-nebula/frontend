@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { GamesListComponent } from '@components/games/games-list/games-list.component';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
 import { catchError, finalize, of, retry } from 'rxjs';
+import { GamesListComponent } from '../../components/games-list/games-list';
 
 @Component({
   selector: 'app-games-list-page',
   standalone: true,
   imports: [CommonModule, GamesListComponent],
-  templateUrl: './games-list-page.html',
-  styleUrls: ['./games-list-page.scss'],
+  templateUrl: './games-list.page.html',
+  styleUrls: ['./games-list.page.scss'],
 })
 export class GamesListPage {
   protected readonly games = signal<Game[]>([]);

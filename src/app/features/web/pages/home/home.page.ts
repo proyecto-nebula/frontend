@@ -3,6 +3,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-home',
   standalone: true,
-  templateUrl: './home.html',
+  templateUrl: './home.page.html',
 })
 export class HomePage {}

@@ -10,14 +10,13 @@ import { firstValueFrom } from 'rxjs';
   selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule],
-  templateUrl: './login.html',
+  templateUrl: './login.page.html',
 })
 export class LoginPage {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
   private router = inject(Router);
 
-  // Estado de carga para deshabilitar el botón mientras se valida
   loading = signal(false);
   errorMessage = signal('');
 
@@ -35,13 +34,11 @@ export class LoginPage {
     const credentials = this.loginForm.getRawValue() as LoginCredentials;
 
     try {
-      // 1. Convertimos a promesa pero con un timeout o manejo claro
       const response = await firstValueFrom(this.auth.login(credentials.email, credentials.password));
 
       console.log('Respuesta del servidor:', response);
 
       if (response?.token) {
-        // 2. Si todo va bien, redirigimos a la lista de juegos
         console.log('Login OK, redirigiendo a /games...');
         await this.router.navigate(['/games']);
       } else {
@@ -51,7 +48,6 @@ export class LoginPage {
       const error = err as HttpErrorResponse;
       console.error('Error capturado:', error);
 
-      // 3. Diferenciamos errores
       if (error.status === 401 || error.status === 403) {
         this.errorMessage.set('Alias o contraseña incorrectos.');
       } else if (error.status === 0) {
@@ -60,7 +56,6 @@ export class LoginPage {
         this.errorMessage.set('Error en el servidor: ' + (error.error?.message || 'Desconocido'));
       }
     } finally {
-      // 4. IMPORTANTE: Siempre liberar el estado de carga para que el botón se reactive
       this.loading.set(false);
     }
   }

@@ -8,7 +8,7 @@ import { GalleriaModule } from 'primeng/galleria';
   selector: 'app-game-detail',
   standalone: true,
   imports: [CommonModule, GalleriaModule],
-  templateUrl: './game-detail.component.html',
+  templateUrl: './game-detail.html',
 })
 export class GameDetailComponent implements OnChanges {
   @Input() slug!: string;
@@ -50,8 +50,6 @@ export class GameDetailComponent implements OnChanges {
           this.game.set(null);
         } else {
           this.game.set(g);
-          this.activeGalleryIndex.set(0);
-          this.galleryVisible.set(false);
         }
         this.isLoading.set(false);
       },

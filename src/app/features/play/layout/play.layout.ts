@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-auth',
+  selector: 'app-play-layout',
+  standalone: true,
   imports: [RouterOutlet],
-  templateUrl: './auth.html',
+  templateUrl: './play.layout.html',
 })
-export class AuthLayout {}
+export class PlayLayout {}

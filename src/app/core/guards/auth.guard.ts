@@ -13,9 +13,9 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   // 2. Si NO está autenticado y NO está ya en el login, redirigir
   // state.url nos dice a dónde intenta ir el usuario
-  if (state.url === '/login') {
+  if (state.url === '/auth/login') {
     return true;
   }
 
-  return router.parseUrl('/login');
+  return router.parseUrl('/auth/login');
 };

@@ -9,11 +9,12 @@
       "@services/*": ["./src/app/core/services/*"],
       // Features
       "@features/*": ["./src/app/features/*"],
+      "@web/*": ["./src/app/features/web/*"],
       "@admin/*": ["./src/app/features/admin/*"],
       "@auth/*": ["./src/app/features/auth/*"],
-      "@main/*": ["./src/app/features/main/*"],
+      "@play/*": ["./src/app/features/play/*"],
       // Models
-      "@models/*": ["./src/app/models/*"],
+      "@models/*": ["./src/app/shared/models/*"],
       // Shared
       "@shared/*": ["./src/app/shared/*"],
       "@components/*": ["./src/app/shared/components/*"],
