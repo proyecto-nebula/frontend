@@ -7,17 +7,49 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
 body {
   background-color: variables.$bg;
+  background-image: variables.$bg-image;
+  /* Keep the background image fixed behind content */
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
   color: variables.$text;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
+
+/*
+  Note: `background-attachment: fixed` is not well supported on some mobile browsers (iOS).
+  If you need the effect to work reliably on mobile, use a fixed pseudo-element as a fallback:
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: variables.$bg-image;
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  Then remove `background-image` from `body` if the pseudo-element is used.
+*/
 
 // Estilos básicos para enlaces (puedes ajustarlos luego)
 a {

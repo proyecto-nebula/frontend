@@ -1,4 +1,15 @@
-$bg: #1f0a3b;
+$bg: #1c172b;
+$bg-image:
+  -webkit-radial-gradient(16% 37%, hsla(222, 37%, 18%, 1), transparent 50%),
+  -webkit-radial-gradient(26% 89%, hsla(283, 47%, 18%, 1), transparent 50%),
+  -webkit-radial-gradient(71% 24%, hsla(256, 37%, 17%, 1), transparent 50%),
+  -webkit-radial-gradient(68% 0%, hsla(256, 37%, 17%, 1), transparent 50%),
+  -webkit-radial-gradient(72% 82%, hsla(216, 50%, 19%, 1), transparent 50%),
+  -webkit-radial-gradient(40% 36%, hsla(22, 0%, 0%, 1), transparent 50%),
+  -webkit-radial-gradient(49% 76%, hsla(173, 0%, 0%, 1), transparent 50%),
+  -webkit-radial-gradient(80% 87%, hsla(223, 27%, 23%, 1), transparent 50%),
+  -webkit-radial-gradient(7% 10%, hsla(284, 35%, 11%, 1), transparent 50%),
+  -webkit-radial-gradient(9% 96%, hsla(258, 19%, 24%, 1), transparent 50%);
 $surface: #161b22;
 $accent: #6c5ce7;
 $text: #f0f6fc;
