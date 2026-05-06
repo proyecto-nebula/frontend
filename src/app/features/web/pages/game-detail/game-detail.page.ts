@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { GameDetailComponent } from '../../components/game-detail/game-detail';
+import { GameDetailComponent } from '../../components/game-detail/game-detail.component';
 
 @Component({
   selector: 'app-game-detail-page',

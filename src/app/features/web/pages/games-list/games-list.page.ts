@@ -3,7 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
 import { catchError, finalize, of, retry } from 'rxjs';
-import { GamesListComponent } from '../../components/games-list/games-list';
+import { GamesListComponent } from '../../components/games-list/games-list.component';
 
 @Component({
   selector: 'app-games-list-page',

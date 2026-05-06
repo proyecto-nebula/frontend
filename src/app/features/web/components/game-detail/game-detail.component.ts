@@ -8,7 +8,7 @@ import { GalleriaModule } from 'primeng/galleria';
   selector: 'app-game-detail',
   standalone: true,
   imports: [CommonModule, GalleriaModule],
-  templateUrl: './game-detail.html',
+  templateUrl: './game-detail.component.html',
 })
 export class GameDetailComponent implements OnChanges {
   @Input() slug!: string;

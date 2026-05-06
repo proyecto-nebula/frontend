@@ -5,14 +5,13 @@ import { AuthService } from '@services/auth.service';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
-// DrawerModule removed: using manual drawer
 import { TieredMenuModule } from 'primeng/tieredmenu';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [CommonModule, RouterModule, AvatarModule, TieredMenuModule, ButtonModule],
-  templateUrl: './header.html',
+  templateUrl: './header.component.html',
   styles: [
     `
       .header-wrapper {
@@ -24,7 +23,6 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
         background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
         color: #fff;
       }
-
       /* Layout for manual header */
       .header-content {
         max-width: 1200px;
@@ -123,7 +121,6 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
         padding: 12px 8px;
       }
 
-      /* (old p-drawer styles removed) */
       /* Overlay and drawer panel (manual) */
       .overlay {
         position: fixed;
@@ -151,7 +148,6 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
           transform 260ms ease,
           opacity 260ms ease;
         z-index: 1002;
-        /* gradient left->right: semi-transparent black to transparent */
         background: linear-gradient(to right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 100%);
         color: #fff;
         display: flex;
@@ -162,7 +158,6 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
         transform: translateX(0);
       }
 
-      /* Search item: show only icon in center menu */
       .menu-search .nav-text {
         display: none;
       }
@@ -186,7 +181,6 @@ export class Header implements OnInit {
   profileItems: MenuItem[] | undefined;
 
   ngOnInit() {
-    // Items del menú central (se vuelven hamburguesa en móvil)
     this.items = [
       { label: 'Inicio', routerLink: '/' },
       { label: 'Juegos', routerLink: '/games' },
@@ -195,7 +189,6 @@ export class Header implements OnInit {
       { label: 'Buscar', icon: 'pi pi-search', styleClass: 'menu-search', routerLink: '/search' },
     ];
 
-    // Items del desplegable del avatar
     this.profileItems = [
       { label: 'Mi Perfil', icon: 'pi pi-user' },
       { label: 'Ajustes', icon: 'pi pi-cog' },
@@ -208,7 +201,5 @@ export class Header implements OnInit {
     ];
   }
 
-  logout() {
-    // Tu lógica para limpiar token y redirigir
-  }
+  logout() {}
 }
