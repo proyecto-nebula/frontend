@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { GameDetailComponent } from '../../components/game-detail/game-detail.component';
+import { GameDetailsUi } from '../../ui/game-details/game-details.ui';
 
 @Component({
-  selector: 'app-game-detail-page',
+  selector: 'app-game-view-page',
   standalone: true,
-  imports: [CommonModule, GameDetailComponent],
-  templateUrl: './game-detail.page.html',
+  imports: [CommonModule, GameDetailsUi],
+  templateUrl: './game-view.page.html',
 })
-export class GameDetailPage {
+export class GameViewPage {
   private route = inject(ActivatedRoute);
   slug = signal<string>('');
 

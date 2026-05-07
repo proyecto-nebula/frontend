@@ -6,9 +6,9 @@ import { RouterModule } from '@angular/router';
   selector: 'app-game-card',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './game-card.component.html',
+  templateUrl: './game-card.ui.html',
 })
-export class GameCardComponent {
+export class GameCardUi {
   @Input() title!: string;
   @Input() coverUrl!: string;
   @Input() slug!: string;

@@ -11,7 +11,7 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
   selector: 'app-header',
   standalone: true,
   imports: [CommonModule, RouterModule, AvatarModule, TieredMenuModule, ButtonModule],
-  templateUrl: './header.component.html',
+  templateUrl: './header.ui.html',
   styles: [
     `
       .header-wrapper {
@@ -174,7 +174,7 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
     `,
   ],
 })
-export class Header implements OnInit {
+export class HeaderUi implements OnInit {
   public auth = inject(AuthService);
   drawerVisible = false;
   items: MenuItem[] | undefined;

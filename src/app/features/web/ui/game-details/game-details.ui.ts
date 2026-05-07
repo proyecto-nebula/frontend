@@ -5,12 +5,12 @@ import { GameService } from '@services/game.service';
 import { GalleriaModule } from 'primeng/galleria';
 
 @Component({
-  selector: 'app-game-detail',
+  selector: 'app-game-details',
   standalone: true,
   imports: [CommonModule, GalleriaModule],
-  templateUrl: './game-detail.component.html',
+  templateUrl: './game-details.ui.html',
 })
-export class GameDetailComponent implements OnChanges {
+export class GameDetailsUi implements OnChanges {
   @Input() slug!: string;
 
   readonly game = signal<Game | null>(null);

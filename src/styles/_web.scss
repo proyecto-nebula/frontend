@@ -1,6 +1,6 @@
 /* Consolidated styles for feature: web */
 
-/* From: src/app/features/web/components/game-card/game-card.component.scss */
+/* From: src/app/features/web/ui/game-card/game-card.ui.scss */
 .game-card {
   width: 180px;
   border-radius: 10px;
@@ -30,7 +30,7 @@
   text-align: center;
 }
 
-/* From: src/app/features/web/components/games-list/games-list.component.scss */
+/* From: src/app/features/web/ui/game-list/game-list.ui.scss */
 .games-list {
   display: flex;
   flex-wrap: wrap;
@@ -43,7 +43,7 @@
   color: #666;
 }
 
-/* From: src/app/features/web/pages/games-list/games-list.page.scss */
+/* From: src/app/features/web/pages/game-list/game-list.page.scss */
 h1 {
   margin-bottom: 2rem;
 }

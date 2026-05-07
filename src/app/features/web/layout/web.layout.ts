@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Header } from '@components/header/header.component';
+import { HeaderUi } from '@components/header/header.ui';
 
 @Component({
   selector: 'app-web-layout',
   standalone: true,
-  imports: [RouterOutlet, Header],
+  imports: [RouterOutlet, HeaderUi],
   templateUrl: './web.layout.html',
 })
 export class WebLayout {
