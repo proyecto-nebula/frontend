@@ -8,7 +8,6 @@ import { GameCardComponent } from '../game-card/game-card.component';
   standalone: true,
   imports: [CommonModule, GameCardComponent],
   templateUrl: './games-list.component.html',
-  
 })
 export class GamesListComponent {
   @Input() games: Game[] = [];

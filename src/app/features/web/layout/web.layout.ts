@@ -8,4 +8,6 @@ import { Header } from '@components/header/header.component';
   imports: [RouterOutlet, Header],
   templateUrl: './web.layout.html',
 })
-export class WebLayout {}
+export class WebLayout {
+  private _ = (document.body.id = 'web');
+}

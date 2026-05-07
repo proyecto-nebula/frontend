@@ -7,4 +7,6 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   imports: [RouterOutlet, RouterLink],
   templateUrl: './admin.layout.html',
 })
-export class AdminLayout {}
+export class AdminLayout {
+  private _ = (document.body.id = 'admin');
+}

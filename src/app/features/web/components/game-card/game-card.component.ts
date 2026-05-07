@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './game-card.component.html',
-  
 })
 export class GameCardComponent {
   @Input() title!: string;

@@ -7,4 +7,6 @@ import { RouterOutlet } from '@angular/router';
   imports: [RouterOutlet],
   templateUrl: './play.layout.html',
 })
-export class PlayLayout {}
+export class PlayLayout {
+  private _ = (document.body.id = 'play');
+}
