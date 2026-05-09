@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 })
 export class GameCardUi {
   @Input() title!: string;
-  @Input() coverUrl!: string;
+  @Input() coverUrl?: string;
+  @Input() bannerUrl?: string;
   @Input() slug!: string;
 }

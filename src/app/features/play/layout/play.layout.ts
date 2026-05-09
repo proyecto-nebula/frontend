@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -6,6 +6,8 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [RouterOutlet],
   templateUrl: './play.layout.html',
+  styles: ['@use "play";'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PlayLayout {
   private _ = (document.body.id = 'play');

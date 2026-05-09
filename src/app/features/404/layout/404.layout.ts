@@ -2,13 +2,13 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-auth-layout',
+  selector: 'app-notfound-layout',
   standalone: true,
   imports: [RouterOutlet],
-  templateUrl: './auth.layout.html',
-  styles: ['@use "auth";'],
+  templateUrl: './404.layout.html',
+  styles: ['@use "404" as notfound;'],
   encapsulation: ViewEncapsulation.None,
 })
-export class AuthLayout {
-  private _ = (document.body.id = 'auth');
+export class NotFoundLayout {
+  private _ = (document.body.id = '404');
 }

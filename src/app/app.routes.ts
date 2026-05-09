@@ -19,5 +19,16 @@ export const routes: Routes = [
     path: 'play',
     loadChildren: () => import('@play/play.routes').then(m => m.PLAY_ROUTES),
   },
-  { path: '**', redirectTo: 'auth/login' },
+  {
+    path: '404',
+    loadComponent: () => import('@features/404/layout/404.layout').then(m => m.NotFoundLayout),
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () => import('@features/404/pages/404.page').then(m => m.NotFoundPage),
+      },
+    ],
+  },
+  { path: '**', redirectTo: '404' },
 ];

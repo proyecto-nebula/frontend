@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderUi } from '@web/ui/header/header.ui';
 
@@ -7,7 +7,7 @@ import { HeaderUi } from '@web/ui/header/header.ui';
   standalone: true,
   imports: [RouterOutlet, HeaderUi],
   templateUrl: './web.layout.html',
+  styles: ['@use "web"'],
+  encapsulation: ViewEncapsulation.None,
 })
-export class WebLayout {
-  private _ = (document.body.id = 'web');
-}
+export class WebLayout {}

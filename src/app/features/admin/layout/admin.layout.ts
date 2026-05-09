@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -6,7 +6,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [RouterOutlet, RouterLink],
   templateUrl: './admin.layout.html',
+  styleUrls: ['./admin.layout.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
-export class AdminLayout {
-  private _ = (document.body.id = 'admin');
-}
+export class AdminLayout {}

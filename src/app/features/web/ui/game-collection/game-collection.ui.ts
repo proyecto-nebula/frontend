@@ -22,11 +22,11 @@ export class GameCollectionUi implements OnInit {
   readonly games = signal<Game[]>([]);
 
   readonly responsiveOptions = [
-    { breakpoint: '1600px', numVisible: 6, numScroll: 1 },
-    { breakpoint: '1480px', numVisible: 5, numScroll: 1 },
-    { breakpoint: '1200px', numVisible: 4, numScroll: 1 },
-    { breakpoint: '1024px', numVisible: 3, numScroll: 1 },
-    { breakpoint: '768px', numVisible: 2, numScroll: 1 },
+    { breakpoint: '1600px', numVisible: 5, numScroll: 1 },
+    { breakpoint: '1480px', numVisible: 4, numScroll: 1 },
+    { breakpoint: '1200px', numVisible: 3, numScroll: 1 },
+    { breakpoint: '1024px', numVisible: 2, numScroll: 1 },
+    { breakpoint: '768px', numVisible: 1, numScroll: 1 },
     { breakpoint: '560px', numVisible: 1, numScroll: 1 },
   ];
 
@@ -46,7 +46,7 @@ export class GameCollectionUi implements OnInit {
   });
 
   get numVisible(): number {
-    return Math.min(this.limit, 6);
+    return Math.min(this.limit, 5);
   }
 
   private readonly gameService = inject(GameService);

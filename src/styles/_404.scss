@@ -1,0 +1,59 @@
+/* NotFound styles (scoped to layout wrapper) */
+body {
+  display: block;
+  min-height: 100vh;
+  background: #1f1f1f;
+  color: #dcdcdc;
+}
+
+.notfound-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.notfound-content {
+  text-align: center;
+  transition:
+    opacity 360ms ease,
+    transform 360ms ease;
+}
+
+.notfound-code {
+  font-size: 8rem;
+  line-height: 1;
+  margin: 0;
+  color: #ffffff;
+}
+
+.notfound-message {
+  margin-top: 1rem;
+  color: #bfbfbf;
+  font-size: 1.25rem;
+}
+
+.notfound-btn {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.25rem;
+  background: #ffffff;
+  color: #111111;
+  border-radius: 6px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    opacity 120ms ease;
+}
+
+.notfound-btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.notfound-container.exiting .notfound-content {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.98);
+}

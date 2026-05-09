@@ -1,0 +1,4 @@
+/* Scope the `admin` partial under the admin wrapper */
+.admin-wrapper {
+	@import 'admin';
+}

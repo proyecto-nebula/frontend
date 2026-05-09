@@ -25,7 +25,8 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
       }
       /* Layout for manual header */
       .header-content {
-        max-width: 1200px;
+        max-width: 1800px;
+        padding: 0 2rem;
         margin: 0 auto;
         position: relative;
       }
