@@ -17,7 +17,7 @@
       "@models/*": ["./src/app/shared/models/*"],
       // Shared
       "@shared/*": ["./src/app/shared/*"],
-      "@components/*": ["./src/app/shared/ui/*"],
+      "@ui/*": ["./src/app/shared/ui/*"],
       "@pipes/*": ["./src/app/shared/pipes/*"],
       // SRC
       "@env/*": ["./src/environments/*"],

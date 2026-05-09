@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderUi } from '@components/header/header.ui';
+import { HeaderUi } from '@web/ui/header/header.ui';
 
 @Component({
   selector: 'app-web-layout',

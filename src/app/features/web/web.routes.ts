@@ -12,7 +12,7 @@ export const WEB_ROUTES: Routes = [
       },
       {
         path: 'games',
-        loadComponent: () => import('./pages/game-list/game-list.page').then(m => m.GameListPage),
+        loadComponent: () => import('./pages/game-all/game-all.page').then(m => m.GameAllPage),
       },
       {
         path: 'games/:slug',

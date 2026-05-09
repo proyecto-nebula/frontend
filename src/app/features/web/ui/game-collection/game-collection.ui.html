@@ -1,0 +1,21 @@
+<section class="game-collection">
+  <header *ngIf="title">
+    <h3>{{ title }}</h3>
+  </header>
+
+  <p-carousel
+    [value]="collection()"
+    [numVisible]="numVisible"
+    [responsiveOptions]="responsiveOptions"
+    [numScroll]="1"
+    [circular]="false"
+    class="game-collection-carousel"
+    [showIndicators]="false"
+  >
+    <ng-template pTemplate="item" let-game>
+      <div class="collection-item">
+        <app-game-card [title]="game.title" [coverUrl]="game.coverUrl" [slug]="game.slug ?? ''"></app-game-card>
+      </div>
+    </ng-template>
+  </p-carousel>
+</section>

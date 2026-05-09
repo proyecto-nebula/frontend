@@ -6,12 +6,12 @@ import { catchError, finalize, of, retry } from 'rxjs';
 import { GameListUi } from '../../ui/game-list/game-list.ui';
 
 @Component({
-  selector: 'app-game-list-page',
+  selector: 'app-game-all-page',
   standalone: true,
   imports: [CommonModule, GameListUi],
-  templateUrl: './game-list.page.html',
+  templateUrl: './game-all.page.html',
 })
-export class GameListPage {
+export class GameAllPage {
   protected readonly games = signal<Game[]>([]);
   protected readonly isLoading = signal(true);
   protected readonly errorMessage = signal('');
