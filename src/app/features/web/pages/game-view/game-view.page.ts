@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { GameDetailsUi } from '../../ui/game-details/game-details.ui';
+import { GameDetailsUi } from '@features/web/ui/game-details/game-details.ui';
 
 @Component({
   selector: 'app-game-view-page',

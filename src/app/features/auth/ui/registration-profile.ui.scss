@@ -1,0 +1,63 @@
+.registration-profile {
+  max-width: 880px;
+  margin: 0 auto;
+  .field {
+    margin-bottom: 1rem;
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+  }
+
+  .avatars {
+    .avatar-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .avatar-item {
+      border: 0;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      border-radius: 8px;
+      overflow: hidden;
+      width: 64px;
+      height: 64px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .avatar-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .avatar-item.selected {
+      outline: 2px solid #ff4081;
+      transform: scale(1.03);
+    }
+    .selected-info {
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      .sel-name {
+        font-weight: 600;
+      }
+      .sel-preview {
+        width: 40px;
+        height: 40px;
+        border-radius: 6px;
+        object-fit: cover;
+      }
+    }
+  }
+}

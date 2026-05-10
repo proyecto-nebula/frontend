@@ -1,0 +1,20 @@
+<div class="registration-payment" [formGroup]="group">
+  <div class="field">
+    <label>Nombre en la tarjeta</label>
+    <input type="text" formControlName="nameOnCard" />
+  </div>
+  <div class="field">
+    <label>Número de tarjeta</label>
+    <input type="text" formControlName="cardNumber" placeholder="4111 1111 1111 1111" />
+  </div>
+  <div class="row">
+    <div class="field">
+      <label>Expiración</label>
+      <input type="text" formControlName="expiry" placeholder="MM/AA" />
+    </div>
+    <div class="field">
+      <label>CVC</label>
+      <input type="text" formControlName="cvc" placeholder="123" />
+    </div>
+  </div>
+</div>

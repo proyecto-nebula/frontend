@@ -1,0 +1,42 @@
+<div class="registration-profile" [formGroup]="group">
+  <div class="field">
+    <label>Nombre público</label>
+    <input type="text" formControlName="username" placeholder="Tu nombre en Nebula" />
+  </div>
+
+  <div class="field">
+    <label>Fecha de nacimiento</label>
+    <input type="date" formControlName="birthdate" />
+  </div>
+
+  <div class="field avatars">
+    <label>Avatar</label>
+    <div class="avatars-debug">Avatares cargados: {{ avatars.length }}</div>
+    <div class="avatar-list">
+      @for (a of avatars; track a.id) {
+        <button
+          type="button"
+          class="avatar-item"
+          (click)="selectAvatar(a.id)"
+          (keyup.enter)="selectAvatar(a.id)"
+          [class.selected]="group.get('avatarId')?.value === a.id"
+          [attr.aria-pressed]="group.get('avatarId')?.value === a.id"
+          [attr.title]="a.name ? a.name : ('Avatar ' + a.id)"
+        >
+          <img [src]="a.imageUrl" [alt]="a.name || 'avatar'" />
+        </button>
+      }
+    </div>
+    @if (group.get('avatarId')?.invalid && group.get('avatarId')?.touched) {
+      <div class="error">Selecciona un avatar</div>
+    }
+
+    @if (selectedAvatar) {
+      <div class="selected-info">
+        <strong>Seleccionado:</strong>
+        <span class="sel-name">{{ selectedAvatar.name || ('#' + selectedAvatar.id) }}</span>
+        <img class="sel-preview" [src]="selectedAvatar.imageUrl" [alt]="selectedAvatar.name || 'seleccionado'" />
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,27 @@
+.join-root {
+	overflow: hidden;
+	position: relative;
+
+	.phases {
+		display: flex;
+		width: 500%;
+		transition: transform 400ms ease;
+	}
+
+	.phase {
+		/* 5 phases -> each occupies 20% of the 500% container */
+		width: 20%;
+		min-height: 60vh;
+		padding: 2rem;
+		box-sizing: border-box;
+	}
+
+	.controls {
+		position: fixed;
+		bottom: 20px;
+		left: 50%;
+		transform: translateX(-50%);
+		display: flex;
+		gap: 0.5rem;
+	}
+}

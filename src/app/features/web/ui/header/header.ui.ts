@@ -1,16 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@services/auth.service';
+import { UserService } from '@services/user.service';
+import { LoginModalService } from '@services/login-modal.service';
+import { User } from '@models/user.model';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { TieredMenuModule } from 'primeng/tieredmenu';
+import { LoginFormComponent } from '@auth/components/login-form/login-form.component';
+import { SharedUiModule } from '../../../../shared/ui/ui.module';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, AvatarModule, TieredMenuModule, ButtonModule],
+  imports: [CommonModule, RouterModule, AvatarModule, TieredMenuModule, ButtonModule, LoginFormComponent, SharedUiModule],
   templateUrl: './header.ui.html',
   styles: [
     `
@@ -177,9 +182,17 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 })
 export class HeaderUi implements OnInit {
   public auth = inject(AuthService);
+  private userSvc = inject(UserService);
+  private router = inject(Router);
+  private loginModal = inject(LoginModalService);
+  // modal state for login
+  showLoginModal = false;
+  loginReturnUrl: string | null = null;
   drawerVisible = false;
   items: MenuItem[] | undefined;
   profileItems: MenuItem[] | undefined;
+  currentUser: User | null = null;
+  currentAvatarUrl: string | null = null;
 
   ngOnInit() {
     this.items = [
@@ -200,7 +213,45 @@ export class HeaderUi implements OnInit {
         command: () => this.logout(),
       },
     ];
+
+    // subscribe to auth user so header updates immediately after login/logout
+    this.auth.user$.subscribe(u => {
+      this.currentUser = u;
+      this.currentAvatarUrl = u?.avatar?.imageUrl ?? null;
+      console.log('[HeaderUi] auth.user$', u, 'avatarUrl=', this.currentAvatarUrl, 'token=', this.auth.getToken());
+    });
+
+    // subscribe to login modal open requests from other components
+    this.loginModal.open$.subscribe((returnUrl) => {
+      if (returnUrl === null) {
+        this.showLoginModal = false;
+        this.loginReturnUrl = null;
+      } else {
+        this.loginReturnUrl = returnUrl || this.router.url || '/';
+        this.showLoginModal = true;
+      }
+    });
   }
 
-  logout() {}
+  logout() {
+    this.auth.logout();
+    // Navigate internally to avoid full page reload and the white flash.
+    // Components subscribed to `auth.user$` will update reactively.
+    this.router.navigate(['/']);
+  }
+
+  openLoginModal() {
+    this.loginModal.open(this.router.url || '/');
+  }
+
+  onLoginSuccess() {
+    // close modal; keep user on the same page (header/menu updates reactively)
+    this.showLoginModal = false;
+    // request-close the modal on the service so subscribers remain in sync
+    this.loginModal.close();
+    // If a return URL was provided and it's different from current, navigate there.
+    if (this.loginReturnUrl && this.loginReturnUrl !== this.router.url) {
+      this.router.navigateByUrl(this.loginReturnUrl);
+    }
+  }
 }

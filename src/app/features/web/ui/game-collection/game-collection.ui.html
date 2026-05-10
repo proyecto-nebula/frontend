@@ -3,19 +3,22 @@
     <h3>{{ title }}</h3>
   </header>
 
-  <p-carousel
-    [value]="collection()"
-    [numVisible]="numVisible"
-    [responsiveOptions]="responsiveOptions"
-    [numScroll]="1"
-    [circular]="false"
-    class="game-collection-carousel"
+  <app-carousel
+    [items]="collection()"
+    [styleClass]="'game-collection-carousel'"
     [showIndicators]="false"
+    [circular]="true"
+    [itemMinWidth]="250"
   >
-    <ng-template pTemplate="item" let-game>
+    <ng-template let-game let-i="index">
       <div class="collection-item">
-        <app-game-card [title]="game.title" [bannerUrl]="game.bannerUrl" [coverUrl]="game.coverUrl" [slug]="game.slug ?? ''"></app-game-card>
+        <app-game-card
+          [title]="game.title"
+          [bannerUrl]="game.bannerUrl"
+          [coverUrl]="game.coverUrl"
+          [slug]="game.slug ?? ''"
+        ></app-game-card>
       </div>
     </ng-template>
-  </p-carousel>
+  </app-carousel>
 </section>

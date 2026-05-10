@@ -3,3 +3,5 @@
 <app-game-collection title="Novedades" mode="publishedAt" [limit]="10"></app-game-collection>
 
 <app-game-collection title="Nuevos juegos" mode="releaseDate" [limit]="10"></app-game-collection>
+
+<web-registration-success-ui *ngIf="showSuccess" [username]="successUsername" [planName]="successPlanName"></web-registration-success-ui>

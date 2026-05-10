@@ -1,0 +1,26 @@
+.registration-account {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  .field {
+    margin-bottom: 1rem;
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+      color: inherit;
+    }
+    .error {
+      color: #ff6b6b;
+      margin-top: 0.25rem;
+      font-size: 0.9rem;
+    }
+  }
+}

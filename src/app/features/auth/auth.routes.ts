@@ -10,6 +10,10 @@ export const AUTH_ROUTES: Routes = [
         path: 'login',
         loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage),
       },
+      {
+        path: 'join',
+        loadComponent: () => import('./pages/join/join.page').then(m => m.JoinPage),
+      },
     ],
   },
 ];

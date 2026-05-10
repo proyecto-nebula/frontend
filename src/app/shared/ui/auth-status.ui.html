@@ -1,0 +1,17 @@
+<div class="auth-status">
+  @if (isAuthenticated()) {
+    <div class="logged">
+      <p-avatar [image]="user?.avatar?.imageUrl ?? 'assets/default-avatar.png'" shape="circle" styleClass="avatar"></p-avatar>
+      <div class="info">
+        <div class="label">Conectado como</div>
+        <div class="username">{{ user?.username }}</div>
+      </div>
+      <button class="btn small logout" (click)="logout()">Cerrar sesión</button>
+    </div>
+  } @else {
+    <div class="not-logged">
+      <button class="btn ghost" (click)="openLogin()">Login</button>
+      <a class="btn" [routerLink]="['/auth/join']">Join</a>
+    </div>
+  }
+</div>

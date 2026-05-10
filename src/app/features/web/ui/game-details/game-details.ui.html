@@ -39,45 +39,23 @@
       }
 
       @if (game()?.screenshots?.length) {
-        <div class="thumbnails" style="display: flex; gap: 8px; flex-wrap: wrap">
-          @for (screenshot of game()?.screenshots; track screenshot.imageUrl; let i = $index) {
-            <div class="thumb" style="width: 180px">
-              <button
-                type="button"
-                (click)="openGallery(i)"
-                style="all: unset; cursor: pointer; display: block; width: 100%"
-              >
-                <img
-                  [src]="screenshot.thumbUrl"
-                  [alt]="game()?.title"
-                  style="width: 100%; height: auto; object-fit: cover; border-radius: 8px"
-                  loading="lazy"
-                />
-              </button>
-            </div>
-          }
-        </div>
+        <app-game-screenshots [screenshots]="game()?.screenshots ?? null" (open)="openGallery($event)"></app-game-screenshots>
 
-        <p-galleria
-          [value]="galleryImages()"
-          [fullScreen]="true"
-          [showThumbnails]="false"
-          [showIndicators]="false"
-          [showItemNavigators]="true"
-          [circular]="true"
+        <app-modal
           [visible]="galleryVisible()"
-          (visibleChange)="galleryVisible.set($event)"
-          [activeIndex]="activeGalleryIndex()"
-          (activeIndexChange)="activeGalleryIndex.set($event)"
-        >
-          <ng-template #item let-item>
-            <img
-              [src]="item.itemImageSrc"
-              [alt]="item.alt"
-              style="display: block; max-width: 90vw; max-height: 90vh; object-fit: contain; box-sizing: border-box"
-            />
-          </ng-template>
-        </p-galleria>
+          (visibleChange)="onGalleryVisibleChange($event)"
+          [width]="'90vw'"
+          [dismissableMask]="true"
+          [closable]="true"
+          [closeOnEscape]="true"
+          [gallery]="true"
+          [gallerySrc]="galleryImages()[activeGalleryIndex()]?.itemImageSrc ?? null"
+          [galleryAlt]="galleryImages()[activeGalleryIndex()]?.alt ?? ''"
+          [galleryIndex]="activeGalleryIndex()"
+          [galleryTotal]="galleryImages().length"
+          (prev)="prevImage()"
+          (next)="nextImage()"
+        ></app-modal>
       }
 
       @if (game()?.summary) {

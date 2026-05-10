@@ -1,0 +1,54 @@
+<p-dialog
+  appendTo="body"
+  [header]="gallery ? '' : (header ?? '')"
+  [showHeader]="!gallery && showHeader"
+  [visible]="visible"
+  (onHide)="onHide()"
+  (onShow)="onShow()"
+  [modal]="modal"
+  [closable]="closable"
+  [dismissableMask]="dismissableMask"
+  [closeOnEscape]="closeOnEscape"
+  [maskStyleClass]="maskClass"
+  [maskStyle]="activeMaskStyle"
+  [contentStyle]="gallery ? galleryContentStyle : contentStyle"
+  [style]="gallery ? galleryPanelStyle : { width: width }"
+  [styleClass]="gallery ? 'app-modal-gallery-dlg' : ''"
+>
+  <ng-container *ngIf="gallery">
+    <div style="display:flex;align-items:center;">
+      <button
+        type="button"
+        (click)="onPrevClick($event)"
+        aria-label="Anterior"
+        style="background:transparent;border:none;color:#fff;font-size:2.5rem;cursor:pointer;padding:0 12px;line-height:1;flex-shrink:0;"
+      >&#x2039;</button>
+      <div style="flex:1;display:flex;justify-content:center;align-items:center;position:relative;min-height:120px;">
+        <div
+          *ngIf="gallerySrc && !imageLoaded"
+          style="position:absolute;width:40px;height:40px;border:3px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:gallery-spin 0.75s linear infinite;"
+        ></div>
+        <img
+          *ngIf="gallerySrc"
+          [src]="gallerySrc"
+          [alt]="galleryAlt"
+          [style.opacity]="imageLoaded ? '1' : '0'"
+          style="max-width:85vw;max-height:85vh;object-fit:contain;display:block;transition:opacity 0.2s ease;"
+          (load)="onImageLoad()"
+          (error)="onImageLoad()"
+        />
+      </div>
+      <button
+        type="button"
+        (click)="onNextClick($event)"
+        aria-label="Siguiente"
+        style="background:transparent;border:none;color:#fff;font-size:2.5rem;cursor:pointer;padding:0 12px;line-height:1;flex-shrink:0;"
+      >&#x203a;</button>
+    </div>
+    <div
+      *ngIf="galleryTotal > 0"
+      style="text-align:center;color:#fff;padding:8px 0 4px;font-size:0.85rem;opacity:0.7;"
+    >{{ galleryIndex + 1 }} / {{ galleryTotal }}</div>
+  </ng-container>
+  <ng-content></ng-content>
+</p-dialog>

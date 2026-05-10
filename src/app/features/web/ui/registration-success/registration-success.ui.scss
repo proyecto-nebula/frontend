@@ -1,0 +1,6 @@
+.rs-backdrop { position: fixed; inset: 0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.45); z-index: 9999; }
+.rs-modal { background:#fff; padding:1.25rem; border-radius:8px; min-width:320px; max-width:90%; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,0.2); }
+.rs-modal h2{margin:0 0 .5rem}
+.rs-modal p{margin:.25rem 0}
+.rs-modal .actions{margin-top:1rem}
+.rs-modal .btn{padding:.6rem 1rem;border-radius:6px;border:0;background:#7c5cff;color:#fff}

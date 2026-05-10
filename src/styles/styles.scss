@@ -1,3 +1,28 @@
 @use 'variables' as variables;
 @use 'base';
 @use 'layout';
+
+/* Gallery modal spinner keyframe (used by app-modal when dialog is appended to body) */
+@keyframes gallery-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Gallery dialog panel — transparent, no border, no shadow.
+   pointer-events:none lets clicks fall through to the mask so dismissableMask works. */
+.app-modal-gallery-dlg .p-dialog {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  pointer-events: none;
+}
+.app-modal-gallery-dlg .p-dialog-content {
+  padding: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+  pointer-events: none;
+}
+/* Re-enable pointer events only on interactive gallery children */
+.app-modal-gallery-dlg .p-dialog-content button,
+.app-modal-gallery-dlg .p-dialog-content img {
+  pointer-events: auto;
+}

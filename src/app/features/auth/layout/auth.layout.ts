@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -9,6 +9,12 @@ import { RouterOutlet } from '@angular/router';
   styles: ['@use "auth";'],
   encapsulation: ViewEncapsulation.None,
 })
-export class AuthLayout {
-  private _ = (document.body.id = 'auth');
+export class AuthLayout implements OnDestroy {
+  constructor() {
+    document.body.classList.add('layout-auth');
+  }
+
+  ngOnDestroy(): void {
+    document.body.classList.remove('layout-auth');
+  }
 }

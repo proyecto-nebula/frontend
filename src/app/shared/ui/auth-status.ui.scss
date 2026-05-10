@@ -1,0 +1,43 @@
+.auth-status {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 2000;
+
+  .avatar {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    .label {
+      font-size: 11px;
+      opacity: 0.85;
+    }
+    .username {
+      font-weight: 700;
+      font-size: 14px;
+    }
+  }
+
+  .not-logged {
+    display: flex;
+    gap: 8px;
+  }
+
+  .logout {
+    margin-left: 8px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+}

@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, Input, OnChanges, signal } from '@angular/core';
+import { Component, computed, HostListener, inject, Input, OnChanges, signal } from '@angular/core';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
-import { GalleriaModule } from 'primeng/galleria';
+import { SharedUiModule } from '../../../../shared/ui/ui.module';
+import { GameScreenshotsUi } from '../game-screenshots/game-screenshots.ui';
 
 @Component({
   selector: 'app-game-details',
   standalone: true,
-  imports: [CommonModule, GalleriaModule],
+  imports: [CommonModule, GameScreenshotsUi, SharedUiModule],
   templateUrl: './game-details.ui.html',
 })
 export class GameDetailsUi implements OnChanges {
@@ -29,8 +30,46 @@ export class GameDetailsUi implements OnChanges {
   private readonly gameService = inject(GameService);
 
   openGallery(index: number): void {
-    this.activeGalleryIndex.set(index);
+    const images = this.galleryImages();
+    if (!images || images.length === 0) return;
+    const clamped = Math.max(0, Math.min(index, images.length - 1));
+    // Set index FIRST so the modal renders with the correct image from the start
+    this.activeGalleryIndex.set(clamped);
     this.galleryVisible.set(true);
+  }
+
+  prevImage(): void {
+    const images = this.galleryImages();
+    if (!images || images.length === 0) return;
+    const i = this.activeGalleryIndex();
+    const prev = (i - 1 + images.length) % images.length;
+    this.activeGalleryIndex.set(prev);
+  }
+
+  nextImage(): void {
+    const images = this.galleryImages();
+    if (!images || images.length === 0) return;
+    const i = this.activeGalleryIndex();
+    const next = (i + 1) % images.length;
+    this.activeGalleryIndex.set(next);
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeydown(e: KeyboardEvent) {
+    if (!this.galleryVisible()) return;
+    if (e.key === 'ArrowLeft') {
+      this.prevImage();
+      e.preventDefault();
+    } else if (e.key === 'ArrowRight') {
+      this.nextImage();
+      e.preventDefault();
+    } else if (e.key === 'Escape') {
+      this.galleryVisible.set(false);
+    }
+  }
+
+  onGalleryVisibleChange(visible: boolean): void {
+    this.galleryVisible.set(visible);
   }
 
   ngOnChanges(): void {

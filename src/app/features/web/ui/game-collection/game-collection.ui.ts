@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
-import { CarouselModule } from 'primeng/carousel';
+import { CarouselComponent } from '@ui/carousel/carousel.component';
 import { GameCardUi } from '../game-card/game-card.ui';
 
 type Mode = 'publishedAt' | 'releaseDate' | 'custom';
@@ -10,7 +10,7 @@ type Mode = 'publishedAt' | 'releaseDate' | 'custom';
 @Component({
   selector: 'app-game-collection',
   standalone: true,
-  imports: [CommonModule, CarouselModule, GameCardUi],
+  imports: [CommonModule, CarouselComponent, GameCardUi],
   templateUrl: './game-collection.ui.html',
 })
 export class GameCollectionUi implements OnInit {
@@ -20,15 +20,6 @@ export class GameCollectionUi implements OnInit {
   @Input() gamesInput: Game[] | null = null; // for custom collections
 
   readonly games = signal<Game[]>([]);
-
-  readonly responsiveOptions = [
-    { breakpoint: '1600px', numVisible: 5, numScroll: 1 },
-    { breakpoint: '1480px', numVisible: 4, numScroll: 1 },
-    { breakpoint: '1200px', numVisible: 3, numScroll: 1 },
-    { breakpoint: '1024px', numVisible: 2, numScroll: 1 },
-    { breakpoint: '768px', numVisible: 1, numScroll: 1 },
-    { breakpoint: '560px', numVisible: 1, numScroll: 1 },
-  ];
 
   readonly collection = computed(() => {
     const all = this.gamesInput ?? this.games();
@@ -44,10 +35,6 @@ export class GameCollectionUi implements OnInit {
     }
     return arr.slice(0, this.limit);
   });
-
-  get numVisible(): number {
-    return Math.min(this.limit, 5);
-  }
 
   private readonly gameService = inject(GameService);
 

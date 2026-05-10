@@ -33,24 +33,20 @@
         </ul>
       </nav>
 
-      <!-- Right: avatar -->
+      <!-- Right: avatar / login -->
       <div class="right">
         @if (auth.isAuthenticated()) {
+          <span class="header-username">{{ currentUser?.username }}</span>
           <p-avatar
-            image="assets/default-avatar.png"
+            [image]="currentAvatarUrl ?? 'assets/default-avatar.png'"
             shape="circle"
             styleClass="cursor-pointer border-1 border-300"
             (click)="menuPerfil.toggle($event)"
           ></p-avatar>
           <p-tieredMenu #menuPerfil [model]="profileItems" [popup]="true"></p-tieredMenu>
         } @else {
-          <a routerLink="/auth">
-            <p-avatar
-              image="assets/default-avatar.png"
-              shape="circle"
-              styleClass="cursor-pointer border-1 border-300"
-            ></p-avatar>
-          </a>
+          <button class="btn ghost" (click)="openLoginModal()">Login</button>
+          <a class="btn" [routerLink]="['/auth/join']">Join</a>
         }
       </div>
     </div>
@@ -87,5 +83,9 @@
         </ul>
       </nav>
     </aside>
+    <!-- Login modal (opened from header) -->
+    <app-modal [(visible)]="showLoginModal" [width]="'420px'">
+      <app-login-form [returnUrl]="loginReturnUrl" (loggedIn)="onLoginSuccess()"></app-login-form>
+    </app-modal>
   </div>
 </header>

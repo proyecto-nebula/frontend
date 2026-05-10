@@ -1,0 +1,41 @@
+<div class="login-container w-full flex justify-content-center align-items-center">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+    <h2>Acceso a Nebula</h2>
+
+    @if (errorMessage()) {
+      <div class="error-banner">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="Ej: usuario@dominio.com"
+        [class.invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Contraseña</label>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        placeholder="••••••••"
+        [class.invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+      />
+    </div>
+
+    <button type="submit" [disabled]="loginForm.invalid || loading()">
+      @if (loading()) {
+        <span>Cargando...</span>
+      } @else {
+        <span>Entrar</span>
+      }
+    </button>
+  </form>
+</div>

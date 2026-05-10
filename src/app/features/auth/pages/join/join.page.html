@@ -1,0 +1,30 @@
+<div class="join-root" [class.phase-0]="phase===0" [class.phase-1]="phase===1" [class.phase-2]="phase===2" [class.phase-3]="phase===3" [class.phase-4]="phase===4">
+  <div class="phases" [style.transform]="'translateX(-' + (phase * 20) + '%)'">
+    <section class="phase">
+      <h2>Cuenta</h2>
+      <auth-registration-account-ui [formGroup]="account"></auth-registration-account-ui>
+    </section>
+
+    <section class="phase">
+      <h2>Perfil</h2>
+      <auth-registration-profile-ui [formGroup]="profile" [avatars]="avatars" (avatarSelected)="onAvatarSelected($event)"></auth-registration-profile-ui>
+    </section>
+
+    <section class="phase">
+      <h2>Plan</h2>
+      <auth-registration-plan-ui [group]="plan" [plans]="plans"></auth-registration-plan-ui>
+    </section>
+
+    <section class="phase">
+      <h2>Pago</h2>
+      <auth-registration-payment-ui [group]="payment"></auth-registration-payment-ui>
+    </section>
+
+    <!-- success is shown on home as a modal after registration -->
+  </div>
+
+  <div class="controls">
+    <button class="btn ghost" (click)="back()" [disabled]="phase===0">Atrás</button>
+    <button class="btn" (click)="next()">{{ nextLabel }}</button>
+  </div>
+</div>
