@@ -9,5 +9,5 @@
   <ng-template pTemplate="item" let-item let-i="index">
     <ng-container *ngIf="itemTpl" [ngTemplateOutlet]="itemTpl" [ngTemplateOutletContext]="{ $implicit: item, index: i }"></ng-container>
   </ng-template>
-
 </p-carousel>
+
