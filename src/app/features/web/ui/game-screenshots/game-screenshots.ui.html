@@ -1,6 +1,6 @@
 <app-carousel
   [items]="screenshotsWithIndex"
-  [itemMinWidth]="250"
+  [itemMinWidth]="240"
   [styleClass]="'game-screenshots-carousel'"
   [showIndicators]="false"
 >
@@ -11,12 +11,14 @@
         (click)="openScreenshot(screenshot.__idx)"
         style="all: unset; cursor: pointer; display: block; width: 100%"
       >
-        <img
-          [src]="screenshot.thumbUrl"
-          [alt]="'Screenshot ' + (screenshot.__idx + 1)"
-          style="width: 100%; height: auto; object-fit: cover; border-radius: 8px"
-          loading="lazy"
-        />
+        <div style="padding-right: 16px">
+          <img
+            [src]="screenshot.thumbUrl"
+            [alt]="'Screenshot ' + (screenshot.__idx + 1)"
+            style="width: 100%; height: auto; object-fit: cover; border-radius: 8px"
+            loading="lazy"
+          />
+        </div>
       </button>
     </div>
   </ng-template>

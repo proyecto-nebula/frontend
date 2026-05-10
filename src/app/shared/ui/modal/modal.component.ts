@@ -7,15 +7,9 @@ import { DialogModule } from 'primeng/dialog';
   standalone: true,
   imports: [CommonModule, DialogModule],
   templateUrl: './modal.component.html',
-  styles: [
-    `:host ::ng-deep .p-dialog-mask {
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      background: rgba(0,0,0,0.35);
-      transition: background 260ms ease, backdrop-filter 260ms ease;
-    }
-    `,
-  ],
+  styles: [`
+    :host { display: contents; }
+  `],
 })
 export class ModalComponent implements OnChanges, OnDestroy {
   @Input() header?: string;
@@ -42,7 +36,11 @@ export class ModalComponent implements OnChanges, OnDestroy {
   @Output() visibleChange = new EventEmitter<boolean>();
 
   imageLoaded = false;
-  maskClass = `app-modal-mask-${Math.random().toString(36).slice(2, 9)}`;
+  /** Unique class added to the mask so we can find it in the DOM regardless of mode */
+  readonly maskClass = `app-modal-mask-${Math.random().toString(36).slice(2, 9)}`;
+
+  private _maskEl: HTMLElement | null = null;
+  private _maskDownFn: ((e: MouseEvent) => void) | null = null;
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('gallerySrc' in changes) {
@@ -50,7 +48,9 @@ export class ModalComponent implements OnChanges, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this._cleanMaskListener();
+  }
 
   onImageLoad(): void {
     this.imageLoaded = true;
@@ -69,10 +69,6 @@ export class ModalComponent implements OnChanges, OnDestroy {
     };
   }
 
-  get contentStyle() {
-    return undefined;
-  }
-
   get galleryContentStyle() {
     return { padding: '0', background: 'transparent', overflow: 'visible' };
   }
@@ -82,18 +78,40 @@ export class ModalComponent implements OnChanges, OnDestroy {
       background: 'transparent',
       border: 'none',
       'box-shadow': 'none',
-      width: this.width,
       'max-width': '98vw',
     };
   }
 
   onHide() {
+    this._cleanMaskListener();
     this.visible = false;
     this.visibleChange.emit(false);
   }
 
-  onShow() {
+  onShow(): void {
     this.visibleChange.emit(true);
+    if (!this.dismissableMask) return;
+    // Wait one tick for appendTo="body" to have rendered the mask in the DOM
+    setTimeout(() => {
+      // Find the mask via its unique class (works for both gallery and normal mode)
+      this._maskEl = document.querySelector<HTMLElement>(`.${this.maskClass}`);
+      if (this._maskEl) {
+        this._maskDownFn = (e: MouseEvent) => {
+          if (this._maskEl && this._maskEl.isSameNode(e.target as Node)) {
+            this.onHide();
+          }
+        };
+        this._maskEl.addEventListener('mousedown', this._maskDownFn);
+      }
+    }, 0);
+  }
+
+  private _cleanMaskListener(): void {
+    if (this._maskEl && this._maskDownFn) {
+      this._maskEl.removeEventListener('mousedown', this._maskDownFn);
+    }
+    this._maskEl = null;
+    this._maskDownFn = null;
   }
 
   onPrevClick(ev?: Event) {

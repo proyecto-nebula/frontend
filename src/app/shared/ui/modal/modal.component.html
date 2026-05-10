@@ -7,15 +7,15 @@
   (onShow)="onShow()"
   [modal]="modal"
   [closable]="closable"
-  [dismissableMask]="dismissableMask"
+  [dismissableMask]="false"
   [closeOnEscape]="closeOnEscape"
   [maskStyleClass]="maskClass"
   [maskStyle]="activeMaskStyle"
-  [contentStyle]="gallery ? galleryContentStyle : contentStyle"
+  [contentStyle]="gallery ? galleryContentStyle : undefined"
   [style]="gallery ? galleryPanelStyle : { width: width }"
   [styleClass]="gallery ? 'app-modal-gallery-dlg' : ''"
 >
-  <ng-container *ngIf="gallery">
+  @if (gallery) {
     <div style="display:flex;align-items:center;">
       <button
         type="button"
@@ -24,19 +24,19 @@
         style="background:transparent;border:none;color:#fff;font-size:2.5rem;cursor:pointer;padding:0 12px;line-height:1;flex-shrink:0;"
       >&#x2039;</button>
       <div style="flex:1;display:flex;justify-content:center;align-items:center;position:relative;min-height:120px;">
-        <div
-          *ngIf="gallerySrc && !imageLoaded"
-          style="position:absolute;width:40px;height:40px;border:3px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:gallery-spin 0.75s linear infinite;"
-        ></div>
-        <img
-          *ngIf="gallerySrc"
-          [src]="gallerySrc"
-          [alt]="galleryAlt"
-          [style.opacity]="imageLoaded ? '1' : '0'"
-          style="max-width:85vw;max-height:85vh;object-fit:contain;display:block;transition:opacity 0.2s ease;"
-          (load)="onImageLoad()"
-          (error)="onImageLoad()"
-        />
+        @if (gallerySrc && !imageLoaded) {
+          <div style="position:absolute;width:40px;height:40px;border:3px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:gallery-spin 0.75s linear infinite;"></div>
+        }
+        @if (gallerySrc) {
+          <img
+            [src]="gallerySrc"
+            [alt]="galleryAlt"
+            [style.opacity]="imageLoaded ? '1' : '0'"
+            style="max-width:85vw;max-height:85vh;object-fit:contain;display:block;transition:opacity 0.2s ease;border-radius:20px;"
+            (load)="onImageLoad()"
+            (error)="onImageLoad()"
+          />
+        }
       </div>
       <button
         type="button"
@@ -45,10 +45,12 @@
         style="background:transparent;border:none;color:#fff;font-size:2.5rem;cursor:pointer;padding:0 12px;line-height:1;flex-shrink:0;"
       >&#x203a;</button>
     </div>
-    <div
-      *ngIf="galleryTotal > 0"
-      style="text-align:center;color:#fff;padding:8px 0 4px;font-size:0.85rem;opacity:0.7;"
-    >{{ galleryIndex + 1 }} / {{ galleryTotal }}</div>
-  </ng-container>
+    @if (galleryTotal > 0) {
+      <div style="text-align:center;color:#fff;padding:8px 0 4px;font-size:0.85rem;opacity:0.7;">
+        {{ galleryIndex + 1 }} / {{ galleryTotal }}
+      </div>
+    }
+  }
   <ng-content></ng-content>
 </p-dialog>
+

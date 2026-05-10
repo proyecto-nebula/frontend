@@ -1,13 +1,15 @@
 <section class="game-collection">
-  <header *ngIf="title">
+  @if (title) {
+  <header>
     <h3>{{ title }}</h3>
   </header>
+  }
 
   <app-carousel
     [items]="collection()"
     [styleClass]="'game-collection-carousel'"
     [showIndicators]="false"
-    [itemMinWidth]="300"
+    [itemMinWidth]="320"
   >
     <ng-template let-game let-i="index">
       <div class="collection-item">

@@ -4,4 +4,6 @@
 
 <app-game-collection title="Nuevos juegos" mode="releaseDate" [limit]="10"></app-game-collection>
 
-<web-registration-success-ui *ngIf="showSuccess" [username]="successUsername" [planName]="successPlanName"></web-registration-success-ui>
+@if (showSuccess) {
+  <web-registration-success-ui [username]="successUsername" [planName]="successPlanName"></web-registration-success-ui>
+}

@@ -2,12 +2,12 @@
   <div class="field">
     <label>Email</label>
     <input type="email" formControlName="email" placeholder="tu@email.com" />
-    <div class="error" *ngIf="group.get('email')?.invalid && group.get('email')?.touched">Email inválido</div>
+    @if (group.get('email')?.invalid && group.get('email')?.touched) { <div class="error">Email inválido</div> }
   </div>
 
   <div class="field">
     <label>Contraseña</label>
     <input type="password" formControlName="password" placeholder="Min. 6 caracteres" />
-    <div class="error" *ngIf="group.get('password')?.invalid && group.get('password')?.touched">Contraseña inválida</div>
+    @if (group.get('password')?.invalid && group.get('password')?.touched) { <div class="error">Contraseña inválida</div> }
   </div>
 </div>

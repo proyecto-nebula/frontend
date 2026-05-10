@@ -1,11 +1,13 @@
 <div class="registration-plan">
   <div class="plan-list">
-    <div class="plan-item" *ngFor="let p of plans" (click)="select(p)" [class.selected]="group.get('planId')?.value === p.id">
-      <div class="plan-info">
-        <div class="plan-name">{{ p.name }}</div>
-        <div class="plan-desc">{{ p.description }}</div>
+    @for (p of plans; track p.id) {
+      <div class="plan-item" (click)="select(p)" [class.selected]="group.get('planId')?.value === p.id">
+        <div class="plan-info">
+          <div class="plan-name">{{ p.name }}</div>
+          <div class="plan-desc">{{ p.description }}</div>
+        </div>
+        <div class="plan-price">{{ p.price | currency:'EUR' }}</div>
       </div>
-      <div class="plan-price">{{ p.price | currency:'EUR' }}</div>
-    </div>
+    }
   </div>
 </div>

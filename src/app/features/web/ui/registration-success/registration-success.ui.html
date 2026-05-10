@@ -1,8 +1,8 @@
 <app-modal header="Registro completado" [visible]="visible" (visibleChange)="onModalVisibleChange($event)" [width]="'520px'">
   <div class="rs-modal">
     <h2>Registro completado</h2>
-    <p *ngIf="username">Bienvenido, <strong>{{ username }}</strong>!</p>
-    <p *ngIf="planName">Has elegido el plan: <strong>{{ planName }}</strong></p>
+    @if (username) { <p>Bienvenido, <strong>{{ username }}</strong>!</p> }
+    @if (planName) { <p>Has elegido el plan: <strong>{{ planName }}</strong></p> }
     <div class="actions">
       <button class="btn" (click)="visible = false">Cerrar</button>
     </div>
