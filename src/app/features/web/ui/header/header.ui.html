@@ -45,7 +45,7 @@
           ></p-avatar>
           <p-tieredMenu #menuPerfil [model]="profileItems" [popup]="true"></p-tieredMenu>
         } @else {
-          <button class="btn ghost" (click)="openLoginModal()">Login</button>
+          <a class="btn ghost" href="/auth/login" (click)="openLoginModal(); $event.preventDefault()">Login</a>
           <a class="btn" [routerLink]="['/auth/join']">Join</a>
         }
       </div>

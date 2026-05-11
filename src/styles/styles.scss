@@ -2,9 +2,17 @@
 @use 'base';
 @use 'layout';
 
+@use 'web';
+@use 'auth';
+@use 'admin';
+@use 'play';
+@use '404' as notfound;
+
 /* Gallery spinner keyframe — referenced by app-modal gallery overlay */
 @keyframes gallery-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Gallery dialog — styleClass lands on the .p-dialog root element.

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -6,15 +6,10 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [RouterOutlet],
   templateUrl: './404.layout.html',
-  styles: ['@use "404" as notfound;'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class NotFoundLayout implements OnDestroy {
-  constructor() {
-    document.body.classList.add('layout-404');
-  }
-
+  private body = document.body.classList.add('404');
   ngOnDestroy(): void {
-    document.body.classList.remove('layout-404');
+    document.body.classList.remove('404');
   }
 }

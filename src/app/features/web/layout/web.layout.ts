@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderUi } from '@web/ui/header/header.ui';
 
@@ -7,7 +7,10 @@ import { HeaderUi } from '@web/ui/header/header.ui';
   standalone: true,
   imports: [RouterOutlet, HeaderUi],
   templateUrl: './web.layout.html',
-  styles: ['@use "web"'],
-  encapsulation: ViewEncapsulation.None,
 })
-export class WebLayout {}
+export class WebLayout implements OnDestroy {
+  private body = document.body.classList.add('web');
+  ngOnDestroy(): void {
+    document.body.classList.remove('web');
+  }
+}

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -6,15 +6,10 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [RouterOutlet],
   templateUrl: './play.layout.html',
-  styles: ['@use "play";'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class PlayLayout implements OnDestroy {
-  constructor() {
-    document.body.classList.add('layout-play');
-  }
-
+  private body = document.body.classList.add('play');
   ngOnDestroy(): void {
-    document.body.classList.remove('layout-play');
+    document.body.classList.remove('play');
   }
 }
