@@ -1,22 +1,24 @@
-<div [class]="styleClass" [style.--c-item-w]="cssItemW">
-  <div class="c-track" [style.transform]="trackTransform">
-    @for (item of items; track $index; let i = $index) {
-      <div class="c-item">
-        @if (itemTpl) {
-          <ng-container
-            [ngTemplateOutlet]="itemTpl"
-            [ngTemplateOutletContext]="{ $implicit: item, index: i }"
-          ></ng-container>
-        }
-      </div>
-    }
+<div [class]="styleClass" [style.--c-item-w]="cssItemW" [style.--c-gap]="cssGap">
+  <div class="c-overflow" [class.c-mask-left]="mask && hasPrev" [class.c-mask-right]="mask && hasNext">
+    <div class="c-track" [style.transform]="trackTransform">
+      @for (item of items; track $index; let i = $index) {
+        <div class="c-item">
+          @if (itemTpl) {
+            <ng-container
+              [ngTemplateOutlet]="itemTpl"
+              [ngTemplateOutletContext]="{ $implicit: item, index: i }"
+            ></ng-container>
+          }
+        </div>
+      }
+    </div>
   </div>
 </div>
 
 @if (hasPrev) {
-  <button class="c-btn c-btn-prev" type="button" aria-label="Anterior" (click)="prev()">&#x2039;</button>
+  <button class="c-btn c-btn-prev" type="button" aria-label="Anterior" (click)="prev()"><i class="pi pi-angle-left"></i></button>
 }
 @if (hasNext) {
-  <button class="c-btn c-btn-next" type="button" aria-label="Siguiente" (click)="next()">&#x203a;</button>
+  <button class="c-btn c-btn-next" type="button" aria-label="Siguiente" (click)="next()"><i class="pi pi-angle-right"></i></button>
 }
 

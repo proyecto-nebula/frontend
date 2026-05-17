@@ -1,5 +1,6 @@
 import { Category } from './category.model';
 import { Studio } from './studio.model';
+import { Pegi } from './pegi.model';
 export interface Game {
   id: number | string;
   title: string;
@@ -23,5 +24,6 @@ export interface Game {
   categories?: Category[];
   developer?: Studio | null;
   publisher?: Studio | null;
+  pegi?: Pegi | null;
   screenshots?: { thumbUrl: string; imageUrl: string }[];
 }

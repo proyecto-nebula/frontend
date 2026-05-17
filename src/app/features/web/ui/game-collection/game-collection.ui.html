@@ -1,25 +1,33 @@
 <section class="game-collection">
   @if (title) {
-  <header>
-    <h3>{{ title }}</h3>
-  </header>
+    <header>
+      <h3>{{ title }}</h3>
+    </header>
   }
 
-  <app-carousel
-    [items]="collection()"
-    [styleClass]="'game-collection-carousel'"
-    [showIndicators]="false"
-    [itemMinWidth]="320"
-  >
-    <ng-template let-game let-i="index">
-      <div class="collection-item">
-        <app-game-card
-          [title]="game.title"
-          [bannerUrl]="game.bannerUrl"
-          [coverUrl]="game.coverUrl"
-          [slug]="game.slug ?? ''"
-        ></app-game-card>
-      </div>
-    </ng-template>
-  </app-carousel>
+  @if (collection !== null && !collection.length && emptyMessage) {
+    <div class="game-collection-empty">
+      <span>{{ emptyMessage }}</span>
+    </div>
+  } @else {
+    <app-carousel
+      [items]="collection ?? []"
+      [styleClass]="'game-collection-carousel'"
+      [showIndicators]="false"
+      [itemMinWidth]="167"
+      [gap]="20"
+      [mask]="true"
+    >
+      <ng-template let-game let-i="index">
+        <div class="collection-item">
+          <app-game-card
+            [title]="game.title"
+            [bannerUrl]="game.bannerUrl"
+            [coverUrl]="game.coverUrl"
+            [slug]="game.slug ?? ''"
+          ></app-game-card>
+        </div>
+      </ng-template>
+    </app-carousel>
+  }
 </section>

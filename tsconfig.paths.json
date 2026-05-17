@@ -13,6 +13,7 @@
       "@admin/*": ["./src/app/features/admin/*"],
       "@auth/*": ["./src/app/features/auth/*"],
       "@play/*": ["./src/app/features/play/*"],
+      "@settings/*": ["./src/app/features/settings/*"],
       // Models
       "@models/*": ["./src/app/shared/models/*"],
       // Shared

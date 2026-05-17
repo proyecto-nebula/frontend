@@ -15,6 +15,7 @@ export class RegistrationPlanUi {
   @Input() plans: Plan[] = [];
 
   select(plan: Plan) {
-    this.group.patchValue({ planId: plan.id });
+    const current = this.group.get('planId')?.value;
+    this.group.patchValue({ planId: current === plan.id ? null : plan.id });
   }
 }

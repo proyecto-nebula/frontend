@@ -60,7 +60,7 @@ export class JoinPage {
     this.form = this.fb.group({
       account: this.fb.group({ email: ['', [Validators.required, Validators.email]], password: ['', [Validators.required, Validators.minLength(6)]] }),
       profile: this.fb.group({ username: ['', Validators.required], birthdate: ['', Validators.required], avatarId: [null, Validators.required] }),
-      plan: this.fb.group({ planId: [null, Validators.required] }),
+      plan: this.fb.group({ planId: [null] }),
       payment: this.fb.group({ nameOnCard: ['', Validators.required], cardNumber: ['', Validators.required], expiry: ['', Validators.required], cvc: ['', Validators.required] }),
     });
 
@@ -106,7 +106,9 @@ export class JoinPage {
 
   get nextLabel() {
     const selected = this.form.get('plan.planId')?.value;
-    if (this.phase === 2 && selected !== null && +selected === 0) return 'Finalizar';
+    if (this.phase === 2) {
+      return (selected !== null && selected !== undefined) ? 'Pagar' : 'Omitir';
+    }
     if (this.phase === 3) return 'Pagar';
     if (this.phase === 4) return 'Finalizado';
     return 'Siguiente';
@@ -116,21 +118,23 @@ export class JoinPage {
     const idx = Number(this.phase) || 0;
     console.log(this._logPrefix, 'next clicked, phase=', idx);
     if (idx >= 4) return;
-    if (!this.currentGroup.valid) {
-      this.currentGroup.markAllAsTouched();
+
+    // Phase 2 (plan): selection is optional — "Omitir" skips, "Pagar" proceeds to payment
+    if (idx === 2) {
+      const planId = this.plan.get('planId')?.value;
+      if (planId === null || planId === undefined) {
+        // Omitir — save user with no plan
+        await this.saveUser();
+        return;
+      }
+      // Plan selected — go to payment
+      this.phase = 3;
       return;
     }
 
-    if (idx === 2) {
-      const planId = +this.plan.get('planId')?.value;
-      if (planId === 0) {
-        await this.saveUser();
-        this.phase = 4; // success
-        return;
-      } else {
-        this.phase = 3; // go to payment
-        return;
-      }
+    if (!this.currentGroup.valid) {
+      this.currentGroup.markAllAsTouched();
+      return;
     }
 
     if (idx === 3) {

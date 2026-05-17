@@ -8,7 +8,9 @@ export const API_ROUTES = {
   games: `${API_URL}/games`,
   categories: `${API_URL}/categories`,
   favorites: `${API_URL}/favorites`,
+  sessions: `${API_URL}/sessions`,
   avatars: `${API_URL}/avatars`,
   plans: `${API_URL}/plans`,
-  // Agrega aquí el resto de endpoints según tu backend
+  studios: `${API_URL}/studios`,
+  pegi: `${API_URL}/pegi`,
 };

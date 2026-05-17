@@ -1,46 +1,33 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Game } from '@models/game.model';
-import { GameService } from '@services/game.service';
 import { CarouselComponent } from '@ui/carousel/carousel.component';
 import { GameCardUi } from '../game-card/game-card.ui';
-
-type Mode = 'publishedAt' | 'releaseDate' | 'custom';
 
 @Component({
   selector: 'app-game-collection',
   standalone: true,
   imports: [CommonModule, CarouselComponent, GameCardUi],
   templateUrl: './game-collection.ui.html',
+  styles: [
+    `
+      .game-collection-empty {
+        width: 100%;
+        height: 100px;
+        border: 3px dashed rgba(255, 255, 255, 0.25);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.95rem;
+        margin: 8px 0;
+      }
+    `,
+  ],
 })
-export class GameCollectionUi implements OnInit {
+export class GameCollectionUi {
   @Input() title = '';
-  @Input() mode: Mode = 'publishedAt';
-  @Input() limit = 10;
-  @Input() gamesInput: Game[] | null = null; // for custom collections
-
-  readonly games = signal<Game[]>([]);
-
-  readonly collection = computed(() => {
-    const all = this.gamesInput ?? this.games();
-    let arr = [...(all || [])];
-    if (this.mode === 'publishedAt') {
-      arr = arr
-        .filter(g => !!g.publishedAt)
-        .sort((a, b) => +new Date(b.publishedAt ?? 0) - +new Date(a.publishedAt ?? 0));
-    } else if (this.mode === 'releaseDate') {
-      arr = arr
-        .filter(g => !!g.releaseDate)
-        .sort((a, b) => +new Date(b.releaseDate ?? 0) - +new Date(a.releaseDate ?? 0));
-    }
-    return arr.slice(0, this.limit);
-  });
-
-  private readonly gameService = inject(GameService);
-
-  ngOnInit(): void {
-    if (!this.gamesInput) {
-      this.gameService.getGames().subscribe({ next: gs => this.games.set(gs || []), error: () => this.games.set([]) });
-    }
-  }
+  @Input() collection: Game[] | null = null;
+  @Input() emptyMessage = '';
 }

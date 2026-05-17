@@ -1,0 +1,211 @@
+<div class="admin-page">
+  <div class="admin-page__toolbar">
+    <h2>Juegos</h2>
+    <button class="btn" (click)="openCreate()">+ Nuevo</button>
+  </div>
+
+  @if (showForm()) {
+    <form [formGroup]="form" (ngSubmit)="save()" class="admin-form">
+      <h3>{{ editingId() ? 'Editar juego' : 'Nuevo juego' }}</h3>
+
+      <!-- Información básica -->
+      <div class="admin-form__section">
+        <h4 class="admin-form__section-title">Información básica</h4>
+        <div class="admin-form__grid">
+          <label class="admin-form__field">
+            <span>Título *</span>
+            <input formControlName="title" type="text" placeholder="Título del juego" />
+          </label>
+          <label class="admin-form__field">
+            <span>Slug</span>
+            <input formControlName="slug" type="text" placeholder="titulo-del-juego" />
+          </label>
+        </div>
+      </div>
+
+      <!-- Distribución y clasificación -->
+      <div class="admin-form__section">
+        <h4 class="admin-form__section-title">Distribución y clasificación</h4>
+        <div class="admin-form__grid">
+          <label class="admin-form__field">
+            <span>Desarrollador</span>
+            <select formControlName="developerId">
+              <option [value]="null">— Sin desarrollador —</option>
+              @for (s of studios(); track s.id) {
+                <option [value]="s.id">{{ s.name }}</option>
+              }
+            </select>
+          </label>
+          <label class="admin-form__field">
+            <span>Publisher</span>
+            <select formControlName="publisherId">
+              <option [value]="null">— Sin publisher —</option>
+              @for (s of studios(); track s.id) {
+                <option [value]="s.id">{{ s.name }}</option>
+              }
+            </select>
+          </label>
+          <label class="admin-form__field">
+            <span>Clasificación PEGI</span>
+            <select formControlName="pegiId">
+              <option [value]="null">— Sin clasificación —</option>
+              @for (p of pegiList(); track p.id) {
+                <option [value]="p.id">{{ p.name }}</option>
+              }
+            </select>
+          </label>
+          <label class="admin-form__field">
+            <span>Fecha de lanzamiento</span>
+            <input formControlName="releaseDate" type="date" />
+          </label>
+          <label class="admin-form__field">
+            <span>Puntuación Metacritic</span>
+            <input formControlName="metacriticScore" type="number" min="0" max="100" placeholder="0–100" />
+          </label>
+        </div>
+      </div>
+
+      <!-- Identificadores externos -->
+      <div class="admin-form__section">
+        <h4 class="admin-form__section-title">Identificadores externos</h4>
+        <div class="admin-form__grid">
+          <label class="admin-form__field">
+            <span>Steam ID</span>
+            <input formControlName="steamId" type="number" placeholder="Ej: 108600" />
+          </label>
+          <label class="admin-form__field">
+            <span>IGDB ID</span>
+            <input formControlName="igdbId" type="number" placeholder="Ej: 3189" />
+          </label>
+          <label class="admin-form__field">
+            <span>Fecha de publicación</span>
+            <input formControlName="publishedAt" type="datetime-local" />
+          </label>
+        </div>
+      </div>
+
+      <!-- Imágenes -->
+      <div class="admin-form__section">
+        <h4 class="admin-form__section-title">Imágenes <small>(se auto-rellenan al introducir Steam ID)</small></h4>
+        <div class="admin-form__grid">
+          <label class="admin-form__field admin-form__field--url">
+            <span>Cover URL</span>
+            <div class="admin-form__url-row">
+              <input formControlName="coverUrl" type="text" placeholder="https://..." />
+              <button type="button" class="btn-sm" title="Previsualizar" (click)="openPreview(form.get('coverUrl')?.value)">
+                <i class="pi pi-eye"></i>
+              </button>
+            </div>
+          </label>
+          <label class="admin-form__field admin-form__field--url">
+            <span>Banner URL</span>
+            <div class="admin-form__url-row">
+              <input formControlName="bannerUrl" type="text" placeholder="https://..." />
+              <button type="button" class="btn-sm" title="Previsualizar" (click)="openPreview(form.get('bannerUrl')?.value)">
+                <i class="pi pi-eye"></i>
+              </button>
+            </div>
+          </label>
+          <label class="admin-form__field admin-form__field--url">
+            <span>Hero URL</span>
+            <div class="admin-form__url-row">
+              <input formControlName="heroUrl" type="text" placeholder="https://..." />
+              <button type="button" class="btn-sm" title="Previsualizar" (click)="openPreview(form.get('heroUrl')?.value)">
+                <i class="pi pi-eye"></i>
+              </button>
+            </div>
+          </label>
+          <label class="admin-form__field admin-form__field--url">
+            <span>Logo URL</span>
+            <div class="admin-form__url-row">
+              <input formControlName="logoUrl" type="text" placeholder="https://..." />
+              <button type="button" class="btn-sm" title="Previsualizar" (click)="openPreview(form.get('logoUrl')?.value)">
+                <i class="pi pi-eye"></i>
+              </button>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Textos -->
+      <div class="admin-form__section">
+        <h4 class="admin-form__section-title">Textos</h4>
+        <div class="admin-form__grid">
+          <label class="admin-form__field admin-form__field--full">
+            <span>Resumen</span>
+            <textarea formControlName="summary" rows="2" placeholder="Breve descripción para listados..."></textarea>
+          </label>
+          <label class="admin-form__field admin-form__field--full">
+            <span>Descripción completa</span>
+            <textarea formControlName="description" rows="4" placeholder="Descripción detallada del juego..."></textarea>
+          </label>
+        </div>
+      </div>
+
+      <!-- Estado -->
+      <div class="admin-form__section">
+        <h4 class="admin-form__section-title">Estado</h4>
+        <div class="admin-form__grid">
+          <div class="admin-form__field admin-form__field--toggle">
+            <p-toggleswitch formControlName="isFeatured"></p-toggleswitch>
+            <span>Destacado</span>
+          </div>
+          <div class="admin-form__field admin-form__field--toggle">
+            <p-toggleswitch formControlName="isActive"></p-toggleswitch>
+            <span>Activo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-form__actions">
+        <button type="button" class="btn ghost" (click)="showForm.set(false)">Cancelar</button>
+        <button type="submit" class="btn" [disabled]="saving()">{{ saving() ? 'Guardando...' : 'Guardar' }}</button>
+      </div>
+    </form>
+  }
+
+  <!-- Image preview overlay -->
+  @if (previewUrl()) {
+    <div class="img-preview-overlay" (click)="previewUrl.set(null)">
+      <div class="img-preview-content" (click)="$event.stopPropagation()">
+        <button class="img-preview-close" type="button" (click)="previewUrl.set(null)">
+          <i class="pi pi-times"></i>
+        </button>
+        <img [src]="previewUrl()!" alt="Preview" />
+      </div>
+    </div>
+  }
+
+  <div class="admin-table-wrapper">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Título</th>
+          <th>Desarrollador</th>
+          <th>Fecha</th>
+          <th>Activo</th>
+          <th>Destacado</th>
+          <th class="admin-table__actions"><span class="th-label">Acciones</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of items(); track item.id) {
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.title }}</td>
+            <td>{{ item.developer?.name ?? '—' }}</td>
+            <td>{{ item.releaseDate }}</td>
+            <td><p-toggleswitch [ngModel]="!!item.isActive" (ngModelChange)="toggleField(item.id, 'isActive', $event)"></p-toggleswitch></td>
+            <td><p-toggleswitch [ngModel]="!!item.isFeatured" (ngModelChange)="toggleField(item.id, 'isFeatured', $event)"></p-toggleswitch></td>
+            <td class="admin-table__actions">
+              <button class="btn-text" (click)="viewGame(item.slug)">Ver</button>
+              <button class="btn-text" (click)="openEdit(item)">Editar</button>
+              <button class="btn-text danger" (click)="remove(item.id)">Eliminar</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -3,6 +3,7 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { authInterceptor } from '@interceptors/auth.interceptor';
+import { httpErrorInterceptor } from '@interceptors/http-error.interceptor';
 import Aura from '@primeuix/themes/aura';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
@@ -12,7 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([authInterceptor]), // 🔥 Registramos el interceptor aquí
+      withInterceptors([httpErrorInterceptor, authInterceptor]),
     ),
     provideAnimationsAsync(),
     providePrimeNG({

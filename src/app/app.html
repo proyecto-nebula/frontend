@@ -1,2 +1,10 @@
-<router-outlet />
-<shared-auth-status-ui></shared-auth-status-ui>
+@if (authService.isAdmin()) {
+  <app-admin-header></app-admin-header>
+}
+@if (maintenanceSvc.isDown()) {
+  <app-maintenance></app-maintenance>
+} @else {
+  <router-outlet />
+}
+<app-toast></app-toast>
+<app-debug-panel></app-debug-panel>

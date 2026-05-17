@@ -1,3 +1,17 @@
 <div class="game-view-page">
-  <app-game-details [slug]="slug()"></app-game-details>
+  <app-game-details [slug]="slug()" (gameLoaded)="onGameLoaded($event)"></app-game-details>
+
+  <app-game-collection
+    title="Juegos similares"
+    [collection]="similarGames()"
+    emptyMessage="No se encontraron juegos similares"
+  ></app-game-collection>
+
+  @if (developerName()) {
+    <app-game-collection
+      [title]="'Otros juegos de ' + developerName()"
+      [collection]="developerGames()"
+      emptyMessage="No hay otros juegos de este desarrollador"
+    ></app-game-collection>
+  }
 </div>

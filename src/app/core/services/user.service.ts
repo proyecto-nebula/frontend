@@ -20,7 +20,7 @@ export class UserService {
     const apiBase = environment.apiUrl.replace(/\/api\/?v?\d*$/i, '');
     const id = this.parseTokenId(token);
 
-    if (id) {
+    if (id !== null) {
       return this.http.get<User>(`${API_ROUTES.users}?id=${id}`).pipe(
         map((u: any) => {
           if (!u) return null;

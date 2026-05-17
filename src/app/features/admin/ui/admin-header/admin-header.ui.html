@@ -1,0 +1,25 @@
+<header class="admin-header">
+  <span class="admin-header__brand">⚙ Admin</span>
+
+  <button class="admin-header__hamburger" type="button" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen()" aria-label="Toggle menu">
+    <i class="pi" [class.pi-bars]="!menuOpen()" [class.pi-times]="menuOpen()"></i>
+  </button>
+
+  <nav class="admin-header__nav" [class.open]="menuOpen()">
+    <a routerLink="/admin/games" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Juegos</a>
+    <a routerLink="/admin/avatars" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Avatars</a>
+    <a routerLink="/admin/categories" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Categorías</a>
+    <a routerLink="/admin/studios" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Estudios</a>
+    <a routerLink="/admin/plans" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Planes</a>
+  </nav>
+
+  <div class="admin-header__right">
+    @if (isAdminZone()) {
+      <a routerLink="/" class="admin-header__exit">← Sitio</a>
+    }
+    <button type="button" class="admin-header__logout" (click)="logout()">
+      <i class="pi pi-sign-out"></i>
+      <span>Logout</span>
+    </button>
+  </div>
+</header>

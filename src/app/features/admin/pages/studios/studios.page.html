@@ -1,0 +1,46 @@
+<div class="admin-page">
+  <div class="admin-page__toolbar">
+    <h2>Estudios</h2>
+    <button class="btn" (click)="openCreate()">+ Nuevo</button>
+  </div>
+
+  @if (showForm()) {
+    <form [formGroup]="form" (ngSubmit)="save()" class="admin-form">
+      <h3>{{ editingId() ? 'Editar estudio' : 'Nuevo estudio' }}</h3>
+      <div class="admin-form__grid">
+        <label class="admin-form__field">
+          <span>Nombre *</span>
+          <input formControlName="name" type="text" placeholder="Nombre del estudio" />
+        </label>
+      </div>
+      <div class="admin-form__actions">
+        <button type="button" class="btn ghost" (click)="showForm.set(false)">Cancelar</button>
+        <button type="submit" class="btn" [disabled]="saving()">{{ saving() ? 'Guardando...' : 'Guardar' }}</button>
+      </div>
+    </form>
+  }
+
+  <div class="admin-table-wrapper">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th class="admin-table__actions"><span class="th-label">Acciones</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of items(); track item.id) {
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td class="admin-table__actions">
+              <button class="btn-sm" (click)="openEdit(item)"><i class="pi pi-pencil"></i><span class="btn-label"> Editar</span></button>
+              <button class="btn-sm danger" (click)="remove(item.id)"><i class="pi pi-trash"></i><span class="btn-label"> Eliminar</span></button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

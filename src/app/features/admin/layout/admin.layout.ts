@@ -1,15 +1,11 @@
-import { Component, OnDestroy } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { HeaderUi } from '@web/ui/header/header.ui';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet, HeaderUi],
   templateUrl: './admin.layout.html',
 })
-export class AdminLayout implements OnDestroy {
-  private body = document.body.classList.add('admin');
-  ngOnDestroy(): void {
-    document.body.classList.remove('admin');
-  }
-}
+export class AdminLayout {}

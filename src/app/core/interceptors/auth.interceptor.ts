@@ -20,9 +20,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(clonedReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if ((error.status === 401 || error.status === 403) && !isAuthLoginRequest) {
+      // Only redirect to login if there was an active token that got rejected (expired session)
+      // Don't redirect for unauthenticated requests (e.g. public endpoints, debug panel)
+      if ((error.status === 401 || error.status === 403) && !isAuthLoginRequest && token) {
         localStorage.removeItem('token');
-        router.navigate(['/login']);
+        router.navigate(['/auth/login']);
       }
       return throwError(() => error);
     }),

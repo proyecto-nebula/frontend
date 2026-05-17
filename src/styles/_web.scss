@@ -238,7 +238,6 @@ a {
 
 // Configuración de scrollbars estilo "Dark Nebula"
 ::-webkit-scrollbar {
-  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -290,7 +289,7 @@ a {
 
 /* Fix: ensure viewport has height so absolutely positioned items are visible */
 .game-featured-carousel .p-carousel-viewport {
-  min-height: 320px; /* adjust if needed */
+  min-height: 180px; /* adjust if needed */
 }
 
 .game-featured-carousel .featured-item,
@@ -307,11 +306,15 @@ a {
 }
 
 .game-collection {
+  .c-track {
+  }
+}
+
+.game-collection-carousel {
 }
 
 /* From: src/app/features/web/ui/game-card/game-card.ui.scss */
 .game-card {
-  width: 300px;
   max-width: 100%;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -321,7 +324,144 @@ a {
   flex-direction: column;
   align-items: center;
   transition: box-shadow 0.2s;
+}
+
+/* ── Game View Page ──────────────────────────────────────────────── */
+.game-view-page {
+  margin: 0 auto;
+}
+
+.game-detail {
+  position: relative;
+}
+
+/* Two-column layout: description left, meta right */
+.game-content {
+  display: flex;
   gap: 2rem;
+  align-items: flex-start;
+  margin: 1.5rem 0;
+
+  &__description {
+    flex: 1;
+    min-width: 0;
+
+    p {
+      margin: 0;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.85);
+    }
+  }
+
+  &__meta {
+    flex: 0 0 260px;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    .game-content__meta {
+      flex: 1;
+      width: 100%;
+    }
+  }
+}
+
+/* Meta info panel (developer, publisher, date, pegi...) */
+.game-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid #6c5ce7;
+  border-radius: 0 8px 8px 0;
+}
+
+.game-meta__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.88rem;
+
+  strong {
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  span {
+    color: #fff;
+    font-weight: 600;
+  }
+}
+
+.metacritic-score {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: #6c3;
+  color: #fff;
+}
+
+/* Play / CTA buttons */
+.btn-play {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    transform 0.1s;
+  margin: 1rem 0 0.5rem;
+
+  &:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+
+  &--play {
+    background: #6c5ce7;
+    color: #fff;
+  }
+  &--premium {
+    background: #e0a800;
+    color: #111;
+  }
+  &--register {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+}
+
+.btn-favorite {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  &--active {
+    color: #e84393;
+    border-color: #e84393;
+  }
 }
 
 .game-card:hover {
@@ -331,7 +471,7 @@ a {
 .game-cover {
   width: 100%;
   height: auto;
-  aspect-ratio: 460 / 215; /* banner aspect ratio */
+  aspect-ratio: 600 / 900; /* banner aspect ratio */
   object-fit: cover;
   object-position: center;
   background: #f0f0f0;

@@ -12,8 +12,10 @@ export class AuthService {
   private _user = signal<User | null>(null);
   private _userSubject = new BehaviorSubject<User | null>(null);
   public user$ = this._userSubject.asObservable();
+  private _loadedSubject = new BehaviorSubject<boolean>(false);
+  readonly loaded$ = this._loadedSubject.asObservable();
   isAuthenticated = computed(() => !!this._user() || !!this.getToken());
-  isAdmin = computed(() => this._user()?.roleId === 1);
+  isAdmin = computed(() => this._user()?.roleId === 0);
   isUser = computed(() => this._user()?.roleId === 4);
 
   login(email: string, password: string) {
@@ -37,18 +39,21 @@ export class AuthService {
   }
 
   constructor() {
-    // If there's an existing token on service init, fetch profile so UI is initialized
     const token = this.getToken();
     if (token) {
       this.http.get<User>(`${API_ROUTES.users}?token=${encodeURIComponent(token)}`).subscribe(
         (u) => {
           this._user.set(u ?? null);
           this._userSubject.next(u ?? null);
+          this._loadedSubject.next(true);
         },
         (err) => {
           console.error('[AuthService] failed to fetch profile on init', err);
+          this._loadedSubject.next(true);
         },
       );
+    } else {
+      this._loadedSubject.next(true);
     }
   }
 
@@ -60,5 +65,11 @@ export class AuthService {
     localStorage.removeItem('token');
     this._user.set(null);
     this._userSubject.next(null);
+  }
+
+  /** Debug-only: switch displayed user without changing JWT */
+  debugSetUser(user: User): void {
+    this._user.set(user);
+    this._userSubject.next(user);
   }
 }

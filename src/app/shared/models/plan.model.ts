@@ -4,4 +4,6 @@ export interface Plan {
   name?: string | null;
   description?: string | null;
   price?: number | null;
+  quality?: string | null;
+  gpu?: string | null;
 }

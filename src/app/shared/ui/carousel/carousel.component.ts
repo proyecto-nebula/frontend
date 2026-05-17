@@ -18,56 +18,144 @@ import {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './carousel.component.html',
-  styles: [`
-    :host {
-      display: block;
-      position: relative;
-      overflow: hidden;
-    }
-    .c-track {
-      display: flex;
-      flex-wrap: nowrap;
-      will-change: transform;
-      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .c-item {
-      flex: 0 0 var(--c-item-w, 220px);
-      min-width: var(--c-item-w, 220px);
-      width: var(--c-item-w, 220px);
-      box-sizing: border-box;
-    }
-    .c-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 2;
-      background: rgba(0, 0, 0, 0.5);
-      border: none;
-      color: #fff;
-      font-size: 1.75rem;
-      line-height: 1;
-      width: 2.25rem;
-      height: 2.25rem;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-      padding: 0;
-    }
-    .c-btn:hover { background: rgba(0, 0, 0, 0.75); }
-    .c-btn-prev { left: 6px; }
-    .c-btn-next { right: 6px; }
-  `],
+  styles: [
+    `
+      :host {
+        display: block;
+        position: relative;
+      }
+
+      .c-overflow {
+        overflow: hidden;
+      }
+      /* Registro de propiedades para la animación */
+      @property --mask-start {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 0%;
+      }
+      @property --mask-left-stop {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 0%;
+      }
+      @property --mask-right-stop {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 100%;
+      }
+      @property --mask-end {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 100%;
+      }
+
+      .c-overflow {
+        /* CONFIGURACIÓN CENTRALIZADA */
+        --mask-width: 10%; /* El 20% para el inicio y el 80% (100 - 20) para el final */
+        --mask-duration: 0.5s; /* Tiempo de la transición */
+
+        /* Aplicación del gradiente */
+        -webkit-mask-image: linear-gradient(
+          to right,
+          transparent var(--mask-start),
+          black var(--mask-left-stop),
+          black var(--mask-right-stop),
+          transparent var(--mask-end)
+        );
+        mask-image: linear-gradient(
+          to right,
+          transparent var(--mask-start),
+          black var(--mask-left-stop),
+          black var(--mask-right-stop),
+          transparent var(--mask-end)
+        );
+
+        /* Valores iniciales (sin máscara activa) */
+        --mask-start: 0%;
+        --mask-left-stop: 0%;
+        --mask-right-stop: 100%;
+        --mask-end: 100%;
+
+        /* Transición usando la variable de tiempo */
+        transition:
+          --mask-start var(--mask-duration) ease,
+          --mask-left-stop var(--mask-duration) ease,
+          --mask-right-stop var(--mask-duration) ease,
+          --mask-end var(--mask-duration) ease;
+      }
+
+      /* Modificadores: Calculan el valor dinámicamente usando la variable base */
+      .c-overflow.c-mask-left {
+        --mask-start: 0%;
+        --mask-left-stop: var(--mask-width);
+      }
+
+      .c-overflow.c-mask-right {
+        --mask-right-stop: calc(100% - var(--mask-width)); /* Ej: 100% - 20% = 80% */
+        --mask-end: 100%;
+      }
+
+      .c-overflow.c-mask-left.c-mask-right {
+        --mask-start: 0%;
+        --mask-left-stop: var(--mask-width);
+        --mask-right-stop: calc(100% - var(--mask-width));
+        --mask-end: 100%;
+      }
+      .c-track {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: var(--c-gap, 0px);
+        will-change: transform;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .c-item {
+        flex: 0 0 var(--c-item-w, 220px);
+        min-width: var(--c-item-w, 220px);
+        width: var(--c-item-w, 220px);
+        box-sizing: border-box;
+      }
+      .c-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.75rem;
+        line-height: 1;
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+        padding: 0;
+      }
+      .c-btn:hover {
+        background: rgba(0, 0, 0, 0.25);
+      }
+      .c-btn-prev {
+        left: -2.5rem;
+      }
+      .c-btn-next {
+        right: -2.5rem;
+      }
+    `,
+  ],
 })
 export class CarouselComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() items: any[] = [];
   @Input() itemMinWidth = 220;
+  @Input() gap = 0;
   @Input() numScroll = 1;
   @Input() circular = false;
   @Input() showIndicators = false;
   @Input() styleClass?: string;
+  @Input() mask = false;
   /** If provided, overrides the auto-computed numVisible */
   @Input() numVisible?: number;
 
@@ -77,11 +165,16 @@ export class CarouselComponent implements AfterViewInit, OnChanges, OnDestroy {
   _currentIndex = 0;
 
   get trackTransform(): string {
-    return `translateX(-${this._currentIndex * this.itemMinWidth}px)`;
+    const step = this._getItemPx() + this.gap;
+    return `translateX(-${this._currentIndex * step}px)`;
   }
 
-  get hasPrev(): boolean { return this._currentIndex > 0; }
-  get hasNext(): boolean { return this._currentIndex < this._maxIndex; }
+  get hasPrev(): boolean {
+    return this._currentIndex > 0;
+  }
+  get hasNext(): boolean {
+    return this._currentIndex < this._maxIndex;
+  }
 
   private get _maxIndex(): number {
     return Math.max(0, this.items.length - this._numVisible);
@@ -99,11 +192,26 @@ export class CarouselComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
   }
 
-  get cssItemW(): string { return `${this.itemMinWidth}px`; }
+  get cssItemW(): string {
+    return `${this.itemMinWidth}px`;
+  }
+
+  get cssGap(): string {
+    return `${this.gap}px`;
+  }
+
+  private _getItemPx(): number {
+    const item = (this.el.nativeElement as HTMLElement).querySelector('.c-item') as HTMLElement;
+    return item?.offsetWidth || this.itemMinWidth;
+  }
 
   private _ro?: ResizeObserver;
 
-  constructor(private el: ElementRef, private zone: NgZone, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private el: ElementRef,
+    private zone: NgZone,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnChanges(_c: SimpleChanges): void {
     this._clampIndex();
@@ -116,13 +224,19 @@ export class CarouselComponent implements AfterViewInit, OnChanges, OnDestroy {
     this._ro = new ResizeObserver(() => {
       const n = this._calc();
       if (n !== this._numVisible) {
-        this.zone.run(() => { this._numVisible = n; this._clampIndex(); this.cdr.markForCheck(); });
+        this.zone.run(() => {
+          this._numVisible = n;
+          this._clampIndex();
+          this.cdr.markForCheck();
+        });
       }
     });
     this._ro.observe(this.el.nativeElement);
   }
 
-  ngOnDestroy(): void { this._ro?.disconnect(); }
+  ngOnDestroy(): void {
+    this._ro?.disconnect();
+  }
 
   private _update(): void {
     this._numVisible = this.numVisible !== undefined ? this.numVisible : this._calc();
@@ -131,11 +245,12 @@ export class CarouselComponent implements AfterViewInit, OnChanges, OnDestroy {
   private _calc(): number {
     const w = (this.el?.nativeElement as HTMLElement)?.getBoundingClientRect?.()?.width ?? 0;
     if (!w) return this._numVisible || 1;
-    return Math.max(1, Math.floor(w / this.itemMinWidth));
+    const itemPx = this._getItemPx();
+    const step = itemPx + this.gap;
+    return Math.max(1, Math.floor((w + this.gap) / step));
   }
 
   private _clampIndex(): void {
     this._currentIndex = Math.max(0, Math.min(this._currentIndex, this._maxIndex));
   }
 }
-

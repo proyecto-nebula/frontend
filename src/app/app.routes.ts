@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@guards/auth.guard';
+import { adminGuard } from '@guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -8,8 +9,17 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    canActivate: [authGuard],
+    canMatch: [adminGuard],
     loadChildren: () => import('@admin/admin.routes').then(m => m.ADMIN_ROUTES),
+  },
+  {
+    path: 'admin',
+    loadComponent: () => import('./features/error/forbidden/forbidden.page').then(m => m.ForbiddenPage),
+  },
+  {
+    path: 'settings',
+    canActivate: [authGuard],
+    loadChildren: () => import('@settings/settings.routes').then(m => m.SETTINGS_ROUTES),
   },
   {
     path: 'auth',
@@ -20,15 +30,7 @@ export const routes: Routes = [
     loadChildren: () => import('@play/play.routes').then(m => m.PLAY_ROUTES),
   },
   {
-    path: '404',
-    loadComponent: () => import('@features/404/layout/404.layout').then(m => m.NotFoundLayout),
-    children: [
-      {
-        path: '',
-        pathMatch: 'full',
-        loadComponent: () => import('@features/404/pages/404.page').then(m => m.NotFoundPage),
-      },
-    ],
+    path: '**',
+    loadComponent: () => import('./features/error/not-found/not-found.page').then(m => m.NotFoundPage),
   },
-  { path: '**', redirectTo: '404' },
 ];

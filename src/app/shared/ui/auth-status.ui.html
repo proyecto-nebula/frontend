@@ -1,17 +1,25 @@
-<div class="auth-status">
-  @if (isAuthenticated()) {
-    <div class="logged">
-      <p-avatar [image]="user?.avatar?.imageUrl ?? 'assets/default-avatar.png'" shape="circle" styleClass="avatar"></p-avatar>
-      <div class="info">
-        <div class="label">Conectado como</div>
-        <div class="username">{{ user?.username }}</div>
+@if (!isProd) {
+  <div class="auth-status">
+    @if (isAuthenticated()) {
+      <div class="logged">
+        <p-avatar [image]="user?.avatar?.imageUrl ?? 'assets/default-avatar.png'" shape="circle" styleClass="avatar"></p-avatar>
+        <div class="info">
+          <div class="label">Conectado como</div>
+          <div class="username">{{ user?.username }}</div>
+        </div>
+        <select class="debug-switch" (change)="switchUser($event)" title="Cambiar usuario (debug)">
+          <option value="">— Cambiar usuario —</option>
+          @for (u of users; track u.id) {
+            <option [value]="u.id">{{ u.username }}</option>
+          }
+        </select>
+        <button class="btn small logout" (click)="logout()">Cerrar sesión</button>
       </div>
-      <button class="btn small logout" (click)="logout()">Cerrar sesión</button>
-    </div>
-  } @else {
-    <div class="not-logged">
-      <button class="btn ghost" (click)="openLogin()">Login</button>
-      <a class="btn" [routerLink]="['/auth/join']">Join</a>
-    </div>
-  }
-</div>
+    } @else {
+      <div class="not-logged">
+        <button class="btn ghost" (click)="openLogin()">Login</button>
+        <a class="btn" [routerLink]="['/auth/join']">Join</a>
+      </div>
+    }
+  </div>
+}

@@ -1,8 +1,11 @@
 <app-carousel
   [items]="screenshotsWithIndex"
-  [itemMinWidth]="240"
+  [itemMinWidth]="300"
   [styleClass]="'game-screenshots-carousel'"
   [showIndicators]="false"
+  [itemMinWidth]="240"
+  [gap]="20"
+  [mask]="true"
 >
   <ng-template let-screenshot>
     <div class="screenshot-thumb" style="width: 100%; box-sizing: border-box">
@@ -11,7 +14,7 @@
         (click)="openScreenshot(screenshot.__idx)"
         style="all: unset; cursor: pointer; display: block; width: 100%"
       >
-        <div style="padding-right: 16px">
+        <div>
           <img
             [src]="screenshot.thumbUrl"
             [alt]="'Screenshot ' + (screenshot.__idx + 1)"

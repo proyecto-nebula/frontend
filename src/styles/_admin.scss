@@ -1,3 +1,290 @@
 /* Styles for admin feature (consolidated) */
 
-/* Add admin-specific styles here */
+/* When admin header (48px) is present, shift web header below it */
+body.admin .header-wrapper {
+  top: 48px;
+}
+
+/* Admin content sits below both headers (body already has 48px admin header, add 60px for web header) */
+.admin-content {
+  padding-top: 60px;
+}
+
+.admin-page {
+  padding: 1.5rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+
+    h2 { margin: 0; font-size: 1.4rem; }
+  }
+}
+
+.admin-form {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+
+  h3 { margin: 0 0 1rem; font-size: 1rem; opacity: 0.7; }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+
+    span { font-size: 0.8rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.04em; }
+
+    input, select, textarea {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px;
+      color: #fff;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.95rem;
+      width: 100%;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 150ms;
+
+      &:focus { border-color: #7c5cff; }
+      option { background: #1a1a2e; color: #fff; }
+    }
+
+    textarea { resize: vertical; }
+
+    &--full { grid-column: 1 / -1; }
+
+    &--check {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+
+      input[type=checkbox] { width: auto; }
+    }
+
+    &--url { grid-column: span 2; }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+}
+
+.admin-table-wrapper {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th, td {
+    padding: 0.65rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  th {
+    background: rgba(255,255,255,0.04);
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.5);
+  }
+
+  tbody tr:hover { background: rgba(255,255,255,0.03); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  &__actions {
+    display: flex;
+    gap: 0.4rem;
+    white-space: nowrap;
+  }
+}
+
+.btn-sm {
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  color: #fff;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 150ms;
+
+  &:hover { background: rgba(255,255,255,0.1); }
+
+  &.danger {
+    border-color: rgba(239,68,68,0.4);
+    color: #f87171;
+
+    &:hover { background: rgba(239,68,68,0.15); }
+  }
+}
+
+.btn-text {
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0.2rem 0.35rem;
+  transition: color 120ms;
+
+  &:hover { color: #fff; }
+
+  &.danger {
+    color: rgba(239, 68, 68, 0.7);
+    &:hover { color: #f87171; }
+  }
+}
+
+/* Form sections */
+.admin-form {
+  &__section {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+
+    &:last-of-type { border-bottom: none; margin-bottom: 0; }
+  }
+
+  &__section-title {
+    margin: 0 0 0.75rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: rgba(255,255,255,0.4);
+
+    small {
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400;
+      font-size: 0.75em;
+      color: rgba(255,255,255,0.3);
+    }
+  }
+
+  &__url-row {
+    position: relative;
+
+    input {
+      width: 100%;
+      padding-right: 2.4rem !important;
+    }
+
+    .btn-sm {
+      position: absolute;
+      right: 1px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: calc(100% - 2px);
+      border: none;
+      border-left: 1px solid rgba(255,255,255,0.1);
+      border-radius: 0 5px 5px 0;
+      padding: 0 0.6rem;
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.5);
+
+      &:hover {
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+      }
+    }
+  }
+
+  &__field--toggle {
+    flex-direction: row !important;
+    align-items: center;
+    gap: 0.75rem;
+
+    span { font-size: 0.9rem; color: rgba(255,255,255,0.8); text-transform: none; letter-spacing: 0; }
+  }
+}
+
+/* Image preview lightbox */
+.img-preview-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.img-preview-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 85vh;
+
+  img {
+    display: block;
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 8px;
+    object-fit: contain;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+  }
+}
+
+.img-preview-close {
+  position: absolute;
+  top: -0.75rem;
+  right: -0.75rem;
+  z-index: 1;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  transition: background 150ms;
+
+  &:hover { background: rgba(255,255,255,0.3); }
+}
+
+/* Admin table: actions column always right-aligned */
+.admin-table {
+  th.admin-table__actions,
+  td.admin-table__actions {
+    text-align: right;
+  }
+}
+
+/* Responsive: hide button labels and "Acciones" heading on narrow screens */
+@media (max-width: 768px) {
+  .admin-table {
+    .btn-label { display: none; }
+    .th-label  { display: none; }
+  }
+}
+
+

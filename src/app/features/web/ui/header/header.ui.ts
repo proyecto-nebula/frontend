@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
@@ -27,6 +27,12 @@ import { SharedUiModule } from '../../../../shared/ui/ui.module';
         z-index: 1003;
         background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
         color: #fff;
+        transition: background 220ms ease;
+      }
+      .header-wrapper.scrolled {
+        background: rgba(13, 13, 26, 0.92);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
       }
       /* Layout for manual header */
       .header-content {
@@ -189,23 +195,30 @@ export class HeaderUi implements OnInit {
   showLoginModal = false;
   loginReturnUrl: string | null = null;
   drawerVisible = false;
+  isScrolled = false;
   items: MenuItem[] | undefined;
   profileItems: MenuItem[] | undefined;
   currentUser: User | null = null;
   currentAvatarUrl: string | null = null;
 
+  @HostListener('window:scroll')
+  onScroll(): void {
+    this.isScrolled = window.scrollY > 20;
+  }
+
   ngOnInit() {
     this.items = [
       { label: 'Inicio', routerLink: '/' },
       { label: 'Juegos', routerLink: '/games' },
-      { label: 'Favoritos', routerLink: '/favoritos' },
+      { label: 'Mis Juegos', routerLink: '/my-games' },
       { label: 'Novedades', routerLink: '/novedades' },
       { label: 'Buscar', icon: 'pi pi-search', styleClass: 'menu-search', routerLink: '/search' },
     ];
 
     this.profileItems = [
       { label: 'Mi Perfil', icon: 'pi pi-user' },
-      { label: 'Ajustes', icon: 'pi pi-cog' },
+      { label: 'Mi suscripción', icon: 'pi pi-credit-card', routerLink: '/settings/plan' },
+      { label: 'Ajustes', icon: 'pi pi-cog', routerLink: '/settings' },
       { separator: true },
       {
         label: 'Cerrar Sesión',

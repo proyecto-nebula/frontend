@@ -1,6 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, HostListener, inject, Input, OnChanges, signal } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { Component, computed, effect, EventEmitter, HostListener, inject, Input, OnChanges, Output, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Game } from '@models/game.model';
+import { AuthService } from '@services/auth.service';
+import { FavoritesService } from '@services/favorites.service';
 import { GameService } from '@services/game.service';
 import { SharedUiModule } from '../../../../shared/ui/ui.module';
 import { GameScreenshotsUi } from '../game-screenshots/game-screenshots.ui';
@@ -8,11 +13,12 @@ import { GameScreenshotsUi } from '../game-screenshots/game-screenshots.ui';
 @Component({
   selector: 'app-game-details',
   standalone: true,
-  imports: [CommonModule, GameScreenshotsUi, SharedUiModule],
+  imports: [CommonModule, DatePipe, RouterModule, GameScreenshotsUi, SharedUiModule],
   templateUrl: './game-details.ui.html',
 })
 export class GameDetailsUi implements OnChanges {
   @Input() slug!: string;
+  @Output() gameLoaded = new EventEmitter<Game>();
 
   readonly game = signal<Game | null>(null);
   readonly isLoading = signal(true);
@@ -27,7 +33,32 @@ export class GameDetailsUi implements OnChanges {
     })),
   );
 
+  readonly isFavorite = signal(false);
+  readonly favoriteLoading = signal(false);
+
   private readonly gameService = inject(GameService);
+  private readonly authService = inject(AuthService);
+  private readonly favoritesService = inject(FavoritesService);
+
+  private readonly currentUser = toSignal(this.authService.user$);
+  readonly isLoggedIn = computed(() => !!this.currentUser());
+  readonly hasPlan = computed(() => {
+    const u = this.currentUser();
+    return u != null && u.planId != null && Number(u.planId) > 0;
+  });
+
+  private _favoriteSub?: Subscription;
+
+  private readonly _favoriteEffect = effect(() => {
+    const user = this.currentUser();
+    const game = this.game();
+    this._favoriteSub?.unsubscribe();
+    if (user && game) {
+      this._favoriteSub = this.favoritesService.isFavorite(user.id, Number(game.id)).subscribe(v => this.isFavorite.set(v));
+    } else {
+      this.isFavorite.set(false);
+    }
+  });
 
   openGallery(index: number): void {
     const images = this.galleryImages();
@@ -73,6 +104,7 @@ export class GameDetailsUi implements OnChanges {
   }
 
   ngOnChanges(): void {
+    this.isFavorite.set(false);
     if (!this.slug) {
       this.isLoading.set(false);
       this.error.set('No se ha proporcionado slug.');
@@ -89,6 +121,7 @@ export class GameDetailsUi implements OnChanges {
           this.game.set(null);
         } else {
           this.game.set(g);
+          this.gameLoaded.emit(g);
         }
         this.isLoading.set(false);
       },
@@ -97,5 +130,31 @@ export class GameDetailsUi implements OnChanges {
         this.isLoading.set(false);
       },
     });
+  }
+
+  toggleFavorite(): void {
+    const user = this.currentUser();
+    const game = this.game();
+    if (!user || !game) return;
+
+    this.favoriteLoading.set(true);
+
+    if (this.isFavorite()) {
+      this.favoritesService.removeFavorite(Number(game.id)).subscribe({
+        next: () => {
+          this.isFavorite.set(false);
+          this.favoriteLoading.set(false);
+        },
+        error: () => this.favoriteLoading.set(false),
+      });
+    } else {
+      this.favoritesService.addFavorite(user.id, Number(game.id)).subscribe({
+        next: () => {
+          this.isFavorite.set(true);
+          this.favoriteLoading.set(false);
+        },
+        error: () => this.favoriteLoading.set(false),
+      });
+    }
   }
 }
