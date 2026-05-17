@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { API_ROUTES } from '@config/api.routes';
 import { Game } from '@models/game.model';
-import { Observable } from 'rxjs';
+import { Observable, catchError, of } from 'rxjs';
 
 const DEFAULT_LIMIT = 20;
 
@@ -73,5 +73,11 @@ export class GameService {
   }
   getGamesByDeveloper(slug: string, limit = DEFAULT_LIMIT) {
     return this.getCollection('by_developer', { slug, limit });
+  }
+
+  searchGames(query: string, limit = 8): Observable<Game[]> {
+    return this.http
+      .get<Game[]>(API_ROUTES.games, { params: { search: query, limit: String(limit) } })
+      .pipe(catchError(() => of([])));
   }
 }

@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, HostListener, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { LoginFormComponent } from '@auth/components/login-form/login-form.component';
+import { Game } from '@models/game.model';
 import { User } from '@models/user.model';
 import { AuthService } from '@services/auth.service';
+import { GameService } from '@services/game.service';
 import { LoginModalService } from '@services/login-modal.service';
 import { UserService } from '@services/user.service';
 import { MenuItem } from 'primeng/api';
@@ -193,14 +195,152 @@ import { SharedUiModule } from '../../../../shared/ui/ui.module';
       .nav-link:hover {
         opacity: 0.85;
       }
+
+      /* ── Quick search ───────────────────────────────────────── */
+      .search-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        margin-right: 8px;
+      }
+      .search-input-wrap {
+        overflow: hidden;
+        max-width: 0;
+        opacity: 0;
+        transition: max-width 0.35s ease, opacity 0.25s ease;
+      }
+      .search-input-wrap.open {
+        max-width: 280px;
+        opacity: 1;
+      }
+      .search-input {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 6px;
+        color: #fff;
+        padding: 6px 12px;
+        font-size: 0.9rem;
+        outline: none;
+        width: 260px;
+        box-sizing: border-box;
+      }
+      .search-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .search-btn {
+        background: transparent;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        padding: 6px 8px;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+      }
+      .search-btn:hover { opacity: 0.8; }
+      .search-dropdown {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        min-width: 320px;
+        min-height: 60px;
+        max-height: 420px;
+        overflow-y: auto;
+        background: rgba(13, 13, 26, 0.97);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        z-index: 1010;
+      }
+      .search-loader {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.4rem;
+        z-index: 1;
+      }
+      .search-loader.visible {
+        opacity: 1;
+      }
+      .search-results-body {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+      }
+      .search-results-body.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .search-message {
+        padding: 12px 16px;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.85rem;
+      }
+      .search-result {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 12px;
+        text-decoration: none;
+        transition: background 0.15s;
+      }
+      .search-result:hover { background: rgba(255, 255, 255, 0.08); }
+      .search-result__img {
+        width: 72px;
+        height: 40px;
+        border-radius: 4px;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .search-result__img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .search-result__info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+      }
+      .search-result__name {
+        color: #fff;
+        font-size: 0.9rem;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .search-result__year {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.78rem;
+      }
     `,
   ],
 })
-export class HeaderUi implements OnInit {
+export class HeaderUi implements OnInit, OnDestroy {
   public auth = inject(AuthService);
   private userSvc = inject(UserService);
   private router = inject(Router);
   private loginModal = inject(LoginModalService);
+  private gameService = inject(GameService);
+  private cdr = inject(ChangeDetectorRef);
+
+  // Quick search
+  searchOpen = false;
+  searchQuery = '';
+  searchResults: Game[] = [];
+  searchLoading = false;
+  private searchTimer?: ReturnType<typeof setTimeout>;
 
   /** Offset for the fixed admin bar (48px) shown on web pages for admin users */
   readonly adminBarTop = computed(() => (this.auth.isAdmin() ? 48 : 0));
@@ -225,7 +365,6 @@ export class HeaderUi implements OnInit {
       { label: 'Juegos', routerLink: '/games' },
       { label: 'Mis Juegos', routerLink: '/my-games' },
       { label: 'Novedades', routerLink: '/novedades' },
-      { label: 'Buscar', icon: 'pi pi-search', styleClass: 'menu-search', routerLink: '/search' },
     ];
 
     this.profileItems = [
@@ -279,5 +418,47 @@ export class HeaderUi implements OnInit {
     if (this.loginReturnUrl && this.loginReturnUrl !== this.router.url) {
       this.router.navigateByUrl(this.loginReturnUrl);
     }
+  }
+
+  // ── Quick search ────────────────────────────────────────────────
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    if (this.searchOpen) this.closeSearch();
+  }
+
+  toggleSearch(): void {
+    if (this.searchOpen) {
+      this.closeSearch();
+    } else {
+      this.searchOpen = true;
+      this.searchQuery = '';
+      this.searchResults = [];
+      setTimeout(() => document.querySelector<HTMLInputElement>('.search-input')?.focus(), 50);
+    }
+  }
+
+  closeSearch(): void {
+    this.searchOpen = false;
+    this.searchQuery = '';
+    this.searchResults = [];
+    clearTimeout(this.searchTimer);
+  }
+
+  onSearchInput(value: string): void {
+    this.searchQuery = value;
+    this.searchResults = [];
+    clearTimeout(this.searchTimer);
+    if (value.length < 3) return;
+    this.searchLoading = true;
+    this.searchTimer = setTimeout(() => {
+      this.gameService.searchGames(value).subscribe({
+        next: results => { this.searchResults = results; this.searchLoading = false; this.cdr.markForCheck(); },
+        error: () => { this.searchLoading = false; this.cdr.markForCheck(); },
+      });
+    }, 300);
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this.searchTimer);
   }
 }

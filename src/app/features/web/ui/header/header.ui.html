@@ -35,6 +35,46 @@
 
       <!-- Right: avatar / login -->
       <div class="right">
+        <!-- Quick search -->
+        <div class="search-wrap" (click)="$event.stopPropagation()">
+          <div class="search-input-wrap" [class.open]="searchOpen">
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Buscar juegos..."
+              [value]="searchQuery"
+              (input)="onSearchInput($any($event.target).value)"
+              (keydown.escape)="closeSearch()"
+            />
+          </div>
+          <button type="button" class="search-btn" (click)="toggleSearch()" aria-label="Buscar">
+            <i class="pi pi-search"></i>
+          </button>
+          @if (searchOpen && searchQuery.length >= 3) {
+            <div class="search-dropdown">
+              <div class="search-loader" [class.visible]="searchLoading">
+                <i class="pi pi-spinner pi-spin"></i>
+              </div>
+              <div class="search-results-body" [class.visible]="!searchLoading">
+                @if (searchResults.length === 0) {
+                  <div class="search-message">Sin resultados</div>
+                }
+                @for (game of searchResults; track game.id) {
+                  <a [routerLink]="['/games', game.slug]" class="search-result" (click)="closeSearch()">
+                    <div class="search-result__img">
+                      <img [src]="game.bannerUrl || game.coverUrl" [alt]="game.title" loading="lazy" />
+                    </div>
+                    <div class="search-result__info">
+                      <span class="search-result__name">{{ game.title }}</span>
+                      <span class="search-result__year">{{ game.releaseDate | date: 'yyyy' }}</span>
+                    </div>
+                  </a>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
         @if (auth.isAuthenticated()) {
           <span class="header-username">{{ currentUser?.username }}</span>
           <p-avatar
