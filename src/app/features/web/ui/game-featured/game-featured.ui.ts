@@ -3,11 +3,12 @@ import { Component, computed, inject, Input, OnInit, AfterViewInit, OnDestroy, E
 import { CarouselModule } from 'primeng/carousel';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
+import { GameHeaderUi } from '../game-header/game-header.ui';
 
 @Component({
   selector: 'app-game-featured',
   standalone: true,
-  imports: [CommonModule, CarouselModule],
+  imports: [CommonModule, CarouselModule, GameHeaderUi],
   templateUrl: './game-featured.ui.html',
 })
 export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
@@ -71,11 +72,13 @@ export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
     const viewport = root.querySelector('.game-featured-carousel .p-carousel-viewport') as HTMLElement | null;
     if (!viewport) return;
 
-    const active = root.querySelector('.game-featured-carousel .p-carousel-item[data-p-carousel-item-active="true"]') as HTMLElement | null;
-    const target = active ?? (root.querySelector('.game-featured-carousel .p-carousel-item') as HTMLElement | null) ?? (root.querySelector('.game-featured-carousel .featured-item') as HTMLElement | null);
+    // Always measure the inner app-game-header content element (not the absolutely-
+    // positioned p-carousel-item whose height == viewport height → circular dependency).
+    const activeItem = root.querySelector('.game-featured-carousel .p-carousel-item[data-p-carousel-item-active="true"]') as HTMLElement | null;
+    const target = (activeItem?.querySelector('app-game-header') as HTMLElement | null)
+      ?? (root.querySelector('.game-featured-carousel app-game-header') as HTMLElement | null);
 
     if (!target) {
-      // no content found, clear explicit height so CSS min-height applies
       viewport.style.height = '';
       return;
     }
@@ -89,7 +92,6 @@ export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
         if (remaining <= 0) this.setViewportHeight(viewport, target);
       };
       unfinished.forEach(img => img.addEventListener('load', onLoad, { once: true }));
-      // also set a fallback in case images fail to load
       setTimeout(() => this.setViewportHeight(viewport, target), 1000);
     } else {
       this.setViewportHeight(viewport, target);

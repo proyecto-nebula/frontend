@@ -1,0 +1,66 @@
+<div class="game-header" [class.game-header--detail]="mode === 'detail'" [class.game-header--featured]="mode === 'featured'">
+
+  <!-- Hero background -->
+  @if (game?.heroUrl) {
+    @if (mode === 'detail') {
+      <img [src]="game!.heroUrl" [alt]="game?.title" class="game-hero" />
+    } @else {
+      <img [src]="game!.heroUrl" [alt]="game?.title" class="featured-hero" />
+    }
+  }
+
+  <!-- Logo or title -->
+  @if (game?.logoUrl) {
+    @if (mode === 'detail') {
+      <img [src]="game!.logoUrl!" [alt]="game?.title" class="game-logo" />
+    } @else {
+      <img [src]="game!.logoUrl!" [alt]="game?.title" class="featured-logo" />
+    }
+  } @else {
+    @if (mode === 'detail') {
+      <h1>{{ game?.title }}</h1>
+    } @else {
+      <h2>{{ game?.title }}</h2>
+    }
+  }
+
+  <!-- Categories before action (detail) / summary before action (featured) -->
+  @if (mode === 'detail' && game?.categories?.length) {
+    <div class="game-header__categories game-tags">
+      @for (cat of game!.categories!; track cat.id) {
+        <span class="game-tag">{{ cat.name }}</span>
+      }
+    </div>
+  }
+
+  @if (mode === 'featured' && game?.summary) {
+    <p class="featured-summary">{{ game!.summary }}</p>
+  }
+
+  <!-- Actions row -->
+  <div class="game-header__actions">
+    @if (mode === 'detail') {
+      @if (!isLoggedIn) {
+        <a routerLink="/auth/join" class="btn-play btn-play--register">Regístrate ahora para jugar</a>
+      } @else if (!hasPlan) {
+        <a routerLink="/settings/plan" class="btn-play btn-play--premium">Hazte premium para jugar</a>
+      } @else {
+        <a [routerLink]="['/play', slug]" class="btn-play btn-play--play">▶ Jugar ahora</a>
+      }
+      @if (isLoggedIn) {
+        <button
+          type="button"
+          class="btn-favorite-icon"
+          [class.btn-favorite-icon--active]="isFavorite"
+          [disabled]="favoriteLoading"
+          (click)="favToggle.emit()"
+          [attr.aria-label]="isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'"
+        >
+          <i class="pi" [class.pi-heart]="!isFavorite" [class.pi-heart-fill]="isFavorite"></i>
+        </button>
+      }
+    } @else {
+      <a [routerLink]="['/games', game?.slug]" class="btn-play btn-play--info">Más información</a>
+    }
+  </div>
+</div>

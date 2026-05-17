@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, inject, OnInit } from '@angular/core';
+import { Component, computed, HostListener, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
@@ -191,6 +191,9 @@ export class HeaderUi implements OnInit {
   private userSvc = inject(UserService);
   private router = inject(Router);
   private loginModal = inject(LoginModalService);
+
+  /** Offset for the fixed admin bar (48px) shown on web pages for admin users */
+  readonly adminBarTop = computed(() => this.auth.isAdmin() ? 48 : 0);
   // modal state for login
   showLoginModal = false;
   loginReturnUrl: string | null = null;

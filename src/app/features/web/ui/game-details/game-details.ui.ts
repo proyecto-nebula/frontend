@@ -1,19 +1,44 @@
-import { CommonModule, DatePipe } from '@angular/common';
-import { Component, computed, effect, EventEmitter, HostListener, inject, Input, OnChanges, Output, signal } from '@angular/core';
+import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
+import {
+  Component,
+  computed,
+  effect,
+  EventEmitter,
+  HostListener,
+  inject,
+  Input,
+  OnChanges,
+  Output,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { Game } from '@models/game.model';
 import { AuthService } from '@services/auth.service';
 import { FavoritesService } from '@services/favorites.service';
 import { GameService } from '@services/game.service';
+import { Subscription } from 'rxjs';
+import { SafePipe } from '../../../../shared/pipes/safe.pipe';
 import { SharedUiModule } from '../../../../shared/ui/ui.module';
+import { ToastService } from '../../../../shared/ui/toast/toast.service';
+import { GameHeaderUi } from '../game-header/game-header.ui';
 import { GameScreenshotsUi } from '../game-screenshots/game-screenshots.ui';
+import { GameVideosUi } from '../game-videos/game-videos.ui';
 
 @Component({
   selector: 'app-game-details',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterModule, GameScreenshotsUi, SharedUiModule],
+  imports: [
+    CommonModule,
+    DatePipe,
+    DecimalPipe,
+    RouterModule,
+    SafePipe,
+    GameHeaderUi,
+    GameScreenshotsUi,
+    SharedUiModule,
+    GameVideosUi,
+  ],
   templateUrl: './game-details.ui.html',
 })
 export class GameDetailsUi implements OnChanges {
@@ -33,12 +58,20 @@ export class GameDetailsUi implements OnChanges {
     })),
   );
 
+  readonly videoVisible = signal(false);
+  readonly activeVideoIndex = signal(-1);
+  readonly activeVideoEmbedUrl = computed(() => {
+    const v = this.game()?.videos?.[this.activeVideoIndex()];
+    return v ? `${v.embedUrl}?autoplay=1&rel=0&modestbranding=1` : null;
+  });
+
   readonly isFavorite = signal(false);
   readonly favoriteLoading = signal(false);
 
   private readonly gameService = inject(GameService);
   private readonly authService = inject(AuthService);
   private readonly favoritesService = inject(FavoritesService);
+  private readonly toast = inject(ToastService);
 
   private readonly currentUser = toSignal(this.authService.user$);
   readonly isLoggedIn = computed(() => !!this.currentUser());
@@ -54,7 +87,9 @@ export class GameDetailsUi implements OnChanges {
     const game = this.game();
     this._favoriteSub?.unsubscribe();
     if (user && game) {
-      this._favoriteSub = this.favoritesService.isFavorite(user.id, Number(game.id)).subscribe(v => this.isFavorite.set(v));
+      this._favoriteSub = this.favoritesService
+        .isFavorite(user.id, Number(game.id))
+        .subscribe(v => this.isFavorite.set(v));
     } else {
       this.isFavorite.set(false);
     }
@@ -85,22 +120,62 @@ export class GameDetailsUi implements OnChanges {
     this.activeGalleryIndex.set(next);
   }
 
+  prevVideo(): void {
+    const count = this.game()?.videos?.length ?? 0;
+    if (count === 0) return;
+    this.activeVideoIndex.set((this.activeVideoIndex() - 1 + count) % count);
+  }
+
+  nextVideo(): void {
+    const count = this.game()?.videos?.length ?? 0;
+    if (count === 0) return;
+    this.activeVideoIndex.set((this.activeVideoIndex() + 1) % count);
+  }
+
   @HostListener('document:keydown', ['$event'])
   handleKeydown(e: KeyboardEvent) {
-    if (!this.galleryVisible()) return;
-    if (e.key === 'ArrowLeft') {
-      this.prevImage();
-      e.preventDefault();
-    } else if (e.key === 'ArrowRight') {
-      this.nextImage();
-      e.preventDefault();
-    } else if (e.key === 'Escape') {
-      this.galleryVisible.set(false);
+    if (this.galleryVisible()) {
+      if (e.key === 'ArrowLeft') {
+        this.prevImage();
+        e.preventDefault();
+      } else if (e.key === 'ArrowRight') {
+        this.nextImage();
+        e.preventDefault();
+      } else if (e.key === 'Escape') {
+        this.galleryVisible.set(false);
+      }
+    } else if (this.videoVisible()) {
+      if (e.key === 'ArrowLeft') {
+        this.prevVideo();
+        e.preventDefault();
+      } else if (e.key === 'ArrowRight') {
+        this.nextVideo();
+        e.preventDefault();
+      } else if (e.key === 'Escape') {
+        this.closeVideo();
+      }
     }
   }
 
   onGalleryVisibleChange(visible: boolean): void {
     this.galleryVisible.set(visible);
+  }
+
+  openVideo(index: number): void {
+    this.activeVideoIndex.set(index);
+    this.videoVisible.set(true);
+  }
+
+  onVideoVisibleChange(visible: boolean): void {
+    if (!visible) {
+      this.videoVisible.set(false);
+      this.activeVideoIndex.set(-1);
+    }
+  }
+
+  closeVideo(): void {
+    this.videoVisible.set(false);
+    this.activeVideoIndex.set(-1);
   }
 
   ngOnChanges(): void {
@@ -132,6 +207,30 @@ export class GameDetailsUi implements OnChanges {
     });
   }
 
+  private static readonly WEBSITE_LABELS: Record<number, string> = {
+    1: 'Sitio oficial',
+    2: 'Wikia',
+    3: 'Wikipedia',
+    4: 'Facebook',
+    5: 'Twitter/X',
+    6: 'Twitch',
+    8: 'Instagram',
+    9: 'YouTube',
+    10: 'App Store',
+    11: 'iPad',
+    12: 'Google Play',
+    13: 'Steam',
+    14: 'Reddit',
+    15: 'Itch.io',
+    16: 'Epic Games',
+    17: 'GOG',
+    18: 'Discord',
+  };
+
+  websiteLabel(category: number): string {
+    return GameDetailsUi.WEBSITE_LABELS[category] ?? 'Web';
+  }
+
   toggleFavorite(): void {
     const user = this.currentUser();
     const game = this.game();
@@ -145,7 +244,11 @@ export class GameDetailsUi implements OnChanges {
           this.isFavorite.set(false);
           this.favoriteLoading.set(false);
         },
-        error: () => this.favoriteLoading.set(false),
+        error: (err) => {
+          console.error('[toggleFavorite] removeFavorite error', err);
+          this.favoriteLoading.set(false);
+          this.toast.error('No se pudo quitar de favoritos. Inténtalo de nuevo.');
+        },
       });
     } else {
       this.favoritesService.addFavorite(user.id, Number(game.id)).subscribe({
@@ -153,7 +256,11 @@ export class GameDetailsUi implements OnChanges {
           this.isFavorite.set(true);
           this.favoriteLoading.set(false);
         },
-        error: () => this.favoriteLoading.set(false),
+        error: (err) => {
+          console.error('[toggleFavorite] addFavorite error', err);
+          this.favoriteLoading.set(false);
+          this.toast.error('No se pudo añadir a favoritos. Inténtalo de nuevo.');
+        },
       });
     }
   }

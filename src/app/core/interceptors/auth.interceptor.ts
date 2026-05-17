@@ -2,9 +2,11 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
+import { AuthService } from '@services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
+  const auth = inject(AuthService);
   const token = localStorage.getItem('token');
   const isAuthLoginRequest = req.url.includes('/auth');
 
@@ -20,10 +22,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(clonedReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Only redirect to login if there was an active token that got rejected (expired session)
-      // Don't redirect for unauthenticated requests (e.g. public endpoints, debug panel)
       if ((error.status === 401 || error.status === 403) && !isAuthLoginRequest && token) {
-        localStorage.removeItem('token');
+        console.warn('[authInterceptor] 401/403 on', clonedReq.method, clonedReq.url, error.error);
+        auth.logout();
         router.navigate(['/auth/login']);
       }
       return throwError(() => error);

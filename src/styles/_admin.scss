@@ -1,13 +1,7 @@
-/* Styles for admin feature (consolidated) */
+/* Styles for admin feature */
 
-/* When admin header (48px) is present, shift web header below it */
-body.admin .header-wrapper {
-  top: 48px;
-}
-
-/* Admin content sits below both headers (body already has 48px admin header, add 60px for web header) */
 .admin-content {
-  padding-top: 60px;
+  padding-top: 48px; /* admin header height */
 }
 
 .admin-page {
@@ -92,6 +86,65 @@ body.admin .header-wrapper {
   border: 1px solid rgba(255,255,255,0.08);
 }
 
+/* p-table search caption */
+.admin-table__search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+
+  i { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+
+  input {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    color: #fff;
+    font-size: 0.88rem;
+    padding: 0.35rem 0.75rem;
+    outline: none;
+    width: 260px;
+
+    &::placeholder { color: rgba(255,255,255,0.35); }
+    &:focus { border-color: rgba(108,92,231,0.6); }
+  }
+}
+
+/* p-table dark overrides */
+.p-datatable {
+  .p-datatable-header { background: transparent; border: none; padding: 0.5rem 0; }
+  .p-datatable-thead > tr > th {
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.5);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.65rem 1rem;
+  }
+  .p-datatable-tbody > tr {
+    background: transparent;
+    color: #fff;
+    > td {
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0.65rem 1rem;
+      font-size: 0.9rem;
+    }
+    &:hover > td { background: rgba(255,255,255,0.03); }
+    &:last-child > td { border-bottom: none; }
+  }
+  .p-paginator {
+    background: transparent;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.6);
+  }
+  .p-sortable-column:not(.p-highlight):hover { background: rgba(255,255,255,0.04); }
+  .p-sortable-column.p-highlight { color: #a29bfe; }
+  .p-sortable-column-icon { color: rgba(255,255,255,0.3); }
+  .p-highlight .p-sortable-column-icon { color: #a29bfe; }
+}
+
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
@@ -116,9 +169,14 @@ body.admin .header-wrapper {
   tbody tr:last-child td { border-bottom: none; }
 
   &__actions {
-    display: flex;
-    gap: 0.4rem;
+    text-align: right;
     white-space: nowrap;
+
+    .actions-cell {
+      display: inline-flex;
+      gap: 0.3rem;
+      align-items: center;
+    }
   }
 }
 
@@ -156,6 +214,33 @@ body.admin .header-wrapper {
   &.danger {
     color: rgba(239, 68, 68, 0.7);
     &:hover { color: #f87171; }
+  }
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  transition: background 120ms, color 120ms, border-color 120ms;
+  font-size: 0.8rem;
+
+  &:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  &.danger {
+    color: rgba(239,68,68,0.6);
+    border-color: rgba(239,68,68,0.15);
+    &:hover { background: rgba(239,68,68,0.1); color: #f87171; border-color: rgba(239,68,68,0.35); }
   }
 }
 

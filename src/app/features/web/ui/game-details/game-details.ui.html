@@ -5,144 +5,222 @@
     <div class="error">{{ error() }}</div>
   } @else {
     <div class="game-detail">
-      @if (game()?.heroUrl) {
-        <img
-          [src]="game()?.heroUrl"
-          [alt]="game()?.title"
-          class="game-hero"
-          style="
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: -1;
-            width: 100vw;
-            height: auto;
-            pointer-events: none;
-            -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
-            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
-            -webkit-mask-size: 100% 100%;
-            mask-size: 100% 100%;
-          "
-        />
-      }
-
-      @if ($any(game())?.logoUrl) {
-        <img
-          [src]="$any(game())?.logoUrl"
-          [alt]="game()?.title"
-          class="game-logo"
-          style="height: 240px; max-width: 480px; object-fit: contain; display: block; margin: 8px 0"
-        />
-      } @else {
-        <h1>{{ game()?.title }}</h1>
-      }
-
-      @if (game()?.developer || game()?.publisher) {
-        <p class="game-studios">
-          @if (game()?.developer) {<span>{{ game()!.developer!.name }}</span>}
-          @if (game()?.developer && game()?.publisher) {<span class="game-studios__sep"> · </span>}
-          @if (game()?.publisher) {<span>{{ game()!.publisher!.name }}</span>}
-        </p>
-      }
-
-      <div class="play-section">
-        @if (!isLoggedIn()) {
-          <a routerLink="/auth/join" class="btn-play btn-play--register">
-            Regístrate ahora para jugar
-          </a>
-        } @else if (!hasPlan()) {
-          <a routerLink="/settings/plan" class="btn-play btn-play--premium">
-            Hazte premium para jugar
-          </a>
-        } @else {
-          <a [routerLink]="['/play', slug]" class="btn-play btn-play--play">
-            ▶ Jugar ahora
-          </a>
-        }
-      </div>
-
-      @if (isLoggedIn()) {
-        <button
-          (click)="toggleFavorite()"
-          [disabled]="favoriteLoading()"
-          class="btn-favorite"
-          [class.btn-favorite--active]="isFavorite()"
-          [attr.aria-label]="isFavorite() ? 'Quitar de favoritos' : 'Añadir a favoritos'"
-        >
-          {{ isFavorite() ? '❤' : '♡' }}
-          {{ isFavorite() ? 'Quitar de favoritos' : 'Añadir a favoritos' }}
-        </button>
-      }
-
-      @if (game()?.screenshots?.length) {
-        <app-game-screenshots [screenshots]="game()?.screenshots ?? null" (open)="openGallery($event)"></app-game-screenshots>
-
-        <app-modal
-          [visible]="galleryVisible()"
-          (visibleChange)="onGalleryVisibleChange($event)"
-          [dismissableMask]="true"
-          [closable]="true"
-          [closeOnEscape]="true"
-          [gallery]="true"
-          [gallerySrc]="galleryImages()[activeGalleryIndex()]?.itemImageSrc ?? null"
-          [galleryAlt]="galleryImages()[activeGalleryIndex()]?.alt ?? ''"
-          [galleryIndex]="activeGalleryIndex()"
-          [galleryTotal]="galleryImages().length"
-          (prev)="prevImage()"
-          (next)="nextImage()"
-        ></app-modal>
-      }
+      <app-game-header
+        [game]="game()"
+        mode="detail"
+        [slug]="slug"
+        [isLoggedIn]="isLoggedIn()"
+        [hasPlan]="hasPlan()"
+        [isFavorite]="isFavorite()"
+        [favoriteLoading]="favoriteLoading()"
+        (favToggle)="toggleFavorite()"
+      ></app-game-header>
 
       <div class="game-content">
         <div class="game-content__description">
+          @if (game()?.screenshots?.length) {
+            <app-game-screenshots
+              [screenshots]="game()?.screenshots ?? null"
+              (open)="openGallery($event)"
+            ></app-game-screenshots>
+
+            <app-modal
+              [visible]="galleryVisible()"
+              (visibleChange)="onGalleryVisibleChange($event)"
+              [dismissableMask]="true"
+              [closable]="true"
+              [closeOnEscape]="true"
+              [gallery]="true"
+              [gallerySrc]="galleryImages()[activeGalleryIndex()]?.itemImageSrc ?? null"
+              [galleryAlt]="galleryImages()[activeGalleryIndex()]?.alt ?? ''"
+              [galleryIndex]="activeGalleryIndex()"
+              [galleryTotal]="galleryImages().length"
+              (prev)="prevImage()"
+              (next)="nextImage()"
+            ></app-modal>
+          }
+
+          @if (game()?.videos?.length) {
+            <app-game-videos
+              [videos]="game()!.videos!"
+              (open)="openVideo($event)"
+            ></app-game-videos>
+
+            <app-modal
+              [gallery]="true"
+              [visible]="videoVisible()"
+              (visibleChange)="onVideoVisibleChange($event)"
+              [dismissableMask]="true"
+              [closable]="true"
+              [closeOnEscape]="true"
+            >
+              @if (activeVideoEmbedUrl()) {
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+                  <div style="display: flex; align-items: center; gap: 0">
+                    @if ((game()?.videos?.length ?? 0) > 1) {
+                      <button
+                        type="button"
+                        (click)="prevVideo()"
+                        aria-label="Vídeo anterior"
+                        style="background: transparent; border: none; color: #fff; font-size: 5rem; cursor: pointer; padding: 0 12px; line-height: 1; flex-shrink: 0"
+                      ><i class="pi pi-angle-left"></i></button>
+                    }
+                    <div style="width: min(85vw, calc(85vh * 16 / 9)); aspect-ratio: 16/9">
+                      <iframe
+                        [src]="activeVideoEmbedUrl()! | safe: 'resourceUrl'"
+                        frameborder="0"
+                        allowfullscreen
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        [title]="'Vídeo de ' + game()?.title"
+                        style="width: 100%; height: 100%; border: none; border-radius: 12px; display: block"
+                      ></iframe>
+                    </div>
+                    @if ((game()?.videos?.length ?? 0) > 1) {
+                      <button
+                        type="button"
+                        (click)="nextVideo()"
+                        aria-label="Vídeo siguiente"
+                        style="background: transparent; border: none; color: #fff; font-size: 5rem; cursor: pointer; padding: 0 12px; line-height: 1; flex-shrink: 0"
+                      ><i class="pi pi-angle-right"></i></button>
+                    }
+                  </div>
+                  @if ((game()?.videos?.length ?? 0) > 1) {
+                    <div style="text-align: center; color: #fff; font-size: 0.85rem; opacity: 0.7">
+                      {{ activeVideoIndex() + 1 }} / {{ game()!.videos!.length }}
+                    </div>
+                  }
+                </div>
+              }
+            </app-modal>
+          }
+
+          <h2 class="game-detail__title">{{ game()?.title }}</h2>
+          @if (game()?.releaseDate) {
+            <span class="game-detail__year">{{ game()?.releaseDate | date: 'yyyy' }}</span>
+          }
           @if (game()?.description) {
-            <p>{{ game()?.description }}</p>
+            <p class="game-detail__description">{{ game()?.description }}</p>
           }
         </div>
 
         <aside class="game-content__meta">
           <div class="game-meta">
-            @if (game()?.publishedAt) {
-              <div class="game-meta__item">
-                <strong>Añadido a Nebula:</strong>
-                <span>{{ game()?.publishedAt | date:'dd/MM/yyyy' }}</span>
-              </div>
-            }
-            @if (game()?.releaseDate) {
-              <div class="game-meta__item">
-                <strong>Fecha de lanzamiento:</strong>
-                <span>{{ game()?.releaseDate | date:'dd/MM/yyyy' }}</span>
-              </div>
-            }
-            @if (game()?.metacriticScore) {
-              <div class="game-meta__item">
-                <strong>Metacritic:</strong>
-                <span class="metacritic-score">{{ game()?.metacriticScore }}</span>
-              </div>
-            }
-            @if (game()?.pegi) {
-              <div class="game-meta__item">
-                <strong>PEGI:</strong>
-                <img [src]="game()!.pegi!.imageUrl!" [alt]="game()!.pegi!.name" style="height:32px;vertical-align:middle" />
-              </div>
-            }
             @if (game()?.developer) {
               <div class="game-meta__item">
-                <strong>Desarrollador:</strong>
+                <h6>Desarrollador</h6>
                 <span>{{ game()?.developer?.name }}</span>
               </div>
             }
             @if (game()?.publisher) {
               <div class="game-meta__item">
-                <strong>Publisher:</strong>
+                <h6>Distribuidor</h6>
                 <span>{{ game()?.publisher?.name }}</span>
+              </div>
+            }
+            @if (game()?.publishedAt) {
+              <div class="game-meta__item">
+                <h6>Añadido a Nebula</h6>
+                <span>{{ game()?.publishedAt | date: 'dd/MM/yyyy' }}</span>
+              </div>
+            }
+            @if (game()?.releaseDate) {
+              <div class="game-meta__item">
+                <h6>Lanzamiento</h6>
+                <span>{{ game()?.releaseDate | date: 'dd/MM/yyyy' }}</span>
+              </div>
+            }
+            @if (game()?.totalRating) {
+              <div class="game-meta__item">
+                <h6>Valoración IGDB</h6>
+                <span class="igdb-rating">
+                  {{ game()!.totalRating! | number: '1.0-0' }}
+                  <small>/100</small>
+                </span>
+              </div>
+            }
+            @if (game()?.metacriticScore) {
+              <div class="game-meta__item">
+                <h6>Metacritic</h6>
+                <span class="metacritic-score">{{ game()?.metacriticScore }}</span>
+              </div>
+            }
+            @if (game()?.pegi) {
+              <div class="game-meta__item">
+                <h6>PEGI</h6>
+                <img [src]="game()!.pegi!.imageUrl!" [alt]="game()!.pegi!.name" style="height: 32px" />
+              </div>
+            }
+            @if (game()?.gameModes?.length) {
+              <div class="game-meta__item">
+                <h6>Modos</h6>
+                <div class="game-tags">
+                  @for (m of game()!.gameModes!; track m) {
+                    <span class="game-tag">{{ m }}</span>
+                  }
+                </div>
+              </div>
+            }
+            @if (game()?.playerPerspectives?.length) {
+              <div class="game-meta__item">
+                <h6>Perspectiva</h6>
+                <div class="game-tags">
+                  @for (p of game()!.playerPerspectives!; track p) {
+                    <span class="game-tag">{{ p }}</span>
+                  }
+                </div>
+              </div>
+            }
+            @if (game()?.multiplayerModes?.length) {
+              <div class="game-meta__item">
+                <h6>Multijugador</h6>
+                <div class="game-tags">
+                  @for (mm of game()!.multiplayerModes!; track mm) {
+                    <span class="game-tag">{{ mm }}</span>
+                  }
+                </div>
+              </div>
+            }
+            @if (game()?.gameEngines?.length) {
+              <div class="game-meta__item">
+                <h6>Motor</h6>
+                <div class="game-tags">
+                  @for (eng of game()!.gameEngines!; track eng) {
+                    <span class="game-tag">{{ eng }}</span>
+                  }
+                </div>
               </div>
             }
             @if (game()?.categories?.length) {
               <div class="game-meta__item">
-                <strong>Categorías:</strong>
-                <span>@for (cat of game()?.categories; track cat.id; let last = $last) { {{ cat.name }}{{ last ? '' : ', ' }} }</span>
+                <h6>Categorías</h6>
+                <div class="game-tags">
+                  @for (cat of game()!.categories!; track cat.id) {
+                    <span class="game-tag">{{ cat.name }}</span>
+                  }
+                </div>
+              </div>
+            }
+            @if (game()?.websites?.length) {
+              <div class="game-meta__item">
+                <h6>Enlaces</h6>
+                <div class="game-websites">
+                  @for (site of game()!.websites!; track site.url) {
+                    <a
+                      [href]="site.url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="game-website-link"
+                      [title]="websiteLabel(site.type)"
+                    >
+                      <img
+                        [src]="'websites/' + site.type + '.svg'"
+                        [alt]="websiteLabel(site.type)"
+                        class="game-website-icon"
+                        onerror="this.style.display = 'none'"
+                      />
+                    </a>
+                  }
+                </div>
               </div>
             }
           </div>

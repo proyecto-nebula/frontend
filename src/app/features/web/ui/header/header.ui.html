@@ -1,4 +1,4 @@
-<header class="header-wrapper" [class.scrolled]="isScrolled">
+<header class="header-wrapper" [class.scrolled]="isScrolled" [style.top.px]="adminBarTop()">
   <div class="header-content">
     <div class="header-row">
       <!-- Left: hamburger (mobile) + logo -->
@@ -70,7 +70,7 @@
       (keydown.space)="drawerVisible = false"
     ></div>
 
-    <aside class="drawer-panel" [class.open]="drawerVisible" role="dialog" aria-hidden="{{ !drawerVisible }}">
+    <aside class="drawer-panel" [class.open]="drawerVisible" [style.top.px]="adminBarTop()" role="dialog" aria-hidden="{{ !drawerVisible }}">
       <nav>
         <ul class="drawer-list">
           @for (it of items; track it.label) {

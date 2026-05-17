@@ -1,5 +1,7 @@
-import { Component, effect, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, computed, effect, inject } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map, startWith } from 'rxjs/operators';
 import { DebugPanelUi } from '@ui/auth-status.ui';
 import { AdminHeaderUi } from '@admin/ui/admin-header/admin-header.ui';
 import { MaintenancePage } from './features/error/maintenance/maintenance.page';
@@ -15,6 +17,20 @@ import { MaintenanceService } from '@services/maintenance.service';
 export class App {
   protected readonly authService = inject(AuthService);
   protected readonly maintenanceSvc = inject(MaintenanceService);
+  private readonly router = inject(Router);
+
+  private readonly isAdminZone = toSignal(
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd),
+      map(() => this.router.url.startsWith('/admin')),
+      startWith(this.router.url.startsWith('/admin')),
+    ),
+    { initialValue: this.router.url.startsWith('/admin') },
+  );
+
+  protected readonly showGlobalAdminHeader = computed(
+    () => this.authService.isAdmin() && !this.isAdminZone(),
+  );
 
   constructor() {
     effect(() => {

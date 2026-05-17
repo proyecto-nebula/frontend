@@ -253,6 +253,15 @@ a {
   }
 }
 
+/* Full-bleed: carousel breaks out of the padded main container to span full viewport width */
+app-game-featured {
+  display: block;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 /* PrimeNG Carousel: fade transition for featured carousel */
 .game-featured-carousel .p-carousel-viewport {
   position: relative;
@@ -289,23 +298,161 @@ a {
 
 /* Fix: ensure viewport has height so absolutely positioned items are visible */
 .game-featured-carousel .p-carousel-viewport {
-  min-height: 180px; /* adjust if needed */
+  min-height: 520px;
 }
 
-.game-featured-carousel .featured-item,
-.game-featured-carousel .featured-hero,
-.game-featured-carousel .featured-logo {
-  width: 100%;
-  display: block;
+/* Game header shared component (detail + featured modes) */
+.game-header {
+  position: relative;
 }
 
-.game-featured-carousel .featured-hero {
-  height: auto;
-  max-height: 480px;
+.game-header--detail {
+  min-height: 520px;
+}
+
+.game-hero {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+  width: 100vw;
+  height: 520px;
   object-fit: cover;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0));
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0));
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+}
+
+.game-logo {
+  height: 240px;
+  max-width: 480px;
+  object-fit: contain;
+  display: block;
+  margin: 0;
+}
+
+.game-studios {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.25rem 0 0.75rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.65);
+
+  &__sep {
+    opacity: 0.4;
+  }
+}
+
+.game-header__categories {
+  margin: 0.5rem 0 0;
+}
+
+.game-header__actions {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.btn-favorite-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.25rem;
+  border-radius: var(--rounded-corners);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &--active {
+    color: #e84393;
+    border-color: #e84393;
+  }
+
+  i {
+    font-size: 1.3rem;
+  }
+}
+
+/* Featured carousel: apply full-width to app-game-header host */
+.game-featured-carousel app-game-header {
+  display: block;
+  width: 100%;
+}
+
+/* Featured header: hero as absolute background, content overlaid */
+.game-header--featured {
+  position: relative;
+  min-height: 520px;
+  overflow: hidden;
+
+  .featured-hero {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    z-index: 0;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 40%, rgba(0, 0, 0, 0.15));
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 40%, rgba(0, 0, 0, 0.15));
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+  }
+
+  .featured-logo,
+  h2,
+  .featured-summary,
+  .game-header__actions {
+    position: relative;
+    z-index: 1;
+  }
+
+  .featured-logo {
+    max-height: 80px;
+    width: auto;
+    max-width: 320px;
+    object-fit: contain;
+    display: block;
+    margin: 2.5rem 2rem 0;
+  }
+
+  h2 {
+    margin: 2.5rem 2rem 0;
+    font-size: 2rem;
+    font-weight: 800;
+  }
+
+  .featured-summary {
+    margin: 0.75rem 2rem 0;
+    max-width: 640px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+
+  .game-header__actions {
+    margin: 1.25rem 2rem 2.5rem;
+  }
 }
 
 .game-collection {
+  margin-bottom: 2rem;
+
+  header {
+    margin-bottom: 1rem;
+  }
+
   .c-track {
   }
 }
@@ -313,10 +460,27 @@ a {
 .game-collection-carousel {
 }
 
+/* Universal carousel hover: dim all sibling items, restore hovered one.
+   Targets .c-track which is present in every app-carousel instance
+   (game-collection, screenshots, videos). */
+.c-track:hover .c-item {
+  opacity: var(--carousel-hover-dim);
+  transition: opacity 0.35s ease;
+}
+.c-track .c-item:hover {
+  opacity: 1;
+  transition: opacity 0.15s ease;
+}
+
+.game-screenshots-carousel,
+.game-videos-carousel {
+  margin-bottom: 1rem;
+}
+
 /* From: src/app/features/web/ui/game-card/game-card.ui.scss */
 .game-card {
   max-width: 100%;
-  border-radius: 10px;
+  border-radius: var(--rounded-corners);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   background: #fff;
   overflow: hidden;
@@ -354,11 +518,15 @@ a {
   }
 
   &__meta {
-    flex: 0 0 260px;
+    flex: 0 0 480px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1100px) {
     flex-direction: column;
+
+    .game-content__description {
+      width: 100%;
+    }
 
     .game-content__meta {
       flex: 1;
@@ -371,28 +539,38 @@ a {
 .game-meta {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding: 1rem 1.25rem;
+  padding: 1rem 2em;
   background: rgba(255, 255, 255, 0.05);
-  border-left: 3px solid #6c5ce7;
-  border-radius: 0 8px 8px 0;
+  border-radius: var(--rounded-corners);
 }
 
 .game-meta__item {
   display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   font-size: 0.88rem;
 
-  strong {
-    color: rgba(255, 255, 255, 0.45);
-    font-weight: 500;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+  &:last-child {
+    border-bottom: none;
   }
 
-  span {
+  > h6 {
+    flex: 0 0 160px;
+    margin: 0;
+    padding-top: 1px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.42);
+    line-height: 1.5;
+  }
+
+  > :not(h6) {
+    min-width: 0;
     color: #fff;
     font-weight: 600;
   }
@@ -408,18 +586,174 @@ a {
   color: #fff;
 }
 
+.igdb-rating {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #a29bfe;
+
+  small {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: 400;
+  }
+}
+
+/* Tag pills (game modes, perspectives, etc.) */
+.game-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.game-tag {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(108, 92, 231, 0.18);
+  border: 1px solid rgba(108, 92, 231, 0.35);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+/* Website links in meta panel */
+.game-websites {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.6rem;
+}
+
+.game-website-link {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.game-website-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/* Video thumbnail carousel */
+.game-videos-carousel {
+  margin-bottom: 1rem;
+}
+
+/* video-thumb mirrors screenshot-thumb structure */
+.video-thumb {
+  overflow: hidden;
+  border-radius: var(--rounded-corners);
+  background: #111;
+
+  &__img-wrap {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.06);
+  }
+
+  &__play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.35);
+    transition: background 0.2s;
+    pointer-events: none;
+
+    i {
+      font-size: 2.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  &:hover &__play {
+    background: rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Screenshot thumbnail zoom */
+.screenshot-thumb {
+  overflow: hidden;
+  border-radius: var(--rounded-corners);
+
+  &__img-wrap {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  img {
+    display: block;
+    transition: transform 0.35s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.06);
+  }
+}
+
+/* Game detail contender info */
+.game-detail__title {
+  margin: 1rem 0 0.1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.game-detail__year {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.game-detail__description {
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+/* Storyline / section heading */
+.game-section-title {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 /* Play / CTA buttons */
 .btn-play {
   display: inline-block;
-  padding: 0.75rem 2rem;
-  border-radius: 8px;
-  font-size: 1rem;
+  padding: 1rem 2.75rem;
+  border-radius: var(--rounded-corners);
+  font-size: 1.05rem;
   font-weight: 700;
   cursor: pointer;
   transition:
     opacity 0.2s,
     transform 0.1s;
-  margin: 1rem 0 0.5rem;
 
   &:hover {
     opacity: 0.88;
@@ -438,6 +772,12 @@ a {
     background: rgba(255, 255, 255, 0.12);
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  &--info {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 }
 
@@ -465,7 +805,11 @@ a {
 }
 
 .game-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
+
+  .game-cover {
+    transform: scale(1.07);
+  }
 }
 
 .game-cover {
@@ -475,6 +819,7 @@ a {
   object-fit: cover;
   object-position: center;
   background: #f0f0f0;
+  transition: transform 0.3s ease;
 }
 
 .game-title {

@@ -14,3 +14,14 @@ $surface: #161b22;
 $accent: #6c5ce7;
 $text: #f0f6fc;
 $sidebar-w: 260px;
+
+// ── Configurable design tokens ──────────────────────────────────────
+// Border radius applied to cards, buttons and panels
+$rounded-corners: 12px;
+// Opacity of non-hovered items when hovering a carousel (0 = invisible, 1 = no effect)
+$carousel-hover-dim: 0.45;
+
+:root {
+  --rounded-corners: #{$rounded-corners};
+  --carousel-hover-dim: #{$carousel-hover-dim};
+}

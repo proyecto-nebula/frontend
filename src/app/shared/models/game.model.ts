@@ -26,4 +26,12 @@ export interface Game {
   publisher?: Studio | null;
   pegi?: Pegi | null;
   screenshots?: { thumbUrl: string; imageUrl: string }[];
+  // IGDB extended data (only present on view=detail)
+  gameModes?: string[];
+  gameEngines?: string[];
+  multiplayerModes?: string[];
+  playerPerspectives?: string[];
+  totalRating?: number | null;
+  videos?: { videoId: string; name?: string; url: string; embedUrl: string }[];
+  websites?: { url: string; type: number }[];
 }

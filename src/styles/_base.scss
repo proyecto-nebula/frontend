@@ -12,6 +12,11 @@ body {
   height: 100%;
 }
 
+// Only clip horizontal overflow on body so window.scrollY stays reliable on all browsers
+body {
+  overflow-x: hidden;
+}
+
 body.admin {
   padding-top: 48px;
 }

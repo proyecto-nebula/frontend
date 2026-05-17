@@ -2,6 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TableModule } from 'primeng/table';
 import { API_ROUTES } from '@config/api.routes';
 
 interface AvatarItem { id: number; name: string; imageUrl: string; }
@@ -9,41 +11,49 @@ interface AvatarItem { id: number; name: string; imageUrl: string; }
 @Component({
   selector: 'app-admin-avatars',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TableModule],
   templateUrl: './avatars.page.html',
 })
 export class AdminAvatarsPage implements OnInit {
-  private http = inject(HttpClient);
-  private fb = inject(FormBuilder);
+  private http   = inject(HttpClient);
+  private fb     = inject(FormBuilder);
+  private route  = inject(ActivatedRoute);
+  private router = inject(Router);
 
-  items = signal<AvatarItem[]>([]);
-  showForm = signal(false);
+  items     = signal<AvatarItem[]>([]);
   editingId = signal<number | null>(null);
-  saving = signal(false);
+  saving    = signal(false);
+  viewMode  = signal<'list' | 'form'>('list');
   form!: FormGroup;
 
   ngOnInit(): void {
-    this.form = this.fb.group({
-      name: ['', Validators.required],
-      imageUrl: ['', Validators.required],
-    });
-    this.load();
+    const id    = this.route.snapshot.paramMap.get('id');
+    const isNew = this.route.snapshot.url.some(s => s.path === 'new');
+    if (id) {
+      this.editingId.set(Number(id));
+      this.viewMode.set('form');
+      this.form = this.fb.group({ name: ['', Validators.required], imageUrl: ['', Validators.required] });
+      this.http.get<AvatarItem[]>(`${API_ROUTES.avatars}?id=${id}`)
+        .subscribe(items => { if (items[0]) this.form.patchValue(items[0]); });
+    } else if (isNew) {
+      this.viewMode.set('form');
+      this.form = this.fb.group({ name: ['', Validators.required], imageUrl: ['', Validators.required] });
+    } else {
+      this.loadList();
+    }
   }
 
-  load(): void {
+  loadList(): void {
     this.http.get<AvatarItem[]>(API_ROUTES.avatars).subscribe(data => this.items.set(data));
   }
 
-  openCreate(): void {
-    this.editingId.set(null);
-    this.form.reset();
-    this.showForm.set(true);
-  }
+  goCreate(): void { this.router.navigate(['/admin/avatars/new']); }
+  goEdit(id: number): void { this.router.navigate(['/admin/avatars', id]); }
+  cancel(): void { this.router.navigate(['/admin/avatars']); }
 
-  openEdit(item: AvatarItem): void {
-    this.editingId.set(item.id);
-    this.form.patchValue(item);
-    this.showForm.set(true);
+  remove(id: number): void {
+    if (!confirm('¿Eliminar este avatar?')) return;
+    this.http.delete(`${API_ROUTES.avatars}?id=${id}`).subscribe(() => this.loadList());
   }
 
   save(): void {
@@ -53,11 +63,10 @@ export class AdminAvatarsPage implements OnInit {
     const req = id
       ? this.http.put(`${API_ROUTES.avatars}?id=${id}`, this.form.value)
       : this.http.post(API_ROUTES.avatars, this.form.value);
-    req.subscribe({ next: () => { this.load(); this.showForm.set(false); }, error: e => console.error(e), complete: () => this.saving.set(false) });
-  }
-
-  remove(id: number): void {
-    if (!confirm('¿Eliminar este avatar?')) return;
-    this.http.delete(`${API_ROUTES.avatars}?id=${id}`).subscribe(() => this.load());
+    req.subscribe({
+      next: () => { this.saving.set(false); this.router.navigate(['/admin/avatars']); },
+      error: e => { this.saving.set(false); console.error(e); },
+    });
   }
 }
+

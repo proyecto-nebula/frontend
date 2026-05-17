@@ -1,0 +1,31 @@
+<app-carousel
+  [items]="videosWithIndex"
+  [styleClass]="'game-videos-carousel'"
+  [showIndicators]="false"
+  [itemMinWidth]="240"
+  [gap]="20"
+  [mask]="true"
+>
+  <ng-template let-video>
+    <div class="video-thumb" style="width: 100%; box-sizing: border-box">
+      <button
+        type="button"
+        (click)="openVideo(video.__idx)"
+        style="all: unset; cursor: pointer; display: block; width: 100%"
+        [attr.aria-label]="'Abrir vídeo ' + (video.__idx + 1)"
+      >
+        <div class="video-thumb__img-wrap">
+          <img
+            [src]="'https://img.youtube.com/vi/' + video.videoId + '/mqdefault.jpg'"
+            [alt]="'Vídeo ' + (video.__idx + 1)"
+            style="width: 100%; height: 100%; object-fit: cover; display: block"
+            loading="lazy"
+          />
+          <div class="video-thumb__play">
+            <i class="pi pi-play-circle"></i>
+          </div>
+        </div>
+      </button>
+    </div>
+  </ng-template>
+</app-carousel>

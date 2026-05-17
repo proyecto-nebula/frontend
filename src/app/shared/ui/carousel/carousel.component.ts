@@ -120,7 +120,7 @@ import {
         top: 50%;
         transform: translateY(-50%);
         z-index: 2;
-        background: none;
+        background: rgba(0, 0, 0, 0.35);
         border: none;
         color: #fff;
         font-size: 1.75rem;
@@ -136,13 +136,13 @@ import {
         padding: 0;
       }
       .c-btn:hover {
-        background: rgba(0, 0, 0, 0.25);
+        background: rgba(0, 0, 0, 0.55);
       }
       .c-btn-prev {
-        left: -2.5rem;
+        left: 0.4rem;
       }
       .c-btn-next {
-        right: -2.5rem;
+        right: 0.4rem;
       }
     `,
   ],
