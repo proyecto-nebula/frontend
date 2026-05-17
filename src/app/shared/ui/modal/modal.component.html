@@ -15,24 +15,26 @@
   [style]="gallery ? galleryPanelStyle : { width: width }"
   [styleClass]="gallery ? 'app-modal-gallery-dlg' : ''"
 >
-  @if (gallery && gallerySrc) {
+  @if (gallery && (gallerySrc || galleryEmbedUrl)) {
     <div style="display: flex; align-items: center">
-      <button
-        type="button"
-        (click)="onPrevClick($event)"
-        aria-label="Anterior"
-        style="
-          background: transparent;
-          border: none;
-          color: #fff;
-          cursor: pointer;
-          padding: 0 12px;
-          line-height: 1;
-          flex-shrink: 0;
-        "
-      >
-        <i class="pi pi-angle-left" style="font-size: 2.5rem"></i>
-      </button>
+      @if (galleryTotal > 1) {
+        <button
+          type="button"
+          (click)="onPrevClick($event)"
+          aria-label="Anterior"
+          style="
+            background: transparent;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            padding: 0 12px;
+            line-height: 1;
+            flex-shrink: 0;
+          "
+        >
+          <i class="pi pi-angle-left" style="font-size: 5rem"></i>
+        </button>
+      }
       <div
         style="
           flex: 1;
@@ -73,25 +75,38 @@
             (error)="onImageLoad()"
           />
         }
+        @if (galleryEmbedUrl && safeEmbedUrl) {
+          <div style="width: min(85vw, calc(85vh * 16 / 9)); aspect-ratio: 16 / 9">
+            <iframe
+              [src]="safeEmbedUrl"
+              frameborder="0"
+              allowfullscreen
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              style="width: 100%; height: 100%; border: none; border-radius: 12px; display: block"
+            ></iframe>
+          </div>
+        }
       </div>
-      <button
-        type="button"
-        (click)="onNextClick($event)"
-        aria-label="Siguiente"
-        style="
-          background: transparent;
-          border: none;
-          color: #fff;
-          cursor: pointer;
-          padding: 0 12px;
-          line-height: 1;
-          flex-shrink: 0;
-        "
-      >
-        <i class="pi pi-angle-right" style="font-size: 2.5rem"></i>
-      </button>
+      @if (galleryTotal > 1) {
+        <button
+          type="button"
+          (click)="onNextClick($event)"
+          aria-label="Siguiente"
+          style="
+            background: transparent;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            padding: 0 12px;
+            line-height: 1;
+            flex-shrink: 0;
+          "
+        >
+          <i class="pi pi-angle-right" style="font-size: 5rem"></i>
+        </button>
+      }
     </div>
-    @if (galleryTotal > 0) {
+    @if (galleryTotal > 1) {
       <div style="text-align: center; color: #fff; padding: 8px 0 4px; font-size: 0.85rem; opacity: 0.7">
         {{ galleryIndex + 1 }} / {{ galleryTotal }}
       </div>

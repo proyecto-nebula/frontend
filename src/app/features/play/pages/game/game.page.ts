@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GameService } from '@services/game.service';
+import { SessionsService } from '@services/sessions.service';
 import { Game } from '@models/game.model';
 import { SafePipe } from '../../../../shared/pipes/safe.pipe';
 
@@ -52,6 +53,7 @@ import { SafePipe } from '../../../../shared/pipes/safe.pipe';
 export class PlayGamePage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly gameService = inject(GameService);
+  private readonly sessionsService = inject(SessionsService);
   private readonly document = inject(DOCUMENT);
 
   readonly game = signal<Game | null>(null);
@@ -69,7 +71,13 @@ export class PlayGamePage implements OnInit, OnDestroy {
     const slug = this.route.snapshot.paramMap.get('slug') ?? '';
     if (slug) {
       this.gameService.getGameBySlug(slug).subscribe({
-        next: g => { this.game.set(g); this.loading.set(false); },
+        next: g => {
+          this.game.set(g);
+          this.loading.set(false);
+          if (g?.id) {
+            this.sessionsService.createSession(Number(g.id)).subscribe();
+          }
+        },
         error: () => this.loading.set(false),
       });
     }

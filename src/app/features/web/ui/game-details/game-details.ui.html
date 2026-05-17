@@ -53,45 +53,12 @@
               [dismissableMask]="true"
               [closable]="true"
               [closeOnEscape]="true"
-            >
-              @if (activeVideoEmbedUrl()) {
-                <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
-                  <div style="display: flex; align-items: center; gap: 0">
-                    @if ((game()?.videos?.length ?? 0) > 1) {
-                      <button
-                        type="button"
-                        (click)="prevVideo()"
-                        aria-label="Vídeo anterior"
-                        style="background: transparent; border: none; color: #fff; font-size: 5rem; cursor: pointer; padding: 0 12px; line-height: 1; flex-shrink: 0"
-                      ><i class="pi pi-angle-left"></i></button>
-                    }
-                    <div style="width: min(85vw, calc(85vh * 16 / 9)); aspect-ratio: 16/9">
-                      <iframe
-                        [src]="activeVideoEmbedUrl()! | safe: 'resourceUrl'"
-                        frameborder="0"
-                        allowfullscreen
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        [title]="'Vídeo de ' + game()?.title"
-                        style="width: 100%; height: 100%; border: none; border-radius: 12px; display: block"
-                      ></iframe>
-                    </div>
-                    @if ((game()?.videos?.length ?? 0) > 1) {
-                      <button
-                        type="button"
-                        (click)="nextVideo()"
-                        aria-label="Vídeo siguiente"
-                        style="background: transparent; border: none; color: #fff; font-size: 5rem; cursor: pointer; padding: 0 12px; line-height: 1; flex-shrink: 0"
-                      ><i class="pi pi-angle-right"></i></button>
-                    }
-                  </div>
-                  @if ((game()?.videos?.length ?? 0) > 1) {
-                    <div style="text-align: center; color: #fff; font-size: 0.85rem; opacity: 0.7">
-                      {{ activeVideoIndex() + 1 }} / {{ game()!.videos!.length }}
-                    </div>
-                  }
-                </div>
-              }
-            </app-modal>
+              [galleryEmbedUrl]="activeVideoEmbedUrl()"
+              [galleryIndex]="activeVideoIndex()"
+              [galleryTotal]="game()!.videos!.length"
+              (prev)="prevVideo()"
+              (next)="nextVideo()"
+            ></app-modal>
           }
 
           <h2 class="game-detail__title">{{ game()?.title }}</h2>

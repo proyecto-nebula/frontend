@@ -13,4 +13,10 @@ export class SessionsService {
       .get<Session[]>(`${API_ROUTES.sessions}?user_id=${userId}`)
       .pipe(catchError(() => of([])));
   }
+
+  createSession(gameId: number): Observable<{ id: number }> {
+    return this.http
+      .post<{ id: number }>(API_ROUTES.sessions, { gameId })
+      .pipe(catchError(() => of({ id: -1 })));
+  }
 }

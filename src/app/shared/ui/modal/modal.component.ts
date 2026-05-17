@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, inject } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { DialogModule } from 'primeng/dialog';
 
 @Component({
@@ -25,6 +26,17 @@ export class ModalComponent implements OnChanges, OnDestroy {
   @Input() galleryAlt = '';
   @Input() galleryIndex = 0;
   @Input() galleryTotal = 0;
+
+  // gallery video input
+  @Input() galleryEmbedUrl: string | null = null;
+
+  private readonly sanitizer = inject(DomSanitizer);
+
+  get safeEmbedUrl(): SafeResourceUrl | null {
+    return this.galleryEmbedUrl
+      ? this.sanitizer.bypassSecurityTrustResourceUrl(this.galleryEmbedUrl)
+      : null;
+  }
 
   @Output() prev = new EventEmitter<void>();
   @Output() next = new EventEmitter<void>();

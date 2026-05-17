@@ -1,21 +1,29 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, HostListener, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '@services/auth.service';
-import { UserService } from '@services/user.service';
-import { LoginModalService } from '@services/login-modal.service';
+import { LoginFormComponent } from '@auth/components/login-form/login-form.component';
 import { User } from '@models/user.model';
+import { AuthService } from '@services/auth.service';
+import { LoginModalService } from '@services/login-modal.service';
+import { UserService } from '@services/user.service';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { TieredMenuModule } from 'primeng/tieredmenu';
-import { LoginFormComponent } from '@auth/components/login-form/login-form.component';
 import { SharedUiModule } from '../../../../shared/ui/ui.module';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, AvatarModule, TieredMenuModule, ButtonModule, LoginFormComponent, SharedUiModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    AvatarModule,
+    TieredMenuModule,
+    ButtonModule,
+    LoginFormComponent,
+    SharedUiModule,
+  ],
   templateUrl: './header.ui.html',
   styles: [
     `
@@ -27,7 +35,9 @@ import { SharedUiModule } from '../../../../shared/ui/ui.module';
         z-index: 1003;
         background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
         color: #fff;
-        transition: background 220ms ease;
+        transition:
+          background 1000ms cubic-bezier(0.4, 0, 0.2, 1),
+          backdrop-filter 1000ms cubic-bezier(0.4, 0, 0.2, 1);
       }
       .header-wrapper.scrolled {
         background: rgba(13, 13, 26, 0.92);
@@ -193,7 +203,7 @@ export class HeaderUi implements OnInit {
   private loginModal = inject(LoginModalService);
 
   /** Offset for the fixed admin bar (48px) shown on web pages for admin users */
-  readonly adminBarTop = computed(() => this.auth.isAdmin() ? 48 : 0);
+  readonly adminBarTop = computed(() => (this.auth.isAdmin() ? 48 : 0));
   // modal state for login
   showLoginModal = false;
   loginReturnUrl: string | null = null;
@@ -238,7 +248,7 @@ export class HeaderUi implements OnInit {
     });
 
     // subscribe to login modal open requests from other components
-    this.loginModal.open$.subscribe((returnUrl) => {
+    this.loginModal.open$.subscribe(returnUrl => {
       if (returnUrl === null) {
         this.showLoginModal = false;
         this.loginReturnUrl = null;
