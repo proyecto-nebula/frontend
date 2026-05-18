@@ -1,0 +1,57 @@
+// ═══════════════════════════════════════════════════════════════
+//  View Transitions — configuración central
+//  Ajusta estas variables para cambiar el comportamiento global.
+// ═══════════════════════════════════════════════════════════════
+
+// Duración de la página que sale (fade out)
+$vt-duration-out: 500ms;
+
+// Duración de la página que entra (fade in + slide)
+$vt-duration-in: 500ms;
+
+// Curva de aceleración compartida
+$vt-easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+// Distancia del slide vertical al entrar (0 = fade puro)
+$vt-slide: 0;
+
+// ── Pseudo-elementos del browser ────────────────────────────────
+
+::view-transition-old(root) {
+  animation: _vt-out $vt-duration-out $vt-easing both;
+}
+
+::view-transition-new(root) {
+  animation: _vt-in $vt-duration-in $vt-easing both;
+}
+
+// ── Keyframes ───────────────────────────────────────────────────
+
+@keyframes _vt-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes _vt-in {
+  from {
+    opacity: 0;
+    transform: translateY($vt-slide);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ── Accesibilidad: sin movimiento ────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
