@@ -1,0 +1,73 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app-shell",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.html",
+          "/*.css",
+          "/*.js",
+          "/manifest.webmanifest"
+        ]
+      }
+    },
+    {
+      "name": "app-assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/assets/**",
+          "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api-public",
+      "urls": [
+        "https://api.tu-dominio.com/api/v1/games**",
+        "https://api.tu-dominio.com/api/v1/studios**",
+        "https://api.tu-dominio.com/api/v1/pegi**",
+        "https://api.tu-dominio.com/api/v1/categories**",
+        "https://api.tu-dominio.com/api/v1/plans**",
+        "https://api.tu-dominio.com/api/v1/avatars**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 150,
+        "maxAge": "1h",
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "steam-cdn",
+      "urls": [
+        "https://cdn.akamai.steamstatic.com/**",
+        "https://steamcdn-a.akamaihd.net/**",
+        "https://store.akamai.steamstatic.com/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 300,
+        "maxAge": "7d"
+      }
+    },
+    {
+      "name": "igdb-cdn",
+      "urls": [
+        "https://images.igdb.com/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 200,
+        "maxAge": "7d"
+      }
+    }
+  ]
+}
