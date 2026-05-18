@@ -4,16 +4,16 @@
 // ═══════════════════════════════════════════════════════════════
 
 // Duración de la página que sale (fade out)
-$vt-duration-out: 500ms;
+$vt-duration-out : 1000ms;
 
 // Duración de la página que entra (fade in + slide)
-$vt-duration-in: 500ms;
+$vt-duration-in  : 1000ms;
 
 // Curva de aceleración compartida
-$vt-easing: cubic-bezier(0.4, 0, 0.2, 1);
+$vt-easing       : cubic-bezier(0.4, 0, 0.2, 1);
 
 // Distancia del slide vertical al entrar (0 = fade puro)
-$vt-slide: 0;
+$vt-slide        : 0px;
 
 // ── Pseudo-elementos del browser ────────────────────────────────
 
@@ -28,12 +28,8 @@ $vt-slide: 0;
 // ── Keyframes ───────────────────────────────────────────────────
 
 @keyframes _vt-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
+  from { opacity: 1; }
+  to   { opacity: 0; }
 }
 
 @keyframes _vt-in {
