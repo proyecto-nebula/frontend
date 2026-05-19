@@ -384,6 +384,157 @@ app-game-featured {
   }
 }
 
+/* Secondary actions bar below main CTA (detail mode) */
+.game-header__secondary-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.btn-secondary-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.13);
+    color: #fff;
+  }
+
+  i { font-size: 0.85rem; }
+}
+
+/* Share modal content */
+.share-modal {
+  padding: 0.75rem 0 0.25rem;
+}
+
+.share-modal__options {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.share-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem;
+  min-width: 60px;
+  transition: color 0.15s;
+
+  &:hover {
+    color: #fff;
+
+    .share-option__icon {
+      transform: scale(1.1);
+    }
+  }
+}
+
+.share-option__icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 1.25rem;
+  transition: transform 0.15s;
+
+  &--email    { background: #555; }
+  &--facebook { background: #1877f2; }
+  &--x        { background: #000; border: 1px solid rgba(255,255,255,0.15); }
+  &--reddit   { background: #ff4500; }
+}
+
+/* Report form modal */
+.report-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.5rem 0 0.25rem;
+}
+
+.report-form__types {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.report-type-option {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.75);
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+
+  input[type='radio'] { display: none; }
+
+  &.selected {
+    border-color: rgba(108, 92, 231, 0.6);
+    background: rgba(108, 92, 231, 0.12);
+    color: #fff;
+  }
+
+  &:hover:not(.selected) {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+.report-form__desc-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.5);
+
+  textarea {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    color: #fff;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.88rem;
+    resize: vertical;
+    outline: none;
+    font-family: inherit;
+
+    &:focus { border-color: rgba(108, 92, 231, 0.5); }
+    &::placeholder { color: rgba(255, 255, 255, 0.25); }
+  }
+}
+
+.report-form__footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
 /* Featured carousel: apply full-width to app-game-header host */
 .game-featured-carousel app-game-header {
   display: block;
@@ -614,6 +765,39 @@ app-game-featured {
   color: rgba(255, 255, 255, 0.82);
   font-size: 0.76rem;
   font-weight: 500;
+}
+
+/* Horizontal info bar in description (game modes, multiplayer, perspective, engine) */
+.game-info-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin-top: 1.5rem;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    flex: 1;
+    min-width: 0;
+
+    & + & {
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    &:first-child {
+      padding-left: 0;
+    }
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.42);
+  }
 }
 
 /* Website links in meta panel */

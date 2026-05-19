@@ -1,3 +1,138 @@
 /* Styles for auth feature (consolidated) */
 
-/* Add auth-specific styles here */
+.login-container {
+  //n-height: 100vh;
+  //splay: flex;
+  //ign-items: center;
+  //stify-content: center;
+  //dding: 2rem 1rem;
+}
+
+.login-form {
+  width: 100%;
+  //x-width: 400px;
+  //ckground: #1e1a2e;
+  //rder: 1px solid rgba(255, 255, 255, 0.08);
+  //rder-radius: 16px;
+  //x-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  //padding: 2.5rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  color: #f0f6fc;
+
+  h2 {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #f0f6fc;
+    margin: 0;
+  }
+}
+
+.login-logo {
+  display: flex;
+  justify-content: center;
+
+  &__img {
+    height: 42px;
+  }
+}
+
+.error-banner {
+  background: rgba(231, 76, 60, 0.12);
+  border: 1px solid rgba(231, 76, 60, 0.35);
+  border-radius: 8px;
+  color: #ff7675;
+  font-size: 0.85rem;
+  padding: 0.6rem 0.85rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  label {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    color: #fff;
+    padding: 0.65rem 0.8rem;
+    font-size: 0.9rem;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.15s;
+
+    &:focus {
+      border-color: rgba(108, 92, 231, 0.55);
+    }
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.22);
+    }
+    &.invalid {
+      border-color: rgba(231, 76, 60, 0.5);
+    }
+  }
+}
+
+.login-extras {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.login-remember {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  user-select: none;
+
+  input[type='checkbox'] {
+    accent-color: #6c5ce7;
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+  }
+}
+
+.login-forgot {
+  font-size: 0.82rem;
+  color: rgba(108, 92, 231, 0.8);
+  text-decoration: none;
+  transition: color 0.15s;
+
+  &:hover { color: #a29bfe; }
+}
+
+.login-form button[type='submit'] {
+  background: #6c5ce7;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    opacity 0.15s;
+  margin-top: 0.25rem;
+
+  &:hover:not(:disabled) {
+    background: #7d6ef0;
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

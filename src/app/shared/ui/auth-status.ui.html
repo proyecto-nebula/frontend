@@ -1,25 +1,19 @@
 @if (!isProd) {
   <div class="auth-status">
-    @if (isAuthenticated()) {
-      <div class="logged">
-        <p-avatar [image]="user?.avatar?.imageUrl ?? 'assets/default-avatar.png'" shape="circle" styleClass="avatar"></p-avatar>
-        <div class="info">
-          <div class="label">Conectado como</div>
-          <div class="username">{{ user?.username }}</div>
-        </div>
-        <select class="debug-switch" (change)="switchUser($event)" title="Cambiar usuario (debug)">
-          <option value="">— Cambiar usuario —</option>
-          @for (u of users; track u.id) {
-            <option [value]="u.id">{{ u.username }}</option>
-          }
-        </select>
-        <button class="btn small logout" (click)="logout()">Cerrar sesión</button>
-      </div>
+    @if (user) {
+      <p-avatar [image]="user.avatar?.imageUrl ?? 'assets/default-avatar.png'" shape="circle" styleClass="avatar"></p-avatar>
+      <span class="username">{{ user.username }}</span>
     } @else {
-      <div class="not-logged">
-        <button class="btn ghost" (click)="openLogin()">Login</button>
-        <a class="btn" [routerLink]="['/auth/join']">Join</a>
-      </div>
+      <span class="username not-logged">Sin sesión</span>
+    }
+    <select class="debug-switch" (change)="switchUser($event)" title="Cambiar usuario (debug)">
+      <option value="">— Cambiar usuario —</option>
+      @for (u of users; track u.id) {
+        <option [value]="u.id">{{ u.username }}</option>
+      }
+    </select>
+    @if (user) {
+      <button class="logout" (click)="logout()" title="Cerrar sesión">✕</button>
     }
   </div>
 }

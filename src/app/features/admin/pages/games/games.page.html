@@ -28,14 +28,14 @@
       <ng-template pTemplate="body" let-item>
         <tr>
           <td>{{ item.id }}</td>
-          <td>{{ item.title }}</td>
+          <td><a [routerLink]="['/games', item.slug]" target="_blank" class="table-link">{{ item.title }}</a></td>
           <td>{{ item.developer?.name ?? '—' }}</td>
           <td>{{ item.releaseDate }}</td>
           <td><p-toggleswitch [ngModel]="!!item.isActive"   (ngModelChange)="toggleField(item.id, 'isActive', $event)"></p-toggleswitch></td>
           <td><p-toggleswitch [ngModel]="!!item.isFeatured" (ngModelChange)="toggleField(item.id, 'isFeatured', $event)"></p-toggleswitch></td>
           <td class="admin-table__actions">
             <div class="actions-cell">
-              <button class="btn-icon" title="Ver juego" (click)="viewGame(item.slug)"><i class="pi pi-external-link"></i></button>
+              <button class="btn-icon" title="Ver" (click)="goView(item.id)"><i class="pi pi-eye"></i></button>
               <button class="btn-icon" title="Editar" (click)="goEdit(item.id)"><i class="pi pi-pencil"></i></button>
               <button class="btn-icon danger" title="Eliminar" (click)="remove(item.id)"><i class="pi pi-trash"></i></button>
             </div>
@@ -50,7 +50,7 @@
   } @else {
 
     <div class="admin-page__toolbar">
-      <h2>{{ editingId() ? 'Editar juego' : 'Nuevo juego' }}</h2>
+      <h2>{{ viewOnly() ? 'Ver juego' : (editingId() ? 'Editar juego' : 'Nuevo juego') }}</h2>
       <button class="btn ghost" (click)="cancel()"><i class="pi pi-arrow-left"></i> Volver</button>
     </div>
 
@@ -168,8 +168,12 @@
       </div>
 
       <div class="admin-form__actions">
-        <button type="button" class="btn ghost" (click)="cancel()">Cancelar</button>
-        <button type="submit" class="btn" [disabled]="saving()">{{ saving() ? 'Guardando...' : 'Guardar' }}</button>
+        @if (viewOnly()) {
+          <button type="button" class="btn" (click)="goEdit(editingId()!)">Editar</button>
+        } @else {
+          <button type="button" class="btn ghost" (click)="cancel()">Cancelar</button>
+          <button type="submit" class="btn" [disabled]="saving()">{{ saving() ? 'Guardando...' : 'Guardar' }}</button>
+        }
       </div>
     </form>
 

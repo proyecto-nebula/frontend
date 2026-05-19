@@ -35,3 +35,51 @@
 .app-modal-gallery-dlg .p-dialog-content img {
   pointer-events: auto;
 }
+
+/* ── Dark theme for all non-gallery p-dialog modals ─────────────────── */
+.p-dialog:not(.app-modal-gallery-dlg) {
+  background: #1e1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+  color: #f0f6fc;
+
+  .p-dialog-header {
+    background: #1e1a2e;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px 14px 0 0;
+    padding: 1.1rem 1.4rem;
+    color: #f0f6fc;
+
+    .p-dialog-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #f0f6fc;
+    }
+
+    .p-dialog-header-icon {
+      color: rgba(240, 246, 252, 0.5);
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      transition: background 0.15s, color 0.15s;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #f0f6fc;
+      }
+    }
+  }
+
+  .p-dialog-content {
+    background: #1e1a2e;
+    color: #f0f6fc;
+    padding: 1.2rem 1.4rem;
+    border-radius: 0 0 14px 14px;
+  }
+
+  /* When there is no header, content covers all corners */
+  &:not(:has(.p-dialog-header)) .p-dialog-content {
+    border-radius: 14px;
+  }
+}

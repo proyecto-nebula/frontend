@@ -1,8 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, startWith } from 'rxjs/operators';
 import { AuthService } from '@services/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { API_ROUTES } from '@config/api.routes';
+import { ReportsBadgeService } from '../../services/reports-badge.service';
 
 @Component({
   selector: 'app-admin-header',
@@ -11,9 +14,11 @@ import { AuthService } from '@services/auth.service';
   templateUrl: './admin-header.ui.html',
   styleUrls: ['./admin-header.ui.scss'],
 })
-export class AdminHeaderUi {
+export class AdminHeaderUi implements OnInit {
   private readonly router = inject(Router);
   private readonly auth = inject(AuthService);
+  private readonly http = inject(HttpClient);
+  readonly badge = inject(ReportsBadgeService);
 
   menuOpen = signal(false);
 
@@ -26,13 +31,15 @@ export class AdminHeaderUi {
     { initialValue: this.router.url.startsWith('/admin') },
   );
 
-  toggleMenu(): void {
-    this.menuOpen.update(v => !v);
+  ngOnInit(): void {
+    this.http.get<{ id: number }[]>(`${API_ROUTES.reports}?is_solved=0`).subscribe({
+      next: list => this.badge.set(list.length),
+      error: () => {},
+    });
   }
 
-  closeMenu(): void {
-    this.menuOpen.set(false);
-  }
+  toggleMenu(): void { this.menuOpen.update(v => !v); }
+  closeMenu(): void  { this.menuOpen.set(false); }
 
   logout(): void {
     this.auth.logout();

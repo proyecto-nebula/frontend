@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { catchError, forkJoin, of } from 'rxjs';
 import { TableModule } from 'primeng/table';
 import { ToggleSwitch } from 'primeng/toggleswitch';
@@ -16,7 +16,7 @@ import { ToastService } from '@ui/toast/toast.service';
 @Component({
   selector: 'app-admin-games',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, ToggleSwitch],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, ToggleSwitch],
   templateUrl: './games.page.html',
 })
 export class AdminGamesPage implements OnInit {
@@ -35,6 +35,7 @@ export class AdminGamesPage implements OnInit {
   saving    = signal(false);
   previewUrl = signal<string | null>(null);
   viewMode  = signal<'list' | 'form'>('list');
+  viewOnly  = signal(false);
 
   form!: FormGroup;
 
@@ -53,6 +54,8 @@ export class AdminGamesPage implements OnInit {
 
     if (id) {
       this.editingId.set(Number(id));
+      const isView = this.route.snapshot.queryParamMap.get('view') === '1';
+      this.viewOnly.set(isView);
       this.viewMode.set('form');
       this.buildForm();
       this.http.get<Game>(`${API_ROUTES.games}?id=${id}`).subscribe(game => {
@@ -60,6 +63,7 @@ export class AdminGamesPage implements OnInit {
         for (const field of this.URL_FIELDS) {
           if (this.form.get(field)?.value?.trim()) this.manuallyEdited.add(field);
         }
+        if (isView) this.form.disable();
       });
       this.loadStudiosAndPegi();
     } else if (isNew) {
@@ -117,6 +121,7 @@ export class AdminGamesPage implements OnInit {
 
   goCreate(): void { this.router.navigate(['/admin/games/new']); }
   goEdit(id: number | string): void { this.router.navigate(['/admin/games', id]); }
+  goView(id: number | string): void { this.router.navigate(['/admin/games', id], { queryParams: { view: '1' } }); }
   cancel(): void { this.router.navigate(['/admin/games']); }
 
   remove(id: number | string): void {
@@ -138,10 +143,6 @@ export class AdminGamesPage implements OnInit {
       },
       error: () => this.toastSvc.error('Error al actualizar'),
     });
-  }
-
-  viewGame(slug: string | null | undefined): void {
-    if (slug) this.router.navigate(['/games', slug]);
   }
 
   private autoFillImages(steamId: number): void {

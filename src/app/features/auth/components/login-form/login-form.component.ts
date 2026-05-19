@@ -4,11 +4,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '@services/auth.service';
 import { firstValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LogoComponent } from '../../../../shared/ui/logo/logo.component';
 
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, LogoComponent],
   templateUrl: './login-form.component.html',
 })
 export class LoginFormComponent {
@@ -24,6 +25,7 @@ export class LoginFormComponent {
   loginForm = this.fb.nonNullable.group({
     email: ['', [Validators.required]],
     password: ['', [Validators.required]],
+    rememberMe: [false],
   });
 
   async onSubmit() {

@@ -137,6 +137,44 @@
     background: transparent;
     border-top: 1px solid rgba(255,255,255,0.06);
     color: rgba(255,255,255,0.6);
+    padding: 0.5rem 0.75rem;
+
+    /* Navigation + page buttons */
+    button {
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.55);
+      border-radius: 6px;
+      min-width: 2rem;
+      height: 2rem;
+      transition: background 150ms, color 150ms;
+
+      &:hover:not(:disabled) {
+        background: rgba(255,255,255,0.08);
+        color: #fff;
+      }
+      &:disabled { opacity: 0.25; cursor: not-allowed; }
+    }
+
+    /* Active page */
+    .p-paginator-page.p-highlight,
+    .p-paginator-page[aria-current='page'] {
+      background: rgba(108,92,231,0.2);
+      color: #a29bfe;
+    }
+
+    /* Rows-per-page select (PrimeNG 17: p-select / older: p-dropdown) */
+    .p-select, .p-dropdown {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px;
+      color: #fff;
+
+      .p-select-label, .p-inputtext { color: rgba(255,255,255,0.7); font-size: 0.85rem; }
+      .p-select-dropdown-icon, .p-dropdown-trigger-icon { color: rgba(255,255,255,0.4); }
+
+      &:hover { border-color: rgba(255,255,255,0.25); }
+    }
   }
   .p-sortable-column:not(.p-highlight):hover { background: rgba(255,255,255,0.04); }
   .p-sortable-column.p-highlight { color: #a29bfe; }
@@ -224,24 +262,28 @@
   width: 28px;
   height: 28px;
   border-radius: 4px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: none;
   background: transparent;
   color: rgba(255,255,255,0.6);
   cursor: pointer;
-  transition: background 120ms, color 120ms, border-color 120ms;
+  transition: background 120ms, color 120ms;
   font-size: 0.8rem;
 
   &:hover {
     background: rgba(255,255,255,0.08);
     color: #fff;
-    border-color: rgba(255,255,255,0.2);
   }
 
   &.danger {
     color: rgba(239,68,68,0.6);
-    border-color: rgba(239,68,68,0.15);
-    &:hover { background: rgba(239,68,68,0.1); color: #f87171; border-color: rgba(239,68,68,0.35); }
+    &:hover { background: rgba(239,68,68,0.1); color: #f87171; }
   }
+}
+
+.table-link {
+  color: #a29bfe;
+  text-decoration: none;
+  &:hover { text-decoration: underline; color: #c4bbff; }
 }
 
 /* Form sections */

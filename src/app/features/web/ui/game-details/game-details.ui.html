@@ -18,46 +18,27 @@
 
       <div class="game-content">
         <div class="game-content__description">
-          @if (game()?.screenshots?.length) {
+          @if (game()?.screenshots?.length || game()?.videos?.length) {
             <app-game-screenshots
               [screenshots]="game()?.screenshots ?? null"
-              (open)="openGallery($event)"
+              [videos]="game()?.videos ?? null"
+              (open)="openMediaItem($event)"
             ></app-game-screenshots>
 
             <app-modal
-              [visible]="galleryVisible()"
-              (visibleChange)="onGalleryVisibleChange($event)"
+              [visible]="mediaVisible()"
+              (visibleChange)="onMediaVisibleChange($event)"
               [dismissableMask]="true"
               [closable]="true"
               [closeOnEscape]="true"
               [gallery]="true"
-              [gallerySrc]="galleryImages()[activeGalleryIndex()]?.itemImageSrc ?? null"
-              [galleryAlt]="galleryImages()[activeGalleryIndex()]?.alt ?? ''"
-              [galleryIndex]="activeGalleryIndex()"
-              [galleryTotal]="galleryImages().length"
-              (prev)="prevImage()"
-              (next)="nextImage()"
-            ></app-modal>
-          }
-
-          @if (game()?.videos?.length) {
-            <app-game-videos
-              [videos]="game()!.videos!"
-              (open)="openVideo($event)"
-            ></app-game-videos>
-
-            <app-modal
-              [gallery]="true"
-              [visible]="videoVisible()"
-              (visibleChange)="onVideoVisibleChange($event)"
-              [dismissableMask]="true"
-              [closable]="true"
-              [closeOnEscape]="true"
-              [galleryEmbedUrl]="activeVideoEmbedUrl()"
-              [galleryIndex]="activeVideoIndex()"
-              [galleryTotal]="game()!.videos!.length"
-              (prev)="prevVideo()"
-              (next)="nextVideo()"
+              [gallerySrc]="activeGallerySrc()"
+              [galleryAlt]="activeGalleryAlt()"
+              [galleryEmbedUrl]="activeEmbedUrl()"
+              [galleryIndex]="activeMediaIndex()"
+              [galleryTotal]="mediaItems().length"
+              (prev)="prevMedia()"
+              (next)="nextMedia()"
             ></app-modal>
           }
 
@@ -68,32 +49,59 @@
           @if (game()?.description) {
             <p class="game-detail__description">{{ game()?.description }}</p>
           }
+
+          @if (game()?.multiplayerModes?.length || game()?.releaseDate || game()?.publishedAt || game()?.developer || game()?.publisher) {
+            <div class="game-info-bar">
+              @if (game()?.multiplayerModes?.length) {
+                <div class="game-info-bar__item">
+                  <span class="game-info-bar__label">Multijugador</span>
+                  <div class="game-tags">
+                    @for (mm of game()!.multiplayerModes!; track mm) {
+                      <span class="game-tag">{{ mm }}</span>
+                    }
+                  </div>
+                </div>
+              }
+              @if (game()?.releaseDate) {
+                <div class="game-info-bar__item">
+                  <span class="game-info-bar__label">Lanzamiento</span>
+                  <span>{{ game()?.releaseDate | date: 'dd/MM/yyyy' }}</span>
+                </div>
+              }
+              @if (game()?.publishedAt) {
+                <div class="game-info-bar__item">
+                  <span class="game-info-bar__label">Añadido a Nebula</span>
+                  <span>{{ game()?.publishedAt | date: 'dd/MM/yyyy' }}</span>
+                </div>
+              }
+              @if (game()?.developer) {
+                <div class="game-info-bar__item">
+                  <span class="game-info-bar__label">Desarrollador</span>
+                  <span>{{ game()?.developer?.name }}</span>
+                </div>
+              }
+              @if (game()?.publisher) {
+                <div class="game-info-bar__item">
+                  <span class="game-info-bar__label">Distribuidor</span>
+                  <span>{{ game()?.publisher?.name }}</span>
+                </div>
+              }
+            </div>
+          }
         </div>
 
         <aside class="game-content__meta">
           <div class="game-meta">
-            @if (game()?.developer) {
+            @if (game()?.pegi) {
               <div class="game-meta__item">
-                <h6>Desarrollador</h6>
-                <span>{{ game()?.developer?.name }}</span>
+                <h6>PEGI</h6>
+                <img [src]="game()!.pegi!.imageUrl!" [alt]="game()!.pegi!.name" style="height: 48px" />
               </div>
             }
-            @if (game()?.publisher) {
+            @if (game()?.metacriticScore) {
               <div class="game-meta__item">
-                <h6>Distribuidor</h6>
-                <span>{{ game()?.publisher?.name }}</span>
-              </div>
-            }
-            @if (game()?.publishedAt) {
-              <div class="game-meta__item">
-                <h6>Añadido a Nebula</h6>
-                <span>{{ game()?.publishedAt | date: 'dd/MM/yyyy' }}</span>
-              </div>
-            }
-            @if (game()?.releaseDate) {
-              <div class="game-meta__item">
-                <h6>Lanzamiento</h6>
-                <span>{{ game()?.releaseDate | date: 'dd/MM/yyyy' }}</span>
+                <h6>Metacritic</h6>
+                <span class="metacritic-score">{{ game()?.metacriticScore }}</span>
               </div>
             }
             @if (game()?.totalRating) {
@@ -103,18 +111,6 @@
                   {{ game()!.totalRating! | number: '1.0-0' }}
                   <small>/100</small>
                 </span>
-              </div>
-            }
-            @if (game()?.metacriticScore) {
-              <div class="game-meta__item">
-                <h6>Metacritic</h6>
-                <span class="metacritic-score">{{ game()?.metacriticScore }}</span>
-              </div>
-            }
-            @if (game()?.pegi) {
-              <div class="game-meta__item">
-                <h6>PEGI</h6>
-                <img [src]="game()!.pegi!.imageUrl!" [alt]="game()!.pegi!.name" style="height: 32px" />
               </div>
             }
             @if (game()?.gameModes?.length) {
@@ -137,12 +133,12 @@
                 </div>
               </div>
             }
-            @if (game()?.multiplayerModes?.length) {
+            @if (game()?.categories?.length) {
               <div class="game-meta__item">
-                <h6>Multijugador</h6>
+                <h6>Categorías</h6>
                 <div class="game-tags">
-                  @for (mm of game()!.multiplayerModes!; track mm) {
-                    <span class="game-tag">{{ mm }}</span>
+                  @for (cat of game()!.categories!; track cat.id) {
+                    <span class="game-tag">{{ cat.name }}</span>
                   }
                 </div>
               </div>
@@ -157,16 +153,7 @@
                 </div>
               </div>
             }
-            @if (game()?.categories?.length) {
-              <div class="game-meta__item">
-                <h6>Categorías</h6>
-                <div class="game-tags">
-                  @for (cat of game()!.categories!; track cat.id) {
-                    <span class="game-tag">{{ cat.name }}</span>
-                  }
-                </div>
-              </div>
-            }
+
             @if (game()?.websites?.length) {
               <div class="game-meta__item">
                 <h6>Enlaces</h6>

@@ -18,12 +18,10 @@ import { AuthService } from '@services/auth.service';
 import { FavoritesService } from '@services/favorites.service';
 import { GameService } from '@services/game.service';
 import { Subscription } from 'rxjs';
-import { SafePipe } from '../../../../shared/pipes/safe.pipe';
 import { SharedUiModule } from '../../../../shared/ui/ui.module';
 import { ToastService } from '../../../../shared/ui/toast/toast.service';
 import { GameHeaderUi } from '../game-header/game-header.ui';
 import { GameScreenshotsUi } from '../game-screenshots/game-screenshots.ui';
-import { GameVideosUi } from '../game-videos/game-videos.ui';
 
 @Component({
   selector: 'app-game-details',
@@ -33,11 +31,9 @@ import { GameVideosUi } from '../game-videos/game-videos.ui';
     DatePipe,
     DecimalPipe,
     RouterModule,
-    SafePipe,
     GameHeaderUi,
     GameScreenshotsUi,
     SharedUiModule,
-    GameVideosUi,
   ],
   templateUrl: './game-details.ui.html',
 })
@@ -48,21 +44,40 @@ export class GameDetailsUi implements OnChanges {
   readonly game = signal<Game | null>(null);
   readonly isLoading = signal(true);
   readonly error = signal<string | null>(null);
-  readonly galleryVisible = signal(false);
-  readonly activeGalleryIndex = signal(0);
-  readonly galleryImages = computed(() =>
-    (this.game()?.screenshots ?? []).map((screenshot, index) => ({
-      itemImageSrc: screenshot.imageUrl,
-      thumbnailImageSrc: screenshot.thumbUrl,
-      alt: `${this.game()?.title ?? 'Screenshot'} ${index + 1}`,
-    })),
-  );
 
-  readonly videoVisible = signal(false);
-  readonly activeVideoIndex = signal(-1);
-  readonly activeVideoEmbedUrl = computed(() => {
-    const v = this.game()?.videos?.[this.activeVideoIndex()];
-    return v ? `${v.embedUrl}?autoplay=1&rel=0&modestbranding=1` : null;
+  readonly mediaVisible = signal(false);
+  readonly activeMediaIndex = signal(0);
+
+  readonly mediaItems = computed(() => {
+    const game = this.game();
+    const items: Array<
+      | { kind: 'screenshot'; itemImageSrc: string; alt: string }
+      | { kind: 'video'; embedUrl: string }
+    > = [];
+    const vids = game?.videos ?? [];
+    if (vids.length > 0) {
+      const trailerIdx = vids.findIndex(v => v.name && v.name.toLowerCase().includes('trailer'));
+      const chosen = vids[trailerIdx >= 0 ? trailerIdx : 0];
+      items.push({ kind: 'video', embedUrl: `${chosen.embedUrl}?autoplay=1&rel=0&modestbranding=1` });
+    }
+    (game?.screenshots ?? []).forEach((s, i) =>
+      items.push({ kind: 'screenshot', itemImageSrc: s.imageUrl, alt: `${game?.title ?? 'Screenshot'} ${i + 1}` })
+    );
+    return items;
+  });
+
+  readonly activeMediaItem = computed(() => this.mediaItems()[this.activeMediaIndex()] ?? null);
+  readonly activeGallerySrc = computed(() => {
+    const item = this.activeMediaItem();
+    return item?.kind === 'screenshot' ? item.itemImageSrc : null;
+  });
+  readonly activeGalleryAlt = computed(() => {
+    const item = this.activeMediaItem();
+    return item?.kind === 'screenshot' ? item.alt : '';
+  });
+  readonly activeEmbedUrl = computed(() => {
+    const item = this.activeMediaItem();
+    return item?.kind === 'video' ? item.embedUrl : null;
   });
 
   readonly isFavorite = signal(false);
@@ -95,87 +110,48 @@ export class GameDetailsUi implements OnChanges {
     }
   });
 
-  openGallery(index: number): void {
-    const images = this.galleryImages();
-    if (!images || images.length === 0) return;
-    const clamped = Math.max(0, Math.min(index, images.length - 1));
-    // Set index FIRST so the modal renders with the correct image from the start
-    this.activeGalleryIndex.set(clamped);
-    this.galleryVisible.set(true);
+  openMediaItem(event: { type: 'screenshot' | 'video'; index: number }): void {
+    const items = this.mediaItems();
+    let targetIndex: number;
+    if (event.type === 'video') {
+      targetIndex = 0;
+    } else {
+      const hasVideo = items.length > 0 && items[0].kind === 'video';
+      targetIndex = hasVideo ? event.index + 1 : event.index;
+    }
+    this.activeMediaIndex.set(Math.max(0, Math.min(targetIndex, items.length - 1)));
+    this.mediaVisible.set(true);
   }
 
-  prevImage(): void {
-    const images = this.galleryImages();
-    if (!images || images.length === 0) return;
-    const i = this.activeGalleryIndex();
-    const prev = (i - 1 + images.length) % images.length;
-    this.activeGalleryIndex.set(prev);
-  }
-
-  nextImage(): void {
-    const images = this.galleryImages();
-    if (!images || images.length === 0) return;
-    const i = this.activeGalleryIndex();
-    const next = (i + 1) % images.length;
-    this.activeGalleryIndex.set(next);
-  }
-
-  prevVideo(): void {
-    const count = this.game()?.videos?.length ?? 0;
+  prevMedia(): void {
+    const count = this.mediaItems().length;
     if (count === 0) return;
-    this.activeVideoIndex.set((this.activeVideoIndex() - 1 + count) % count);
+    this.activeMediaIndex.set((this.activeMediaIndex() - 1 + count) % count);
   }
 
-  nextVideo(): void {
-    const count = this.game()?.videos?.length ?? 0;
+  nextMedia(): void {
+    const count = this.mediaItems().length;
     if (count === 0) return;
-    this.activeVideoIndex.set((this.activeVideoIndex() + 1) % count);
+    this.activeMediaIndex.set((this.activeMediaIndex() + 1) % count);
   }
 
   @HostListener('document:keydown', ['$event'])
   handleKeydown(e: KeyboardEvent) {
-    if (this.galleryVisible()) {
+    if (this.mediaVisible()) {
       if (e.key === 'ArrowLeft') {
-        this.prevImage();
+        this.prevMedia();
         e.preventDefault();
       } else if (e.key === 'ArrowRight') {
-        this.nextImage();
+        this.nextMedia();
         e.preventDefault();
       } else if (e.key === 'Escape') {
-        this.galleryVisible.set(false);
-      }
-    } else if (this.videoVisible()) {
-      if (e.key === 'ArrowLeft') {
-        this.prevVideo();
-        e.preventDefault();
-      } else if (e.key === 'ArrowRight') {
-        this.nextVideo();
-        e.preventDefault();
-      } else if (e.key === 'Escape') {
-        this.closeVideo();
+        this.mediaVisible.set(false);
       }
     }
   }
 
-  onGalleryVisibleChange(visible: boolean): void {
-    this.galleryVisible.set(visible);
-  }
-
-  openVideo(index: number): void {
-    this.activeVideoIndex.set(index);
-    this.videoVisible.set(true);
-  }
-
-  onVideoVisibleChange(visible: boolean): void {
-    if (!visible) {
-      this.videoVisible.set(false);
-      this.activeVideoIndex.set(-1);
-    }
-  }
-
-  closeVideo(): void {
-    this.videoVisible.set(false);
-    this.activeVideoIndex.set(-1);
+  onMediaVisibleChange(visible: boolean): void {
+    this.mediaVisible.set(visible);
   }
 
   ngOnChanges(): void {

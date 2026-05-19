@@ -21,6 +21,8 @@ export const ADMIN_ROUTES: Routes = [
       { path: 'plans',        loadComponent: () => import('./pages/plans/plans.page').then(m => m.AdminPlansPage) },
       { path: 'plans/new',    loadComponent: () => import('./pages/plans/plans.page').then(m => m.AdminPlansPage) },
       { path: 'plans/:id',    loadComponent: () => import('./pages/plans/plans.page').then(m => m.AdminPlansPage) },
+      { path: 'reports',      loadComponent: () => import('./pages/reports/reports.page').then(m => m.AdminReportsPage) },
+      { path: 'reports/:id',  loadComponent: () => import('./pages/reports/reports.page').then(m => m.AdminReportsPage) },
     ],
   },
 ];

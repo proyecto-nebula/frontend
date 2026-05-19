@@ -1,5 +1,8 @@
-<div class="login-container w-full flex justify-content-center align-items-center">
+<div class="login-container">
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+    <div class="login-logo">
+      <app-logo height="42px" />
+    </div>
     <h2>Acceso a Nebula</h2>
 
     @if (errorMessage()) {
@@ -28,6 +31,14 @@
         placeholder="••••••••"
         [class.invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
       />
+    </div>
+
+    <div class="login-extras">
+      <label class="login-remember">
+        <input type="checkbox" formControlName="rememberMe" />
+        <span>Recordar en este equipo</span>
+      </label>
+      <a href="#" class="login-forgot" (click)="$event.preventDefault()">Olvidé mi contraseña</a>
     </div>
 
     <button type="submit" [disabled]="loginForm.invalid || loading()">

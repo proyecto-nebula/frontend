@@ -30,17 +30,34 @@ export class DebugPanelUi implements OnInit {
 
   ngOnInit() {
     if (this.isProd) return;
-    this.auth.user$.subscribe(u => (this.user = u));
+
+    // Pre-load from cache so the switcher works even before the first successful fetch
+    const cached = localStorage.getItem('debugUsers');
+    if (cached) {
+      try { this.users = JSON.parse(cached); } catch { /* ignore */ }
+    }
+
+    this.loadUsers();
+
+    // Retry loading when auth state changes (e.g. after logging in)
+    this.auth.user$.subscribe(u => {
+      this.user = u;
+      if (this.users.length === 0) this.loadUsers();
+    });
+  }
+
+  private loadUsers(): void {
     this.http.get<User[]>(API_ROUTES.users).subscribe({
       next: list => {
         this.users = list;
+        localStorage.setItem('debugUsers', JSON.stringify(list));
         const debugId = localStorage.getItem('debugUserId');
         if (debugId) {
           const u = list.find(u => String(u.id) === debugId);
           if (u) this.auth.debugSetUser(u);
         }
       },
-      error: () => {},
+      error: () => { /* use cached list */ },
     });
   }
 

@@ -13,6 +13,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { SharedUiModule } from '../../../../shared/ui/ui.module';
+import { LogoComponent } from '../../../../shared/ui/logo/logo.component';
 
 @Component({
   selector: 'app-header',
@@ -25,6 +26,7 @@ import { SharedUiModule } from '../../../../shared/ui/ui.module';
     ButtonModule,
     LoginFormComponent,
     SharedUiModule,
+    LogoComponent,
   ],
   templateUrl: './header.ui.html',
   styles: [
