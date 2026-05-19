@@ -729,24 +729,24 @@ app-game-featured {
 
 .metacritic-score {
   display: inline-block;
-  padding: 0.1rem 0.5rem;
+  padding: 0.15rem 0.6rem;
   border-radius: 4px;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.9rem;
+  line-height: 1.2;
   background: #6c3;
   color: #fff;
 }
 
 .igdb-rating {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 4px;
   font-weight: 700;
-  font-size: 1rem;
-  color: #a29bfe;
-
-  small {
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.45);
-    font-weight: 400;
-  }
+  font-size: 1.9rem;
+  line-height: 1.2;
+  background: #a29bfe;
+  color: #fff;
 }
 
 /* Tag pills (game modes, perspectives, etc.) */
@@ -819,8 +819,8 @@ app-game-featured {
 }
 
 .game-website-icon {
-  width: 22px;
-  height: 22px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
 }
 
@@ -1031,3 +1031,164 @@ h1 {
 }
 
 /* PrimeNG Galleria: rely on PrimeNG's `baseZIndex` and avoid forcing z-index here */
+
+/* ── My Games Page ───────────────────────────────────────────────── */
+.my-games-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2.5rem;
+  align-items: flex-start;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+  }
+
+  &__collections {
+    min-width: 0;
+  }
+
+  &__ranking {
+    min-width: 0;
+  }
+}
+
+.total-playtime {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 1.5rem 1.5rem;
+  background: rgba(108, 92, 231, 0.12);
+  border: 1px solid rgba(108, 92, 231, 0.25);
+  border-radius: var(--rounded-corners);
+  margin-bottom: 1.25rem;
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 0.4rem;
+  }
+
+  &__time {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  &__value {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #a29bfe;
+
+    small {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-left: 0.1em;
+    }
+  }
+
+  &__unit {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+
+    small {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-left: 0.1em;
+      color: rgba(255, 255, 255, 0.4);
+    }
+  }
+}
+
+.game-list {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--rounded-corners);
+  overflow: hidden;
+
+  &__header {
+    padding: 0.9rem 1.25rem 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+    h3 {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+  }
+
+  &__items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__item {
+    padding: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    &:last-child { border-bottom: none; }
+    &:hover { background: rgba(255, 255, 255, 0.03); }
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+
+    &:hover .game-list__name { color: #a29bfe; }
+  }
+
+  &__rank {
+    flex: 0 0 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.3);
+    text-align: right;
+  }
+
+  &__banner {
+    flex: 0 0 60px;
+    width: 60px;
+    height: 34px;
+    object-fit: cover;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.06);
+
+    &--empty {
+      display: block;
+    }
+  }
+
+  &__name {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__duration {
+    flex: 0 0 auto;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.45);
+    white-space: nowrap;
+  }
+
+  &__loading,
+  &__empty {
+    padding: 2rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 0.875rem;
+  }
+}

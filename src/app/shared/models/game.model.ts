@@ -34,4 +34,5 @@ export interface Game {
   totalRating?: number | null;
   videos?: { videoId: string; name?: string; url: string; embedUrl: string }[];
   websites?: { url: string; type: number }[];
+  totalDuration?: number; // seconds — present in most-played collections
 }

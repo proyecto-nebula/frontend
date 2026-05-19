@@ -18,9 +18,9 @@
         <tr>
           <th pSortableColumn="id" style="width:60px">ID <p-sortIcon field="id" /></th>
           <th pSortableColumn="name">Nombre <p-sortIcon field="name" /></th>
-          <th pSortableColumn="price" style="width:100px">Precio <p-sortIcon field="price" /></th>
-          <th>Calidad</th>
-          <th>GPU</th>
+          <th pSortableColumn="price" style="width:100px" class="hide-sm">Precio <p-sortIcon field="price" /></th>
+          <th class="hide-sm">Calidad</th>
+          <th class="hide-sm">GPU</th>
           <th style="width:90px" class="admin-table__actions"><span class="th-label">Acciones</span></th>
         </tr>
       </ng-template>
@@ -28,9 +28,9 @@
         <tr>
           <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
-          <td>{{ item.price | currency:'EUR' }}</td>
-          <td>{{ item.quality ?? '—' }}</td>
-          <td>{{ item.gpu ?? '—' }}</td>
+          <td class="hide-sm">{{ item.price | currency:'EUR' }}</td>
+          <td class="hide-sm">{{ item.quality ?? '—' }}</td>
+          <td class="hide-sm">{{ item.gpu ?? '—' }}</td>
           <td class="admin-table__actions">
             <div class="actions-cell">
               <button class="btn-icon" title="Editar" (click)="goEdit(item.id)"><i class="pi pi-pencil"></i></button>

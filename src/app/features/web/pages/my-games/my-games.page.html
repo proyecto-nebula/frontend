@@ -3,21 +3,40 @@
 @if (isLoading()) {
   <div>Cargando...</div>
 } @else {
-  <app-game-collection
-    title="Últimos juegos jugados"
-    [collection]="lastPlayedGames()"
-    emptyMessage="Todavía no has jugado a ningún juego"
-  ></app-game-collection>
+  <div class="my-games-layout">
+    <div class="my-games-layout__collections">
+      <app-game-collection
+        title="Últimos juegos jugados"
+        [collection]="lastPlayedGames()"
+        emptyMessage="Todavía no has jugado a ningún juego"
+      ></app-game-collection>
 
-  <app-game-collection
-    title="Mis favoritos"
-    [collection]="favoriteGames()"
-    emptyMessage="Todavía no tienes juegos favoritos"
-  ></app-game-collection>
+      <app-game-collection
+        title="Mis favoritos"
+        [collection]="favoriteGames()"
+        emptyMessage="Todavía no tienes juegos favoritos"
+      ></app-game-collection>
 
-  <app-game-collection
-    title="Juegos más jugados"
-    [collection]="mostPlayedGames()"
-    emptyMessage="Todavía no has jugado lo suficiente a ningún juego"
-  ></app-game-collection>
+      <app-game-collection
+        title="Recomendados para ti"
+        [collection]="recommendedGames()"
+        emptyMessage="Sin recomendaciones disponibles"
+      ></app-game-collection>
+    </div>
+
+    <div class="my-games-layout__ranking">
+      <div class="total-playtime">
+        <span class="total-playtime__label">Tiempo jugado</span>
+        <div class="total-playtime__time">
+          <span class="total-playtime__value">{{ totalPlayDisplay().hours | number:'1.0-0' }}<small>h</small></span>
+          <span class="total-playtime__unit">{{ totalPlayDisplay().minutes | number:'2.0-0' }}<small>min</small></span>
+        </div>
+      </div>
+
+      <app-game-list
+          title="Juegos más jugados"
+          [games]="mostPlayedGames()"
+        ></app-game-list>
+    </div>
+  </div>
 }

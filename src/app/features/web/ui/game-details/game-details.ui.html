@@ -106,11 +106,8 @@
             }
             @if (game()?.totalRating) {
               <div class="game-meta__item">
-                <h6>Valoración IGDB</h6>
-                <span class="igdb-rating">
-                  {{ game()!.totalRating! | number: '1.0-0' }}
-                  <small>/100</small>
-                </span>
+                <h6>IGDB</h6>
+                <span class="igdb-rating">{{ game()!.totalRating! | number: '1.0-0' }}</span>
               </div>
             }
             @if (game()?.gameModes?.length) {
@@ -154,11 +151,34 @@
               </div>
             }
 
-            @if (game()?.websites?.length) {
+            @if (platformSites().length) {
+              <div class="game-meta__item">
+                <h6>Otras plataformas</h6>
+                <div class="game-websites">
+                  @for (site of platformSites(); track site.url) {
+                    <a
+                      [href]="site.url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="game-website-link"
+                      [title]="websiteLabel(site.type)"
+                    >
+                      <img
+                        [src]="'websites/' + site.type + '.svg'"
+                        [alt]="websiteLabel(site.type)"
+                        class="game-website-icon"
+                        onerror="this.style.display = 'none'"
+                      />
+                    </a>
+                  }
+                </div>
+              </div>
+            }
+            @if (otherSites().length) {
               <div class="game-meta__item">
                 <h6>Enlaces</h6>
                 <div class="game-websites">
-                  @for (site of game()!.websites!; track site.url) {
+                  @for (site of otherSites(); track site.url) {
                     <a
                       [href]="site.url"
                       target="_blank"

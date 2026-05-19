@@ -18,10 +18,10 @@
         <tr>
           <th pSortableColumn="id" style="width:60px">ID <p-sortIcon field="id" /></th>
           <th pSortableColumn="title">Título <p-sortIcon field="title" /></th>
-          <th>Desarrollador</th>
-          <th pSortableColumn="releaseDate" style="width:110px">Fecha <p-sortIcon field="releaseDate" /></th>
-          <th pSortableColumn="isActive" style="width:80px">Activo <p-sortIcon field="isActive" /></th>
-          <th pSortableColumn="isFeatured" style="width:88px">Dest. <p-sortIcon field="isFeatured" /></th>
+          <th class="hide-sm">Desarrollador</th>
+          <th pSortableColumn="releaseDate" style="width:110px" class="hide-sm">Fecha <p-sortIcon field="releaseDate" /></th>
+          <th pSortableColumn="isActive" style="width:80px" class="hide-sm">Activo <p-sortIcon field="isActive" /></th>
+          <th pSortableColumn="isFeatured" style="width:88px" class="hide-sm">Dest. <p-sortIcon field="isFeatured" /></th>
           <th style="width:110px" class="admin-table__actions"><span class="th-label">Acciones</span></th>
         </tr>
       </ng-template>
@@ -29,10 +29,10 @@
         <tr>
           <td>{{ item.id }}</td>
           <td><a [routerLink]="['/games', item.slug]" target="_blank" class="table-link">{{ item.title }}</a></td>
-          <td>{{ item.developer?.name ?? '—' }}</td>
-          <td>{{ item.releaseDate }}</td>
-          <td><p-toggleswitch [ngModel]="!!item.isActive"   (ngModelChange)="toggleField(item.id, 'isActive', $event)"></p-toggleswitch></td>
-          <td><p-toggleswitch [ngModel]="!!item.isFeatured" (ngModelChange)="toggleField(item.id, 'isFeatured', $event)"></p-toggleswitch></td>
+          <td class="hide-sm">{{ item.developer?.name ?? '—' }}</td>
+          <td class="hide-sm">{{ item.releaseDate }}</td>
+          <td class="hide-sm"><p-toggleswitch [ngModel]="!!item.isActive"   (ngModelChange)="toggleField(item.id, 'isActive', $event)"></p-toggleswitch></td>
+          <td class="hide-sm"><p-toggleswitch [ngModel]="!!item.isFeatured" (ngModelChange)="toggleField(item.id, 'isFeatured', $event)"></p-toggleswitch></td>
           <td class="admin-table__actions">
             <div class="actions-cell">
               <button class="btn-icon" title="Ver" (click)="goView(item.id)"><i class="pi pi-eye"></i></button>

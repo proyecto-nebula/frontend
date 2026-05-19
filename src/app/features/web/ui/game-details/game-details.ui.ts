@@ -201,7 +201,20 @@ export class GameDetailsUi implements OnChanges {
     16: 'Epic Games',
     17: 'GOG',
     18: 'Discord',
+    22: 'Xbox',
+    23: 'PlayStation',
+    24: 'Nintendo',
   };
+
+  private static readonly PLATFORM_TYPES = new Set([13, 16, 17, 22, 23, 24]);
+
+  readonly platformSites = computed(() =>
+    (this.game()?.websites ?? []).filter(s => GameDetailsUi.PLATFORM_TYPES.has(s.type))
+  );
+
+  readonly otherSites = computed(() =>
+    (this.game()?.websites ?? []).filter(s => !GameDetailsUi.PLATFORM_TYPES.has(s.type))
+  );
 
   websiteLabel(category: number): string {
     return GameDetailsUi.WEBSITE_LABELS[category] ?? 'Web';

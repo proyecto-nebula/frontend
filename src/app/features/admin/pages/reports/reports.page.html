@@ -17,10 +17,10 @@
         <tr>
           <th pSortableColumn="id" style="width:60px">ID <p-sortIcon field="id" /></th>
           <th pSortableColumn="gameTitle">Juego <p-sortIcon field="gameTitle" /></th>
-          <th style="width:140px">Tipo</th>
-          <th>Descripción</th>
-          <th pSortableColumn="createdAt" style="width:150px">Fecha <p-sortIcon field="createdAt" /></th>
-          <th style="width:90px;text-align:center">Resuelto</th>
+          <th style="width:140px" class="hide-sm">Tipo</th>
+          <th class="hide-sm">Descripción</th>
+          <th pSortableColumn="createdAt" style="width:150px" class="hide-sm">Fecha <p-sortIcon field="createdAt" /></th>
+          <th style="width:90px;text-align:center" class="hide-sm">Resuelto</th>
           <th style="width:80px" class="admin-table__actions"><span class="th-label">Acciones</span></th>
         </tr>
       </ng-template>
@@ -34,12 +34,12 @@
               {{ item.gameTitle ?? '—' }}
             }
           </td>
-          <td>{{ typeLabel(item.type) }}</td>
-          <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+          <td class="hide-sm">{{ typeLabel(item.type) }}</td>
+          <td class="hide-sm" style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
             {{ item.description || '—' }}
           </td>
-          <td>{{ item.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
-          <td style="text-align:center">
+          <td class="hide-sm">{{ item.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td class="hide-sm" style="text-align:center">
             <p-toggleswitch
               [ngModel]="!!item.isSolved"
               (ngModelChange)="toggleSolved(item.id, $event)"

@@ -1,9 +1,29 @@
-@if (games.length > 0) {
-  <div class="games-list">
-    @for (game of games; track game.id) {
-      <app-game-card [title]="game.title" [bannerUrl]="game.bannerUrl" [coverUrl]="game.coverUrl" [slug]="game.slug ?? ''"></app-game-card>
-    }
-  </div>
-} @else {
-  <p class="empty-message">No hay juegos para mostrar.</p>
-}
+<section class="game-list">
+  @if (title) {
+    <header class="game-list__header">
+      <h3>{{ title }}</h3>
+    </header>
+  }
+  @if (games === null) {
+    <div class="game-list__loading">Cargando...</div>
+  } @else if (!games.length) {
+    <div class="game-list__empty">Todavía no has jugado a ningún juego</div>
+  } @else {
+    <ol class="game-list__items">
+      @for (game of topGames; track game.id; let i = $index) {
+        <li class="game-list__item">
+          <a class="game-list__row" [routerLink]="['/games', game.slug]">
+            <span class="game-list__rank">{{ i + 1 }}</span>
+            @if (game.bannerUrl) {
+              <img class="game-list__banner" [src]="game.bannerUrl" [alt]="game.title" />
+            } @else {
+              <div class="game-list__banner game-list__banner--empty"></div>
+            }
+            <span class="game-list__name">{{ game.title }}</span>
+            <span class="game-list__duration">{{ formatDuration(game.totalDuration ?? 0) }}</span>
+          </a>
+        </li>
+      }
+    </ol>
+  }
+</section>
