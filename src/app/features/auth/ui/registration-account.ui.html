@@ -1,13 +1,87 @@
-<div class="registration-account" [formGroup]="group">
-  <div class="field">
-    <label>Email</label>
-    <input type="email" formControlName="email" placeholder="tu@email.com" />
-    @if (group.get('email')?.invalid && group.get('email')?.touched) { <div class="error">Email inválido</div> }
+<div class="reg-account" [formGroup]="group">
+
+  <!-- Email -->
+  <div class="reg-field" [class.is-error]="emailCtrl?.invalid && emailCtrl?.touched">
+    <label class="reg-label">Correo electrónico</label>
+    <div class="reg-input-wrap">
+      <input
+        class="reg-input"
+        type="email"
+        formControlName="email"
+        placeholder="tu@email.com"
+        autocomplete="email"
+      />
+      @if (emailChecking) {
+        <span class="reg-input-icon spin">⏳</span>
+      } @else if (emailCtrl?.valid && !emailTaken) {
+        <span class="reg-input-icon ok">✓</span>
+      }
+    </div>
+    @if (emailCtrl?.touched) {
+      @if (emailCtrl?.hasError('required')) { <div class="reg-error">El email es obligatorio</div> }
+      @else if (emailCtrl?.hasError('email')) { <div class="reg-error">Introduce un email válido</div> }
+      @else if (emailCtrl?.hasError('emailTaken')) { <div class="reg-error">Este email ya está registrado</div> }
+    }
   </div>
 
-  <div class="field">
-    <label>Contraseña</label>
-    <input type="password" formControlName="password" placeholder="Min. 6 caracteres" />
-    @if (group.get('password')?.invalid && group.get('password')?.touched) { <div class="error">Contraseña inválida</div> }
+  <!-- Contraseña -->
+  <div class="reg-field" [class.is-error]="passwordCtrl?.invalid && passwordCtrl?.touched">
+    <label class="reg-label">Contraseña</label>
+    <div class="reg-input-wrap">
+      <input
+        class="reg-input"
+        [type]="showPassword ? 'text' : 'password'"
+        formControlName="password"
+        placeholder="Mínimo 8 caracteres"
+        autocomplete="new-password"
+      />
+      <button type="button" class="reg-input-icon toggle-pw" (click)="togglePassword()" tabindex="-1">
+        {{ showPassword ? '🙈' : '👁' }}
+      </button>
+    </div>
+    @if (passwordCtrl?.value) {
+      <div class="pw-checks">
+        @for (c of passwordStrengthChecks; track c.label) {
+          <div class="pw-check" [class.ok]="c.ok">
+            <span class="pw-check__icon">{{ c.ok ? '✓' : '✗' }}</span>
+            <span>{{ c.label }}</span>
+          </div>
+        }
+        <div class="pw-strength pw-strength--{{ passwordStrengthLevel }}">
+          <div class="pw-strength__bar"></div>
+          <div class="pw-strength__bar"></div>
+          <div class="pw-strength__bar"></div>
+          <span class="pw-strength__label">
+            {{ passwordStrengthLevel === 'strong' ? 'Segura' : passwordStrengthLevel === 'medium' ? 'Moderada' : 'Débil' }}
+          </span>
+        </div>
+      </div>
+    }
   </div>
+
+  <!-- Fecha de nacimiento -->
+  <div class="reg-field">
+    <label class="reg-label">Fecha de nacimiento</label>
+    <div class="reg-date-row">
+      <select class="reg-select" formControlName="birthdateDay">
+        <option [ngValue]="null" disabled>Día</option>
+        @for (d of days; track d) { <option [ngValue]="d">{{ d }}</option> }
+      </select>
+      <select class="reg-select" formControlName="birthdateMonth">
+        <option [ngValue]="null" disabled>Mes</option>
+        @for (m of MONTHS; track $index) { <option [ngValue]="$index + 1">{{ m }}</option> }
+      </select>
+      <select class="reg-select" formControlName="birthdateYear">
+        <option [ngValue]="null" disabled>Año</option>
+        @for (y of years; track y) { <option [ngValue]="y">{{ y }}</option> }
+      </select>
+    </div>
+    @if (
+      (group.get('birthdateDay')?.invalid || group.get('birthdateMonth')?.invalid || group.get('birthdateYear')?.invalid)
+      && group.get('birthdateDay')?.touched
+    ) {
+      <div class="reg-error">Introduce tu fecha de nacimiento completa</div>
+    }
+  </div>
+
 </div>

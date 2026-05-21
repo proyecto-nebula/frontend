@@ -2,9 +2,15 @@
   <div class="plan-list">
     @for (p of plans; track p.id) {
       <div class="plan-item" (click)="select(p)" [class.selected]="group.get('planId')?.value === p.id">
-        <div class="plan-info">
-          <div class="plan-name">{{ p.name }}</div>
-          <div class="plan-desc">{{ p.description }}</div>
+        <div class="plan-name">{{ p.name }}</div>
+        <div class="plan-desc">{{ p.description }}</div>
+        <div class="plan-specs">
+          @if (p.quality) {
+            <div class="plan-spec"><span class="plan-spec__icon">🎞</span><span>{{ p.quality }}</span></div>
+          }
+          @if (p.gpu) {
+            <div class="plan-spec"><span class="plan-spec__icon">🖥</span><span>{{ p.gpu }}</span></div>
+          }
         </div>
         <div class="plan-price">{{ p.price | currency:'EUR' }}</div>
       </div>

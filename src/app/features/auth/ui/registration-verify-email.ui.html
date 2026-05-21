@@ -1,0 +1,28 @@
+<div class="verify-email">
+  <div class="verify-email__icon">✉️</div>
+  <p class="verify-email__text">
+    Hemos enviado un código de verificación a<br />
+    <strong>{{ email || 'tu correo electrónico' }}</strong>
+  </p>
+  <p class="verify-email__hint">Introduce el código de 6 caracteres que encontrarás en tu bandeja de entrada.</p>
+
+  <div class="verify-email__boxes" (paste)="onPaste($event)">
+    @for (d of digits; track $index) {
+      <input
+        #codeBox
+        class="verify-email__box"
+        type="text"
+        maxlength="1"
+        inputmode="text"
+        autocomplete="one-time-code"
+        [value]="d"
+        (input)="onInput($index, $event)"
+        (keydown)="onKeydown($index, $event)"
+      />
+    }
+  </div>
+
+  <p class="verify-email__resend">
+    ¿No has recibido nada? <button type="button" class="verify-email__resend-btn">Reenviar código</button>
+  </p>
+</div>

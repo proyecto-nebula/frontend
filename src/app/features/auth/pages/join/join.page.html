@@ -1,30 +1,49 @@
-<div class="join-root" [class.phase-0]="phase===0" [class.phase-1]="phase===1" [class.phase-2]="phase===2" [class.phase-3]="phase===3" [class.phase-4]="phase===4">
-  <div class="phases" [style.transform]="'translateX(-' + (phase * 20) + '%)'">
-    <section class="phase">
-      <h2>Cuenta</h2>
-      <auth-registration-account-ui [formGroup]="account"></auth-registration-account-ui>
-    </section>
+<div class="join-page">
 
-    <section class="phase">
-      <h2>Perfil</h2>
-      <auth-registration-profile-ui [formGroup]="profile" [avatars]="avatars" (avatarSelected)="onAvatarSelected($event)"></auth-registration-profile-ui>
-    </section>
-
-    <section class="phase">
-      <h2>Plan</h2>
-      <auth-registration-plan-ui [group]="plan" [plans]="plans"></auth-registration-plan-ui>
-    </section>
-
-    <section class="phase">
-      <h2>Pago</h2>
-      <auth-registration-payment-ui [group]="payment"></auth-registration-payment-ui>
-    </section>
-
-    <!-- success is shown on home as a modal after registration -->
+  <!-- Logo fijo en la parte superior -->
+  <div class="join-logo">
+    <app-logo height="38px" />
   </div>
 
-  <div class="controls">
-    <button class="btn ghost" (click)="back()" [disabled]="phase===0">Atrás</button>
-    <button class="btn" (click)="next()">{{ nextLabel }}</button>
+  <div class="join-root">
+    <div class="phases" [style.transform]="'translateX(-' + (phase * 20) + '%)'">
+
+      <!-- Fase 0: Cuenta -->
+      <section class="phase">
+        <h2 class="phase-title">Crea tu cuenta</h2>
+        <auth-registration-account-ui [formGroup]="account"></auth-registration-account-ui>
+      </section>
+
+      <!-- Fase 1: Verificación de email -->
+      <section class="phase">
+        <h2 class="phase-title">Verifica tu correo</h2>
+        <auth-registration-verify-email-ui [email]="account.get('email')?.value"></auth-registration-verify-email-ui>
+      </section>
+
+      <!-- Fase 2: Perfil -->
+      <section class="phase">
+        <h2 class="phase-title">Tu perfil</h2>
+        <auth-registration-profile-ui [formGroup]="profile" [avatars]="avatars" (avatarSelected)="onAvatarSelected($event)"></auth-registration-profile-ui>
+      </section>
+
+      <!-- Fase 3: Plan -->
+      <section class="phase">
+        <h2 class="phase-title">Elige tu plan</h2>
+        <auth-registration-plan-ui [group]="plan" [plans]="plans"></auth-registration-plan-ui>
+      </section>
+
+      <!-- Fase 4: Pago -->
+      <section class="phase">
+        <h2 class="phase-title">Datos de pago</h2>
+        <auth-registration-payment-ui [group]="payment"></auth-registration-payment-ui>
+      </section>
+
+    </div>
+
+    <div class="controls">
+      <button class="btn ghost" (click)="back()" [disabled]="phase===0">Atrás</button>
+      <button class="btn" (click)="next()">{{ nextLabel }}</button>
+    </div>
   </div>
+
 </div>

@@ -28,7 +28,14 @@
       <ng-template pTemplate="body" let-item>
         <tr>
           <td>{{ item.id }}</td>
-          <td><a [routerLink]="['/games', item.slug]" target="_blank" class="table-link">{{ item.title }}</a></td>
+          <td>
+            <div class="table-game-title">
+              @if (item.bannerUrl) {
+                <img [src]="item.bannerUrl" [alt]="item.title" class="table-game-banner" />
+              }
+              <a [routerLink]="['/games', item.slug]" target="_blank" class="table-link">{{ item.title }}</a>
+            </div>
+          </td>
           <td class="hide-sm">{{ item.developer?.name ?? '—' }}</td>
           <td class="hide-sm">{{ item.releaseDate }}</td>
           <td class="hide-sm"><p-toggleswitch [ngModel]="!!item.isActive"   (ngModelChange)="toggleField(item.id, 'isActive', $event)"></p-toggleswitch></td>

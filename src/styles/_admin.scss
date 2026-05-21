@@ -286,6 +286,20 @@
   &:hover { text-decoration: underline; color: #c4bbff; }
 }
 
+.table-game-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.table-game-banner {
+  width: 64px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
 /* Form sections */
 .admin-form {
   &__section {
