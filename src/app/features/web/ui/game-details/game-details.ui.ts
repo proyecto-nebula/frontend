@@ -80,6 +80,14 @@ export class GameDetailsUi implements OnChanges {
     return item?.kind === 'video' ? item.embedUrl : null;
   });
 
+  readonly descriptionParagraphs = computed(() => {
+    const desc = this.game()?.description ?? '';
+    return desc
+      .split(/\r?\n/)
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+  });
+
   readonly isFavorite = signal(false);
   readonly favoriteLoading = signal(false);
 

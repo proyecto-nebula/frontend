@@ -403,14 +403,18 @@ app-game-featured {
   font-weight: 500;
   padding: 0.35rem 0.9rem;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 
   &:hover {
     background: rgba(255, 255, 255, 0.13);
     color: #fff;
   }
 
-  i { font-size: 0.85rem; }
+  i {
+    font-size: 0.85rem;
+  }
 }
 
 /* Share modal content */
@@ -460,10 +464,19 @@ app-game-featured {
   font-size: 1.25rem;
   transition: transform 0.15s;
 
-  &--email    { background: #555; }
-  &--facebook { background: #1877f2; }
-  &--x        { background: #000; border: 1px solid rgba(255,255,255,0.15); }
-  &--reddit   { background: #ff4500; }
+  &--email {
+    background: #555;
+  }
+  &--facebook {
+    background: #1877f2;
+  }
+  &--x {
+    background: #000;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  &--reddit {
+    background: #ff4500;
+  }
 }
 
 /* Report form modal */
@@ -490,9 +503,14 @@ app-game-featured {
   cursor: pointer;
   font-size: 0.88rem;
   color: rgba(255, 255, 255, 0.75);
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    color 0.15s;
 
-  input[type='radio'] { display: none; }
+  input[type='radio'] {
+    display: none;
+  }
 
   &.selected {
     border-color: rgba(108, 92, 231, 0.6);
@@ -525,8 +543,12 @@ app-game-featured {
     outline: none;
     font-family: inherit;
 
-    &:focus { border-color: rgba(108, 92, 231, 0.5); }
-    &::placeholder { color: rgba(255, 255, 255, 0.25); }
+    &:focus {
+      border-color: rgba(108, 92, 231, 0.5);
+    }
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.25);
+    }
   }
 }
 
@@ -662,7 +684,7 @@ app-game-featured {
     min-width: 0;
 
     p {
-      margin: 0;
+      margin: 0 0 10px 0;
       line-height: 1.7;
       color: rgba(255, 255, 255, 0.85);
     }
@@ -1129,8 +1151,12 @@ h1 {
     padding: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 
-    &:last-child { border-bottom: none; }
-    &:hover { background: rgba(255, 255, 255, 0.03); }
+    &:last-child {
+      border-bottom: none;
+    }
+    &:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
   }
 
   &__row {
@@ -1142,7 +1168,9 @@ h1 {
     text-decoration: none;
     color: inherit;
 
-    &:hover .game-list__name { color: #a29bfe; }
+    &:hover .game-list__name {
+      color: #a29bfe;
+    }
   }
 
   &__rank {

@@ -47,7 +47,11 @@
             <span class="game-detail__year">{{ game()?.releaseDate | date: 'yyyy' }}</span>
           }
           @if (game()?.description) {
-            <p class="game-detail__description">{{ game()?.description }}</p>
+            <div class="game-detail__description">
+              @for (p of descriptionParagraphs(); track p) {
+                <p>{{ p }}</p>
+              }
+            </div>
           }
 
           @if (
