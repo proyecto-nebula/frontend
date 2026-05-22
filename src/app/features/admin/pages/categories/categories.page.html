@@ -18,7 +18,7 @@
         <tr>
           <th pSortableColumn="id" style="width:60px">ID <p-sortIcon field="id" /></th>
           <th pSortableColumn="name">Nombre <p-sortIcon field="name" /></th>
-          <th style="width:70px" class="hide-sm">Imagen</th>
+          <th style="width:70px" class="hide-sm">Icono</th>
           <th style="width:90px" class="admin-table__actions"><span class="th-label">Acciones</span></th>
         </tr>
       </ng-template>
@@ -27,8 +27,8 @@
           <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
           <td class="hide-sm">
-            @if (item.imageUrl) {
-              <img [src]="item.imageUrl" [alt]="item.name" style="height:32px;object-fit:cover;border-radius:4px" />
+            @if (item.icon) {
+              <i [class]="item.icon" aria-hidden="true" style="font-size:20px"></i>
             } @else { — }
           </td>
           <td class="admin-table__actions">
@@ -58,8 +58,8 @@
           <input formControlName="name" type="text" placeholder="Nombre de la categoría" />
         </label>
         <label class="admin-form__field admin-form__field--url">
-          <span>URL de imagen</span>
-          <input formControlName="imageUrl" type="text" placeholder="https://..." />
+          <span>Clase de icono (p.ej. "pi pi-tags")</span>
+          <input formControlName="icon" type="text" placeholder="p.ej. pi pi-tags" />
         </label>
       </div>
       <div class="admin-form__actions">

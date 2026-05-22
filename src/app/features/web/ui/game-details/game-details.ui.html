@@ -50,14 +50,23 @@
             <p class="game-detail__description">{{ game()?.description }}</p>
           }
 
-          @if (game()?.multiplayerModes?.length || game()?.releaseDate || game()?.publishedAt || game()?.developer || game()?.publisher) {
+          @if (
+            game()?.categories?.length ||
+            game()?.releaseDate ||
+            game()?.publishedAt ||
+            game()?.developer ||
+            game()?.publisher
+          ) {
             <div class="game-info-bar">
-              @if (game()?.multiplayerModes?.length) {
+              @if (game()?.categories?.length) {
                 <div class="game-info-bar__item">
-                  <span class="game-info-bar__label">Multijugador</span>
+                  <span class="game-info-bar__label">Categorías</span>
                   <div class="game-tags">
-                    @for (mm of game()!.multiplayerModes!; track mm) {
-                      <span class="game-tag">{{ mm }}</span>
+                    @for (cat of game()!.categories!; track cat.id) {
+                      <span class="game-tag">
+                        <i [class]="'pi ' + cat.icon" aria-hidden="true" style="margin-right: 6px"></i>
+                        {{ cat.name }}
+                      </span>
                     }
                   </div>
                 </div>
@@ -130,12 +139,12 @@
                 </div>
               </div>
             }
-            @if (game()?.categories?.length) {
+            @if (game()?.multiplayerModes?.length) {
               <div class="game-meta__item">
-                <h6>Categorías</h6>
+                <h6>Multijugador</h6>
                 <div class="game-tags">
-                  @for (cat of game()!.categories!; track cat.id) {
-                    <span class="game-tag">{{ cat.name }}</span>
+                  @for (mm of game()!.multiplayerModes!; track mm) {
+                    <span class="game-tag">{{ mm }}</span>
                   }
                 </div>
               </div>

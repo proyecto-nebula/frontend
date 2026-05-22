@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { API_ROUTES } from '@config/api.routes';
 
-interface CategoryItem { id: number; name: string; imageUrl?: string; }
+interface CategoryItem { id: number; name: string; icon?: string; }
 
 @Component({
   selector: 'app-admin-categories',
@@ -32,12 +32,12 @@ export class AdminCategoriesPage implements OnInit {
     if (id) {
       this.editingId.set(Number(id));
       this.viewMode.set('form');
-      this.form = this.fb.group({ name: ['', Validators.required], imageUrl: [''] });
+      this.form = this.fb.group({ name: ['', Validators.required], icon: [''] });
       this.http.get<CategoryItem[]>(`${API_ROUTES.categories}?id=${id}`)
         .subscribe(items => { if (items[0]) this.form.patchValue(items[0]); });
     } else if (isNew) {
       this.viewMode.set('form');
-      this.form = this.fb.group({ name: ['', Validators.required], imageUrl: [''] });
+      this.form = this.fb.group({ name: ['', Validators.required], icon: [''] });
     } else {
       this.loadList();
     }

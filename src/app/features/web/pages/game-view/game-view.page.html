@@ -7,11 +7,10 @@
     emptyMessage="No se encontraron juegos similares"
   ></app-game-collection>
 
-  @if (developerName()) {
+  @if (developerName() && developerGames()?.length) {
     <app-game-collection
       [title]="'Otros juegos de ' + developerName()"
       [collection]="developerGames()"
-      emptyMessage="No hay otros juegos de este desarrollador"
     ></app-game-collection>
   }
 </div>
