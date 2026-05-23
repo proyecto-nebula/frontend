@@ -81,7 +81,7 @@ export class GameDetailsUi implements OnChanges {
   });
 
   readonly descriptionParagraphs = computed(() => {
-    const desc = this.game()?.description ?? '';
+    const desc = this.game()?.description ?? this.game()?.summary ?? '';
     return desc
       .split(/\r?\n/)
       .map(s => s.trim())
