@@ -1,16 +1,16 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { firstValueFrom } from 'rxjs';
-import { AuthService } from '@services/auth.service';
-import { PlansService } from '@services/plans.service';
-import { RegistrationPlanUi } from '@auth/ui/registration-plan.ui';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { RegistrationPaymentUi } from '@auth/ui/registration-payment.ui';
+import { RegistrationPlanUi } from '@auth/ui/registration-plan.ui';
 import { API_ROUTES } from '@config/api.routes';
 import { Plan } from '@models/plan.model';
+import { AuthService } from '@services/auth.service';
+import { PlansService } from '@services/plans.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-settings-plan-page',

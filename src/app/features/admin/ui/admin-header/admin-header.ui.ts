@@ -4,8 +4,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { API_ROUTES } from '@config/api.routes';
 import { AuthService } from '@services/auth.service';
-import { filter, map, startWith } from 'rxjs/operators';
 import { ReportsBadgeService } from '@services/reports-badge.service';
+import { filter, map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-header',

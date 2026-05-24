@@ -3,8 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { API_ROUTES } from '@config/api.routes';
 import { AuthResponse, User } from '@models/user.model';
-import { tap } from 'rxjs';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -25,11 +24,11 @@ export class AuthService {
           localStorage.setItem('token', res.token);
           // Fetch profile and update internal signals/subjects so UI updates reactively
           this.http.get<User>(`${API_ROUTES.users}?token=${encodeURIComponent(res.token)}`).subscribe(
-            (u) => {
+            u => {
               this._user.set(u ?? null);
               this._userSubject.next(u ?? null);
             },
-            (err) => {
+            err => {
               console.error('[AuthService] failed to fetch profile after login', err);
             },
           );
@@ -42,12 +41,12 @@ export class AuthService {
     const token = this.getToken();
     if (token) {
       this.http.get<User>(`${API_ROUTES.users}?token=${encodeURIComponent(token)}`).subscribe(
-        (u) => {
+        u => {
           this._user.set(u ?? null);
           this._userSubject.next(u ?? null);
           this._loadedSubject.next(true);
         },
-        (err) => {
+        err => {
           console.error('[AuthService] failed to fetch profile on init', err);
           this._loadedSubject.next(true);
         },

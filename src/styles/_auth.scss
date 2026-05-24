@@ -140,12 +140,12 @@
 }
 
 // ─── auth-join-page ───────────────────────────────────────────────────────────
-.auth-feature {
+body.auth main {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: calc(100vh - 64px);
-  padding-top: 64px; // header height
+  padding-top: 64px;
 }
 
 .join-page {

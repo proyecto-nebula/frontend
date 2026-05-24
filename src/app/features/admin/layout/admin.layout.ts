@@ -1,11 +1,21 @@
-import { Component } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AdminHeaderUi } from '../ui/admin-header/admin-header.ui';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterOutlet, AdminHeaderUi],
+  imports: [RouterOutlet],
   templateUrl: './admin.layout.html',
 })
-export class AdminLayout {}
+export class AdminLayout implements OnInit, OnDestroy {
+  private readonly doc = inject(DOCUMENT);
+
+  ngOnInit(): void {
+    this.doc.body.classList.add('admin');
+  }
+
+  ngOnDestroy(): void {
+    this.doc.body.classList.remove('admin');
+  }
+}

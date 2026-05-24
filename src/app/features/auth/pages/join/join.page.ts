@@ -20,10 +20,10 @@ import { API_ROUTES } from '@config/api.routes';
 import { Avatar } from '@models/avatar.model';
 import { Plan } from '@models/plan.model';
 import { AuthService } from '@services/auth.service';
-import { firstValueFrom } from 'rxjs';
 import { AvatarsService } from '@services/avatars.service';
 import { PlansService } from '@services/plans.service';
 import { SettingsService } from '@services/settings.service';
+import { firstValueFrom } from 'rxjs';
 
 function passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
   const v: string = control.value ?? '';

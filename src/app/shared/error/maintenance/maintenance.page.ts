@@ -8,5 +8,7 @@ import { MaintenanceService } from '@services/maintenance.service';
 })
 export class MaintenancePage {
   private svc = inject(MaintenanceService);
-  retry(): void { this.svc.check(); }
+  retry(): void {
+    this.svc.check();
+  }
 }

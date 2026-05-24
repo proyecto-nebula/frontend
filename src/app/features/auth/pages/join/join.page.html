@@ -1,8 +1,6 @@
 <div class="join-page">
-
   <div class="join-root">
-    <div class="phases" [style.transform]="'translateX(-' + (phase * 20) + '%)'">
-
+    <div class="phases" [style.transform]="'translateX(-' + phase * 20 + '%)'">
       <!-- Fase 0: Cuenta -->
       <section class="phase">
         <h2 class="phase-title">Crea tu cuenta</h2>
@@ -22,7 +20,11 @@
       <!-- Fase 2: Perfil -->
       <section class="phase">
         <h2 class="phase-title">Tu perfil</h2>
-        <auth-registration-profile-ui [formGroup]="profile" [avatars]="avatars" (avatarSelected)="onAvatarSelected($event)"></auth-registration-profile-ui>
+        <auth-registration-profile-ui
+          [formGroup]="profile"
+          [avatars]="avatars"
+          (avatarSelected)="onAvatarSelected($event)"
+        ></auth-registration-profile-ui>
       </section>
 
       <!-- Fase 3: Plan -->
@@ -36,13 +38,11 @@
         <h2 class="phase-title">Datos de pago</h2>
         <auth-registration-payment-ui [group]="payment"></auth-registration-payment-ui>
       </section>
-
     </div>
 
     <div class="controls">
-      <button class="btn ghost" (click)="back()" [disabled]="phase===0">Atrás</button>
+      <button class="btn ghost" (click)="back()" [disabled]="phase === 0">Atrás</button>
       <button class="btn" (click)="next()">{{ nextLabel }}</button>
     </div>
   </div>
-
 </div>

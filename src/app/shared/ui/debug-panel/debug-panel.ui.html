@@ -1,7 +1,11 @@
 @if (!isProd) {
   <div class="auth-status">
     @if (user) {
-      <p-avatar [image]="user.avatar?.imageUrl ?? 'assets/default-avatar.png'" shape="circle" styleClass="avatar"></p-avatar>
+      <p-avatar
+        [image]="user.avatar?.imageUrl ?? 'assets/default-avatar.png'"
+        shape="circle"
+        styleClass="avatar"
+      ></p-avatar>
       <span class="username">{{ user.username }}</span>
     } @else {
       <span class="username not-logged">Sin sesión</span>

@@ -8,5 +8,7 @@ import { Router } from '@angular/router';
 })
 export class ForbiddenPage {
   private router = inject(Router);
-  goHome(): void { this.router.navigate(['/']); }
+  goHome(): void {
+    this.router.navigate(['/']);
+  }
 }

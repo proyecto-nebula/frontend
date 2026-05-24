@@ -1,4 +1,4 @@
-@if (showGlobalAdminHeader()) {
+@if (authService.isAdmin()) {
   <app-admin-header></app-admin-header>
 }
 @if (maintenanceSvc.isDown()) {

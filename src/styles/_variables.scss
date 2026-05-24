@@ -1,27 +1,63 @@
-$bg: #1c172b;
-$bg-image:
-  -webkit-radial-gradient(16% 37%, hsla(222, 37%, 18%, 1), transparent 50%),
-  -webkit-radial-gradient(26% 89%, hsla(283, 47%, 18%, 1), transparent 50%),
-  -webkit-radial-gradient(71% 24%, hsla(256, 37%, 17%, 1), transparent 50%),
-  -webkit-radial-gradient(68% 0%, hsla(256, 37%, 17%, 1), transparent 50%),
-  -webkit-radial-gradient(72% 82%, hsla(216, 50%, 19%, 1), transparent 50%),
-  -webkit-radial-gradient(40% 36%, hsla(22, 0%, 0%, 1), transparent 50%),
-  -webkit-radial-gradient(49% 76%, hsla(173, 0%, 0%, 1), transparent 50%),
-  -webkit-radial-gradient(80% 87%, hsla(223, 27%, 23%, 1), transparent 50%),
-  -webkit-radial-gradient(7% 10%, hsla(284, 35%, 11%, 1), transparent 50%),
-  -webkit-radial-gradient(9% 96%, hsla(258, 19%, 24%, 1), transparent 50%);
+/*
 $surface: #161b22;
 $accent: #6c5ce7;
 $text: #f0f6fc;
 $sidebar-w: 260px;
 
+$surface: #161b22;
+$accent: #6c5ce7;
+
+$sidebar-w: 260px;
+$bg-color: #1e0e39;
+//$bg-color: #222;
+$bg-dark: linear-gradient(to right, #310e68 0%, #5f0f40 74%);
+$bg-dark: linear-gradient(to right, #1e0e39 0%, #34093b 74%);
+//$bg-dark: linear-gradient(to left, #222 0%, #111 74%);
+$bg-dark: linear-gradient(to right, #c04848 0%, #480048 74%);
+$bg-dark: linear-gradient(135deg, #f97794 10%, #623aa2 100%);
+
 // ── Configurable design tokens ──────────────────────────────────────
 // Border radius applied to cards, buttons and panels
+
 $rounded-corners: 12px;
 // Opacity of non-hovered items when hovering a carousel (0 = invisible, 1 = no effect)
 $carousel-hover-dim: 0.45;
+*/
 
 :root {
-  --rounded-corners: #{$rounded-corners};
-  --carousel-hover-dim: #{$carousel-hover-dim};
+  --bg-color: #0a0c1a;
+  --bg-image:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25)),
+    radial-gradient(at 16% 37%, hsla(222, 50%, 25%, 0.8), transparent 50%),
+    radial-gradient(at 26% 89%, hsla(230, 45%, 18%, 0.7), transparent 50%),
+    radial-gradient(at 71% 24%, hsla(220, 55%, 20%, 0.8), transparent 50%),
+    radial-gradient(at 68% 0%, hsla(210, 60%, 15%, 0.7), transparent 50%),
+    radial-gradient(at 72% 82%, hsla(216, 55%, 22%, 0.8), transparent 50%),
+    radial-gradient(at 40% 36%, hsla(225, 100%, 2%, 1), transparent 50%),
+    radial-gradient(at 49% 76%, hsla(235, 100%, 1%, 1), transparent 50%),
+    radial-gradient(at 80% 87%, hsla(223, 40%, 25%, 0.7), transparent 50%),
+    radial-gradient(at 7% 10%, hsla(240, 35%, 15%, 0.8), transparent 50%),
+    radial-gradient(at 9% 96%, hsla(225, 30%, 20%, 0.7), transparent 50%);
+  --font-type: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-color: #f0f6fc;
+  --font-lineheight: 1.6;
+
+  --sm: 576px;
+  --md: 768px;
+  --lg: 992px;
+  --xl: 1200px;
+  --xxl: 1600px;
+
+  --page-max: var(--xxl);
+  --page-gutter: 3rem;
+  --page-width: max(var(--page-gutter), calc((100% - var(--page-max)) / 2));
+  --admin-header-height: 3rem;
+  --header-height: 3rem;
+  --padding-main: 2rem;
+
+  --hero-top: calc((var(--header-height) + var(--padding-main)) * -1);
+
+  --rounded-corners: 16px;
+
+  --carousel-hover-dim: 0.45;
 }

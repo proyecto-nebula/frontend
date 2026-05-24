@@ -14,11 +14,39 @@ body {
 
 // Only clip horizontal overflow on body so window.scrollY stays reliable on all browsers
 body {
+  background-color: var(--bg-color);
+  background-image: var(--bg-image);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  color: var(--font-color);
+  font-family: var(--font-type);
+  line-height: var(--font-lineheight);
+  -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
-body.admin {
-  padding-top: 48px;
+body.is-admin {
+  // Admin zone: fixed admin bar at top
+  padding-top: var(--admin-header-height);
+}
+
+// Web/settings have a fixed app-header; add its height as top padding.
+// When the admin bar is also visible, stack both offsets.
+body.web,
+body.settings {
+  padding-top: var(--header-height);
+}
+
+body.web.is-admin,
+body.settings.is-admin {
+  padding-top: calc(var(--header-height) + var(--admin-header-height));
+}
+
+body main {
+  padding-inline: var(--page-width);
+  padding-top: 2rem;
 }
 
 // ─── Global buttons ──────────────────────────────────────────────
@@ -34,22 +62,34 @@ body.admin {
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 150ms, opacity 150ms;
+  transition:
+    background 150ms,
+    opacity 150ms;
   text-decoration: none;
   white-space: nowrap;
   line-height: 1.4;
 
-  &:hover { background: #9370ff; }
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:hover {
+    background: #9370ff;
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 
   &.ghost {
     background: transparent;
-    border: 1px solid rgba(255,255,255,0.2);
-    color: rgba(255,255,255,0.8);
-    &:hover { background: rgba(255,255,255,0.08); }
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
   }
 
-  &.small { padding: 0.3rem 0.75rem; font-size: 0.82rem; }
+  &.small {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.82rem;
+  }
 }
 
 // ─── Error pages (404, 403, maintenance) ─────────────────────────
@@ -59,7 +99,9 @@ body.admin {
   justify-content: center;
   min-height: 100vh;
   padding: 2rem;
-  transition: opacity 350ms ease, transform 350ms ease;
+  transition:
+    opacity 350ms ease,
+    transform 350ms ease;
 
   &.exiting {
     opacity: 0;
@@ -95,7 +137,9 @@ body.admin {
   margin-top: 1.5rem;
   background: #fff;
   color: #111;
-  &:hover { background: #e8e8e8; }
+  &:hover {
+    background: #e8e8e8;
+  }
 }
 
 // ─── Maintenance overlay ──────────────────────────────────────────
@@ -109,7 +153,9 @@ body.admin {
   z-index: 10001;
 }
 
-.maintenance-body { text-align: center; }
+.maintenance-body {
+  text-align: center;
+}
 
 .maintenance-icon {
   display: block;
@@ -158,17 +204,34 @@ body.admin {
   cursor: pointer;
   animation: toast-in 200ms ease forwards;
   max-width: 340px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 
-  &--success { background: #1e7e45; }
-  &--error   { background: #b02828; }
-  &--warning { background: #8a5a00; }
-  &--info    { background: #1a5fa8; }
+  &--success {
+    background: #1e7e45;
+  }
+  &--error {
+    background: #b02828;
+  }
+  &--warning {
+    background: #8a5a00;
+  }
+  &--info {
+    background: #1a5fa8;
+  }
 }
 
-.toast__icon { font-size: 1rem; flex-shrink: 0; }
+.toast__icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
 
 @keyframes toast-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -1,14 +1,14 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule, DatePipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { TableModule } from 'primeng/table';
-import { ToggleSwitch } from 'primeng/toggleswitch';
 import { API_ROUTES } from '@config/api.routes';
 import { Report } from '@models/report.model';
-import { ToastService } from '@ui/toast/toast.service';
 import { ReportsBadgeService } from '@services/reports-badge.service';
+import { ToastService } from '@ui/toast/toast.service';
+import { TableModule } from 'primeng/table';
+import { ToggleSwitch } from 'primeng/toggleswitch';
 
 @Component({
   selector: 'app-admin-reports',
@@ -17,16 +17,16 @@ import { ReportsBadgeService } from '@services/reports-badge.service';
   templateUrl: './admin-reports.page.html',
 })
 export class AdminReportsPage implements OnInit {
-  private http     = inject(HttpClient);
-  private route    = inject(ActivatedRoute);
-  private router   = inject(Router);
-  private toast    = inject(ToastService);
-  private badge    = inject(ReportsBadgeService);
+  private http = inject(HttpClient);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private toast = inject(ToastService);
+  private badge = inject(ReportsBadgeService);
 
-  items       = signal<Report[]>([]);
-  viewMode    = signal<'list' | 'form'>('list');
+  items = signal<Report[]>([]);
+  viewMode = signal<'list' | 'form'>('list');
   editingItem = signal<Report | null>(null);
-  solved      = false;
+  solved = false;
 
   readonly typeLabels: Record<number, string> = {
     1: 'No carga',
@@ -62,13 +62,20 @@ export class AdminReportsPage implements OnInit {
     });
   }
 
-  goEdit(id: number): void { this.router.navigate(['/admin/reports', id]); }
-  cancel():           void { this.router.navigate(['/admin/reports']); }
+  goEdit(id: number): void {
+    this.router.navigate(['/admin/reports', id]);
+  }
+  cancel(): void {
+    this.router.navigate(['/admin/reports']);
+  }
 
   remove(id: number): void {
     if (!confirm('¿Eliminar este reporte?')) return;
     this.http.delete(`${API_ROUTES.reports}?id=${id}`).subscribe({
-      next: () => { this.toast.success('Reporte eliminado'); this.loadList(); },
+      next: () => {
+        this.toast.success('Reporte eliminado');
+        this.loadList();
+      },
       error: () => this.toast.error('Error al eliminar'),
     });
   }
@@ -76,9 +83,7 @@ export class AdminReportsPage implements OnInit {
   toggleSolved(id: number, value: boolean): void {
     this.http.patch(`${API_ROUTES.reports}?id=${id}`, { isSolved: value ? 1 : 0 }).subscribe({
       next: () => {
-        this.items.update(list =>
-          list.map(r => Number(r.id) === id ? { ...r, isSolved: value } : r)
-        );
+        this.items.update(list => list.map(r => (Number(r.id) === id ? { ...r, isSolved: value } : r)));
         value ? this.badge.decrement() : this.badge.increment();
         this.toast.success('Reporte actualizado');
       },
@@ -101,5 +106,7 @@ export class AdminReportsPage implements OnInit {
     });
   }
 
-  typeLabel(type: number): string { return this.typeLabels[type] ?? 'Desconocido'; }
+  typeLabel(type: number): string {
+    return this.typeLabels[type] ?? 'Desconocido';
+  }
 }

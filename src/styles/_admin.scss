@@ -1,12 +1,8 @@
 /* Styles for admin feature */
 
-.admin-content {
-  padding-top: 48px; /* admin header height */
-}
+/* padding-top handled by body.admin in _base.scss */
 
 .admin-page {
-  padding: 1.5rem 2rem;
-  max-width: 1400px;
   margin: 0 auto;
 
   &__toolbar {
@@ -549,8 +545,8 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  padding: 0 1.5rem;
-  height: 48px;
+  padding-inline: var(--page-width) 1.5rem;
+  height: var(--admin-header-height);
   background: #1a1a2e;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 0.875rem;

@@ -1,0 +1,170 @@
+$bg: #1c172b;
+$bg-image:
+  -webkit-radial-gradient(16% 37%, hsla(222, 37%, 18%, 1), transparent 50%),
+  -webkit-radial-gradient(26% 89%, hsla(283, 47%, 18%, 1), transparent 50%),
+  -webkit-radial-gradient(71% 24%, hsla(256, 37%, 17%, 1), transparent 50%),
+  -webkit-radial-gradient(68% 0%, hsla(256, 37%, 17%, 1), transparent 50%),
+  -webkit-radial-gradient(72% 82%, hsla(216, 50%, 19%, 1), transparent 50%),
+  -webkit-radial-gradient(40% 36%, hsla(22, 0%, 0%, 1), transparent 50%),
+  -webkit-radial-gradient(49% 76%, hsla(173, 0%, 0%, 1), transparent 50%),
+  -webkit-radial-gradient(80% 87%, hsla(223, 27%, 23%, 1), transparent 50%),
+  -webkit-radial-gradient(7% 10%, hsla(284, 35%, 11%, 1), transparent 50%),
+  -webkit-radial-gradient(9% 96%, hsla(258, 19%, 24%, 1), transparent 50%);
+$bg-image2:
+  -webkit-radial-gradient(16% 37%, rgb(23, 40, 79), transparent 50%),
+  -webkit-radial-gradient(26% 89%, rgb(18, 16, 37), transparent 50%),
+  -webkit-radial-gradient(71% 24%, rgb(16, 9, 39), transparent 50%),
+  -webkit-radial-gradient(68% 0%, rgb(16, 7, 37), transparent 50%),
+  -webkit-radial-gradient(72% 82%, rgb(4, 21, 46), transparent 50%),
+  -webkit-radial-gradient(40% 36%, hsla(22, 0%, 0%, 1), transparent 50%),
+  -webkit-radial-gradient(49% 76%, hsla(173, 0%, 0%, 1), transparent 50%),
+  -webkit-radial-gradient(80% 87%, rgb(7, 15, 34), transparent 50%),
+  -webkit-radial-gradient(7% 10%, rgb(38, 10, 98), transparent 50%),
+  -webkit-radial-gradient(9% 96%, rgb(24, 14, 46), transparent 50%);
+
+$bg2: #0b0914; // Un negro azulado mucho más profundo
+$bg-image2:
+  // Nubes principales (Púrpuras y Azules)
+  radial-gradient(at 16% 37%, hsla(260, 50%, 25%, 0.8), transparent 60%),
+  radial-gradient(at 26% 89%, hsla(280, 45%, 20%, 0.8), transparent 60%),
+  radial-gradient(at 71% 24%, hsla(230, 60%, 15%, 1), transparent 60%),
+  // Toques de luz "Estelar" (Cian y Magenta)
+  radial-gradient(at 68% 0%, hsla(190, 70%, 15%, 0.6), transparent 50%),
+  radial-gradient(at 72% 82%, hsla(320, 50%, 15%, 0.6), transparent 50%),
+  // Sombras profundas para dar volumen (Nebulosas oscuras)
+  radial-gradient(at 40% 36%, hsla(260, 100%, 2%, 1), transparent 40%),
+  radial-gradient(at 49% 76%, hsla(0, 0%, 0%, 1), transparent 50%),
+  // Resplandores lejanos
+  radial-gradient(at 80% 87%, hsla(240, 40%, 18%, 0.8), transparent 50%),
+  radial-gradient(at 7% 10%, hsla(280, 50%, 10%, 1), transparent 50%),
+  radial-gradient(at 9% 96%, hsla(220, 30%, 15%, 1), transparent 50%);
+
+// --- Capas de Estrellas (CSS Puro) ---
+// Capa 1: Estrellas diminutas y densas
+$stars-small: radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px);
+// Capa 2: Estrellas un poco más grandes y dispersas
+$stars-big: radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px);
+
+$bg-image:
+  // --- 1. CAPA DE ESTRELLAS BIG (Dispersas) ---
+  $stars-big,
+  // --- 2. CAPA DE ESTRELLAS SMALL (Densas) ---
+  $stars-small,
+  // --- 3. TUS DEGRADADOS DE NÉBULA (Los que ajustamos antes) ---
+  // Nubes principales
+  radial-gradient(at 16% 37%, hsla(260, 50%, 25%, 0.8), transparent 60%),
+  radial-gradient(at 26% 89%, hsla(280, 45%, 20%, 0.8), transparent 60%),
+  radial-gradient(at 71% 24%, hsla(230, 60%, 15%, 1), transparent 60%),
+  // Toques de luz
+  radial-gradient(at 68% 0%, hsla(190, 70%, 15%, 0.6), transparent 50%),
+  radial-gradient(at 72% 82%, hsla(320, 50%, 15%, 0.6), transparent 50%),
+  // Sombras profundas
+  radial-gradient(at 40% 36%, hsla(260, 100%, 2%, 1), transparent 40%),
+  radial-gradient(at 49% 76%, hsla(0, 0%, 0%, 1), transparent 50%),
+  // Resplandores lejanos
+  radial-gradient(at 80% 87%, hsla(240, 40%, 18%, 0.8), transparent 50%),
+  radial-gradient(at 7% 10%, hsla(280, 50%, 10%, 1), transparent 50%),
+  radial-gradient(at 9% 96%, hsla(220, 30%, 15%, 1), transparent 50%);
+
+$bg: #05050a; // Un negro casi total con un ligero tinte azulado
+$bg-image:
+  // Nubes de gas en Azul Cobalto y Púrpura frío
+  radial-gradient(at 16% 37%, hsla(240, 60%, 15%, 0.9), transparent 60%),
+  radial-gradient(at 26% 89%, hsla(265, 50%, 12%, 0.8), transparent 60%),
+  radial-gradient(at 71% 24%, hsla(220, 70%, 10%, 1), transparent 60%),
+  // Destellos de luz en Azul Cian y Eléctrico (Nébula joven)
+  radial-gradient(at 68% 0%, hsla(195, 80%, 12%, 0.7), transparent 50%),
+  radial-gradient(at 72% 82%, hsla(210, 60%, 14%, 0.6), transparent 50%),
+  // Agujeros negros / Sombras de polvo cósmico
+  radial-gradient(at 40% 36%, hsla(240, 100%, 1%, 1), transparent 45%),
+  radial-gradient(at 49% 76%, hsla(230, 100%, 0%, 1), transparent 50%),
+  // Resplandores profundos de fondo
+  radial-gradient(at 80% 87%, hsla(235, 45%, 15%, 0.8), transparent 50%),
+  radial-gradient(at 7% 10%, hsla(250, 40%, 8%, 1), transparent 50%),
+  radial-gradient(at 9% 96%, hsla(215, 35%, 12%, 1), transparent 50%);
+
+$bg: #020205; // Negro absoluto para máximo contraste
+$bg-image:
+  // 1. Capa de iluminación superior (Haces de luz fría)
+  linear-gradient(135deg, hsla(210, 100%, 10%, 0.4) 0%, transparent 40%),
+  linear-gradient(225deg, hsla(190, 80%, 8%, 0.3) 0%, transparent 50%),
+  // 2. Núcleos de energía (Cian y Azul Eléctrico)
+  radial-gradient(at 85% 15%, hsla(195, 100%, 10%, 0.6), transparent 50%),
+  radial-gradient(at 15% 85%, hsla(220, 100%, 12%, 0.5), transparent 60%),
+  // 3. Nebulosa horizontal (Efecto de "disco galáctico")
+  radial-gradient(ellipse at center, hsla(230, 50%, 8%, 0.8), transparent 80%),
+  // 4. Sombras de oclusión (Para dar volumen al vacío)
+  radial-gradient(at 50% 50%, hsla(240, 100%, 2%, 1), transparent 70%),
+  // 5. Profundidad base (Azul abisal)
+  linear-gradient(to bottom, #020205, #050a15);
+
+$bg: #010103; // Negro casi puro
+$bg-image:
+  // 1. Nebulosa lejana en el borde superior derecho (Índigo)
+  radial-gradient(at 90% 10%, hsla(230, 45%, 10%, 0.7), transparent 50%),
+  // 2. Brillo residual en el borde inferior izquierdo (Azul Cobalto)
+  radial-gradient(at 10% 90%, hsla(215, 50%, 8%, 0.6), transparent 50%),
+  // 3. Gran masa de gas frío central (Azul Medianoche)
+  radial-gradient(ellipse at center, hsla(240, 60%, 4%, 0.9), transparent 85%),
+  // 4. "Velo" diagonal sutil para dar textura
+  linear-gradient(150deg, hsla(220, 100%, 2%, 0.5) 0%, transparent 30%),
+  // 5. Capa de oscuridad pura para ocultar el ruido
+  radial-gradient(at 50% 50%, rgba(0, 0, 0, 1) 20%, transparent 100%),
+  // 6. Fondo base
+  linear-gradient(to bottom, #010103, #02040a);
+$bg: #0a0c1a; // Un azul noche un poco más visible que el negro puro
+$bg-image:
+  // 1. Gran Nébula superior (Azul Zafiro)
+  radial-gradient(at 85% 20%, hsla(220, 60%, 18%, 0.9), transparent 65%),
+  // 2. Iluminación inferior (Azul Eléctrico suave)
+  radial-gradient(at 15% 80%, hsla(200, 70%, 14%, 0.8), transparent 60%),
+  // 3. Bruma central para suavizar el contraste
+  radial-gradient(ellipse at center, hsla(230, 40%, 12%, 0.7), transparent 80%),
+  // 4. Haz de luz diagonal (Cian muy oscuro)
+  linear-gradient(135deg, hsla(190, 80%, 10%, 0.4) 0%, transparent 40%),
+  // 5. Fondo base con degradado lineal para profundidad
+  linear-gradient(to bottom, #0a0c1a, #05060d);
+
+/*
+  background-image: $bg-dark;
+  background-image: linear-gradient(135deg, #f761a1 10%, #8c1bab 100%);
+  background-image: linear-gradient(135deg, #43cbff 10%, #9708cc 100%);
+
+  background-image: linear-gradient(135deg, #152f90 10%, #68038d 100%);
+  background-image: linear-gradient(135deg, #3b2667 10%, #bc78ec 100%);
+
+  background: linear-gradient(90deg, #f44369, #3e3b92);
+  background: linear-gradient(
+    137deg,
+    rgb(19.608% 17.647% 45.882%) 0%,
+    rgb(22.783% 15.576% 44.64%) 6.25%,
+    rgb(25.562% 13.764% 43.552%) 12.5%,
+    rgb(27.971% 12.193% 42.61%) 18.75%,
+    rgb(30.037% 10.846% 41.801%) 25%,
+    rgb(31.785% 9.705% 41.117%) 31.25%,
+    rgb(33.243% 8.755% 40.547%) 37.5%,
+    rgb(34.436% 7.976% 40.08%) 43.75%,
+    rgb(35.392% 7.353% 39.706%) 50%,
+    rgb(36.136% 6.868% 39.415%) 56.25%,
+    rgb(36.696% 6.503% 39.196%) 62.5%,
+    rgb(37.097% 6.241% 39.039%) 68.75%,
+    rgb(37.365% 6.066% 38.934%) 75%,
+    rgb(37.528% 5.96% 38.87%) 81.25%,
+    rgb(37.612% 5.905% 38.837%) 87.5%,
+    rgb(37.643% 5.885% 38.825%) 93.75%,
+    rgb(37.647% 5.882% 38.824%) 100%
+  );
+  */
+
+$bg: #1c172b;
+$bg-image:
+  -webkit-radial-gradient(16% 37%, hsla(222, 37%, 18%, 1), transparent 50%),
+  -webkit-radial-gradient(26% 89%, hsla(283, 47%, 18%, 1), transparent 50%),
+  -webkit-radial-gradient(71% 24%, hsla(256, 37%, 17%, 1), transparent 50%),
+  -webkit-radial-gradient(68% 0%, hsla(256, 37%, 17%, 1), transparent 50%),
+  -webkit-radial-gradient(72% 82%, hsla(216, 50%, 19%, 1), transparent 50%),
+  -webkit-radial-gradient(40% 36%, hsla(22, 0%, 0%, 1), transparent 50%),
+  -webkit-radial-gradient(49% 76%, hsla(173, 0%, 0%, 1), transparent 50%),
+  -webkit-radial-gradient(80% 87%, hsla(223, 27%, 23%, 1), transparent 50%),
+  -webkit-radial-gradient(7% 10%, hsla(284, 35%, 11%, 1), transparent 50%),
+  -webkit-radial-gradient(9% 96%, hsla(258, 19%, 24%, 1), transparent 50%);

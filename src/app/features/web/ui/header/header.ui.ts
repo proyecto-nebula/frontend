@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, computed, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { LoginFormComponent } from '@auth/components/login-form/login-form.component';
 import { Game } from '@models/game.model';
@@ -49,8 +49,6 @@ export class HeaderUi implements OnInit, OnDestroy {
   searchLoading = false;
   private searchTimer?: ReturnType<typeof setTimeout>;
 
-  /** Offset for the fixed admin bar (48px) shown on web pages for admin users */
-  readonly adminBarTop = computed(() => (this.auth.isAdmin() ? 48 : 0));
   // modal state for login
   showLoginModal = false;
   loginReturnUrl: string | null = null;

@@ -7,8 +7,8 @@ import { environment } from '@env/environment';
 import { User } from '@models/user.model';
 import { AuthService } from '@services/auth.service';
 import { LoginModalService } from '@services/login-modal.service';
-import { AvatarModule } from 'primeng/avatar';
 import { SettingsService } from '@services/settings.service';
+import { AvatarModule } from 'primeng/avatar';
 
 @Component({
   selector: 'app-debug-panel',
