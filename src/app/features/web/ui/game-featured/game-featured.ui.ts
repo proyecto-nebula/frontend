@@ -1,8 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, Input, OnInit, AfterViewInit, OnDestroy, ElementRef, signal } from '@angular/core';
-import { CarouselModule } from 'primeng/carousel';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
+import { CarouselModule } from 'primeng/carousel';
 import { GameHeroUi } from '../game-hero/game-hero.ui';
 
 @Component({
@@ -53,7 +63,11 @@ export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
     const carouselEl = root.querySelector('.game-featured-carousel');
     if (carouselEl) {
       this.observer = new MutationObserver(() => this.adjustCarouselHeight());
-      this.observer.observe(carouselEl, { subtree: true, attributes: true, attributeFilter: ['data-p-carousel-item-active'] });
+      this.observer.observe(carouselEl, {
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['data-p-carousel-item-active'],
+      });
     }
   }
 
@@ -74,9 +88,12 @@ export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
 
     // Always measure the inner app-game-hero content element (not the absolutely-
     // positioned p-carousel-item whose height == viewport height → circular dependency).
-    const activeItem = root.querySelector('.game-featured-carousel .p-carousel-item[data-p-carousel-item-active="true"]') as HTMLElement | null;
-    const target = (activeItem?.querySelector('app-game-hero') as HTMLElement | null)
-      ?? (root.querySelector('.game-featured-carousel app-game-hero') as HTMLElement | null);
+    const activeItem = root.querySelector(
+      '.game-featured-carousel .p-carousel-item[data-p-carousel-item-active="true"]',
+    ) as HTMLElement | null;
+    const target =
+      (activeItem?.querySelector('app-game-hero') as HTMLElement | null) ??
+      (root.querySelector('.game-featured-carousel app-game-hero') as HTMLElement | null);
 
     if (!target) {
       viewport.style.height = '';

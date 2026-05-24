@@ -1,12 +1,12 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { API_ROUTES } from '@config/api.routes';
 import { Game } from '@models/game.model';
-import { ModalComponent } from '@shared/ui/modal/modal.component';
-import { ToastService } from '@shared/ui/toast/toast.service';
+import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
+import { ToastService } from '../../../../shared/ui/toast/toast.service';
 
 @Component({
   selector: 'app-game-hero',
@@ -14,17 +14,7 @@ import { ToastService } from '@shared/ui/toast/toast.service';
   imports: [CommonModule, RouterModule, FormsModule, ModalComponent],
   templateUrl: './game-hero.ui.html',
 })
-export class GameHeroUi implements OnInit, OnDestroy {
-  private readonly doc = inject(DOCUMENT);
-
-  ngOnInit(): void {
-    this.doc.body.classList.add('hero');
-  }
-
-  ngOnDestroy(): void {
-    this.doc.body.classList.remove('hero');
-  }
-
+export class GameHeroUi {
   @Input() game: Game | null = null;
   /** 'detail' = game-view page; 'featured' = home featured carousel */
   @Input() mode: 'detail' | 'featured' = 'detail';
