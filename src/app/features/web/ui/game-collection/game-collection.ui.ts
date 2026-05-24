@@ -9,22 +9,6 @@ import { GameCardUi } from '../game-card/game-card.ui';
   standalone: true,
   imports: [CommonModule, CarouselComponent, GameCardUi],
   templateUrl: './game-collection.ui.html',
-  styles: [
-    `
-      .game-collection-empty {
-        width: 100%;
-        height: 100px;
-        border: 3px dashed rgba(255, 255, 255, 0.25);
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: rgba(255, 255, 255, 0.4);
-        font-size: 0.95rem;
-        margin: 8px 0;
-      }
-    `,
-  ],
 })
 export class GameCollectionUi {
   @Input() title = '';

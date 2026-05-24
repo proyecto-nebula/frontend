@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { Component, Input } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Plan } from '@models/plan.model';
 
 @Component({
@@ -8,7 +8,6 @@ import { Plan } from '@models/plan.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './registration-plan.ui.html',
-  styleUrls: ['./registration-plan.ui.scss'],
 })
 export class RegistrationPlanUi {
   @Input() group!: FormGroup;

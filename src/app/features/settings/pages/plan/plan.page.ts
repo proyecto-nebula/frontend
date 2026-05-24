@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '@services/auth.service';
-import { PlansService } from '@auth/services/plans.service';
+import { PlansService } from '@services/plans.service';
 import { RegistrationPlanUi } from '@auth/ui/registration-plan.ui';
 import { RegistrationPaymentUi } from '@auth/ui/registration-payment.ui';
 import { API_ROUTES } from '@config/api.routes';

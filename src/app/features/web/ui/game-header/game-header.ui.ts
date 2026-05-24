@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { Game } from '@models/game.model';
 import { API_ROUTES } from '@config/api.routes';
+import { Game } from '@models/game.model';
 import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { ToastService } from '../../../../shared/ui/toast/toast.service';
 
@@ -13,7 +13,6 @@ import { ToastService } from '../../../../shared/ui/toast/toast.service';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, ModalComponent],
   templateUrl: './game-header.ui.html',
-  styles: [':host { display: block; }'],
 })
 export class GameHeaderUi {
   @Input() game: Game | null = null;
@@ -28,35 +27,68 @@ export class GameHeaderUi {
 
   @Output() favToggle = new EventEmitter<void>();
 
-  private readonly http  = inject(HttpClient);
+  private readonly http = inject(HttpClient);
   private readonly toast = inject(ToastService);
 
   // ── Share ──────────────────────────────────────────────────────
   shareVisible = false;
-  linkCopied   = false;
+  linkCopied = false;
 
-  get shareUrl():   string { return typeof window !== 'undefined' ? window.location.href : ''; }
-  get shareTitle(): string { return this.game?.title ?? ''; }
+  get shareUrl(): string {
+    return typeof window !== 'undefined' ? window.location.href : '';
+  }
+  get shareTitle(): string {
+    return this.game?.title ?? '';
+  }
 
-  openShare(): void { this.linkCopied = false; this.shareVisible = true; }
+  openShare(): void {
+    this.linkCopied = false;
+    this.shareVisible = true;
+  }
 
   async copyLink(): Promise<void> {
     try {
       await navigator.clipboard.writeText(this.shareUrl);
       this.linkCopied = true;
-      setTimeout(() => { this.linkCopied = false; }, 2000);
-    } catch { /* clipboard not available */ }
+      setTimeout(() => {
+        this.linkCopied = false;
+      }, 2000);
+    } catch {
+      /* clipboard not available */
+    }
   }
 
-  shareEmail():    void { window.open(`mailto:?subject=${encodeURIComponent('Echa un vistazo a ' + this.shareTitle + ' en Nebula')}&body=${encodeURIComponent(this.shareUrl)}`); }
-  shareFacebook(): void { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(this.shareUrl)}`, '_blank', 'noopener,noreferrer'); }
-  shareX():        void { window.open(`https://x.com/intent/tweet?url=${encodeURIComponent(this.shareUrl)}&text=${encodeURIComponent(this.shareTitle + ' en Nebula')}`, '_blank', 'noopener,noreferrer'); }
-  shareReddit():   void { window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(this.shareUrl)}&title=${encodeURIComponent(this.shareTitle)}`, '_blank', 'noopener,noreferrer'); }
+  shareEmail(): void {
+    window.open(
+      `mailto:?subject=${encodeURIComponent('Echa un vistazo a ' + this.shareTitle + ' en Nebula')}&body=${encodeURIComponent(this.shareUrl)}`,
+    );
+  }
+  shareFacebook(): void {
+    window.open(
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(this.shareUrl)}`,
+      '_blank',
+      'noopener,noreferrer',
+    );
+  }
+  shareX(): void {
+    window.open(
+      `https://x.com/intent/tweet?url=${encodeURIComponent(this.shareUrl)}&text=${encodeURIComponent(this.shareTitle + ' en Nebula')}`,
+      '_blank',
+      'noopener,noreferrer',
+    );
+  }
+  shareReddit(): void {
+    window.open(
+      `https://www.reddit.com/submit?url=${encodeURIComponent(this.shareUrl)}&title=${encodeURIComponent(this.shareTitle)}`,
+      '_blank',
+      'noopener,noreferrer',
+    );
+  }
 
   // ── Report ─────────────────────────────────────────────────────
   reportVisible = false;
-  reportType    = 4;
-  reportDesc    = '';
+  reportType = 4;
+  reportDesc = '';
   reportSending = signal(false);
 
   readonly reportTypes = [
@@ -67,28 +99,30 @@ export class GameHeaderUi {
   ];
 
   openReport(): void {
-    this.reportType    = 4;
-    this.reportDesc    = '';
+    this.reportType = 4;
+    this.reportDesc = '';
     this.reportVisible = true;
   }
 
   submitReport(): void {
     if (!this.game?.id) return;
     this.reportSending.set(true);
-    this.http.post(API_ROUTES.reports, {
-      gameId:      this.game.id,
-      type:        this.reportType,
-      description: this.reportDesc || null,
-    }).subscribe({
-      next: () => {
-        this.reportSending.set(false);
-        this.reportVisible = false;
-        this.toast.success('Reporte enviado. ¡Gracias!');
-      },
-      error: () => {
-        this.reportSending.set(false);
-        this.toast.error('No se pudo enviar el reporte.');
-      },
-    });
+    this.http
+      .post(API_ROUTES.reports, {
+        gameId: this.game.id,
+        type: this.reportType,
+        description: this.reportDesc || null,
+      })
+      .subscribe({
+        next: () => {
+          this.reportSending.set(false);
+          this.reportVisible = false;
+          this.toast.success('Reporte enviado. ¡Gracias!');
+        },
+        error: () => {
+          this.reportSending.set(false);
+          this.toast.error('No se pudo enviar el reporte.');
+        },
+      });
   }
 }

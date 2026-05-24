@@ -1,5 +1,5 @@
-import { Component, Input, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, ElementRef, Input, QueryList, ViewChildren } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './registration-verify-email.ui.html',
-  styleUrls: ['./registration-verify-email.ui.scss'],
 })
 export class RegistrationVerifyEmailUi {
   @Input() email = '';

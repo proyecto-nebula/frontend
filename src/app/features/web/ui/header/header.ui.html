@@ -1,7 +1,7 @@
 <header class="header-wrapper" [class.scrolled]="isScrolled" [style.top.px]="adminBarTop()">
   <div class="header-content">
     <div class="header-row">
-      <!-- Left: hamburger (mobile) + logo -->
+      <!-- Left: hamburger (mobile) + logo + nav (desktop) -->
       <div class="left">
         <button
           type="button"
@@ -15,25 +15,25 @@
         <a class="desktop-logo" routerLink="/">
           <app-logo />
         </a>
+
+        <!-- Desktop nav inline with logo -->
+        <nav class="desktop-nav">
+          <ul class="nav-list">
+            @for (it of items; track it.label) {
+              @if (!it.requiresAuth || auth.isAuthenticated()) {
+                <li class="nav-item" [ngClass]="it.styleClass">
+                  <a [routerLink]="it.routerLink" class="nav-link">
+                    @if (it.icon) {
+                      <i [class]="it.icon + ' nav-icon'"></i>
+                    }
+                    <span class="nav-text">{{ it.label }}</span>
+                  </a>
+                </li>
+              }
+            }
+          </ul>
+        </nav>
       </div>
-
-      <!-- Center: manual nav -->
-      <nav class="center">
-        <ul class="nav-list">
-          @for (it of items; track it.label) {
-            <li class="nav-item" [ngClass]="it.styleClass">
-              <a [routerLink]="it.routerLink" class="nav-link">
-                @if (it.icon) {
-                  <i [class]="it.icon + ' nav-icon'"></i>
-                }
-                <span class="nav-text">{{ it.label }}</span>
-              </a>
-            </li>
-          }
-        </ul>
-      </nav>
-
-      <!-- Right: avatar / login -->
       <div class="right">
         <!-- Quick search -->
         <div class="search-wrap" (click)="$event.stopPropagation()">
@@ -114,11 +114,13 @@
       <nav>
         <ul class="drawer-list">
           @for (it of items; track it.label) {
-            <li class="drawer-item">
-              <a [routerLink]="it.routerLink" (click)="drawerVisible = false" class="drawer-link">
-                <span>{{ it.label }}</span>
-              </a>
-            </li>
+            @if (!it.requiresAuth || auth.isAuthenticated()) {
+              <li class="drawer-item">
+                <a [routerLink]="it.routerLink" (click)="drawerVisible = false" class="drawer-link">
+                  <span>{{ it.label }}</span>
+                </a>
+              </li>
+            }
           }
         </ul>
       </nav>

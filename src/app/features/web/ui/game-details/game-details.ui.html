@@ -68,7 +68,7 @@
                   <div class="game-tags">
                     @for (cat of game()!.categories!; track cat.id) {
                       <span class="game-tag">
-                        <i [class]="'pi ' + cat.icon" aria-hidden="true" style="margin-right: 6px"></i>
+                        <i [class]="'pi ' + cat.icon + ' tag-icon'" aria-hidden="true"></i>
                         {{ cat.name }}
                       </span>
                     }
@@ -108,7 +108,7 @@
             @if (game()?.pegi) {
               <div class="game-meta__item">
                 <h6>PEGI</h6>
-                <img [src]="game()!.pegi!.imageUrl!" [alt]="game()!.pegi!.name" style="height: 48px" />
+                <img [src]="game()!.pegi!.imageUrl!" [alt]="game()!.pegi!.name" class="pegi-badge" />
               </div>
             }
             @if (game()?.metacriticScore) {

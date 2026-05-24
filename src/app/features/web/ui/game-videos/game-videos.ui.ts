@@ -7,7 +7,6 @@ import { CarouselComponent } from '@ui/carousel/carousel.component';
   standalone: true,
   imports: [CommonModule, CarouselComponent],
   templateUrl: './game-videos.ui.html',
-  styles: [`:host { display: block; }`],
 })
 export class GameVideosUi {
   @Input() videos: { videoId: string; url: string; embedUrl: string }[] | null = null;
@@ -17,7 +16,7 @@ export class GameVideosUi {
     this.open.emit(index);
   }
 
-  get videosWithIndex(): ({ videoId: string; url: string; embedUrl: string; __idx: number })[] {
+  get videosWithIndex(): { videoId: string; url: string; embedUrl: string; __idx: number }[] {
     return (this.videos ?? []).map((v, i) => ({ ...v, __idx: i }));
   }
 }

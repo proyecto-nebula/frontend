@@ -14,7 +14,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    loadComponent: () => import('./features/error/forbidden/forbidden.page').then(m => m.ForbiddenPage),
+    loadComponent: () => import('@shared/error/forbidden/forbidden.page').then(m => m.ForbiddenPage),
   },
   {
     path: 'settings',
@@ -31,6 +31,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    loadComponent: () => import('./features/error/not-found/not-found.page').then(m => m.NotFoundPage),
+    loadComponent: () => import('@shared/error/not-found/not-found.page').then(m => m.NotFoundPage),
   },
 ];

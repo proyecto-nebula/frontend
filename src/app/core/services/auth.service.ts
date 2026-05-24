@@ -15,8 +15,8 @@ export class AuthService {
   private _loadedSubject = new BehaviorSubject<boolean>(false);
   readonly loaded$ = this._loadedSubject.asObservable();
   isAuthenticated = computed(() => !!this._user() || !!this.getToken());
-  isAdmin = computed(() => this._user()?.roleId === 0);
-  isUser = computed(() => this._user()?.roleId === 4);
+  isAdmin = computed(() => this._user()?.roleId === 1);
+  isUser = computed(() => this._user()?.roleId === 2);
 
   login(email: string, password: string) {
     return this.http.post<AuthResponse>(API_ROUTES.auth, { email, password }).pipe(

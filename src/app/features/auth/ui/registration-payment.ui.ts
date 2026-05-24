@@ -1,14 +1,12 @@
-import { Component, Input, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'auth-registration-payment-ui',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './registration-payment.ui.html',
-  styleUrls: ['./registration-payment.ui.scss'],
 })
 export class RegistrationPaymentUi implements OnInit {
   @Input() group!: FormGroup;
@@ -19,12 +17,7 @@ export class RegistrationPaymentUi implements OnInit {
   ngOnInit() {
     const val: string = this.group.get('cardNumber')?.value ?? '';
     if (val.length >= 12) {
-      this.cardGroups = [
-        val.slice(0, 4),
-        val.slice(4, 8),
-        val.slice(8, 12),
-        val.slice(12, 16),
-      ];
+      this.cardGroups = [val.slice(0, 4), val.slice(4, 8), val.slice(8, 12), val.slice(12, 16)];
     }
     this.syncCard();
   }

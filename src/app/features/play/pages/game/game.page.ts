@@ -1,9 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
 import { SessionsService } from '@services/sessions.service';
-import { Game } from '@models/game.model';
 import { SafePipe } from '../../../../shared/pipes/safe.pipe';
 
 @Component({
@@ -14,7 +14,7 @@ import { SafePipe } from '../../../../shared/pipes/safe.pipe';
     @if (embedUrl()) {
       <iframe
         class="play-iframe"
-        [src]="embedUrl()! | safe:'resourceUrl'"
+        [src]="embedUrl()! | safe: 'resourceUrl'"
         frameborder="0"
         allow="autoplay; fullscreen; accelerometer; gyroscope; encrypted-media; picture-in-picture"
         allowfullscreen
@@ -25,30 +25,6 @@ import { SafePipe } from '../../../../shared/pipes/safe.pipe';
       </div>
     }
   `,
-  styles: [`
-    :host { display: block; }
-
-    .play-iframe {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      border: none;
-      background: #000;
-      z-index: 10;
-    }
-
-    .play-no-video {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #000;
-      color: rgba(255,255,255,0.6);
-      font-size: 1.1rem;
-    }
-  `],
 })
 export class PlayGamePage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
@@ -62,8 +38,7 @@ export class PlayGamePage implements OnInit, OnDestroy {
   readonly embedUrl = computed(() => {
     const videos = this.game()?.videos;
     if (!videos?.length) return null;
-    const video =
-      videos.find(v => v.name?.toLowerCase().includes('gameplay')) ?? videos[0];
+    const video = videos.find(v => v.name?.toLowerCase().includes('gameplay')) ?? videos[0];
     return `${video.embedUrl}?autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3`;
   });
 
@@ -90,4 +65,3 @@ export class PlayGamePage implements OnInit, OnDestroy {
     }
   }
 }
-

@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Avatar } from '@models/avatar.model';
 
 @Component({
@@ -8,7 +8,6 @@ import { Avatar } from '@models/avatar.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './registration-profile.ui.html',
-  styleUrls: ['./registration-profile.ui.scss'],
 })
 export class RegistrationProfileUi implements OnChanges {
   @Input('formGroup') group!: FormGroup;
@@ -17,14 +16,14 @@ export class RegistrationProfileUi implements OnChanges {
 
   selectAvatar(id: number) {
     console.debug('[RegistrationProfileUi] selectAvatar', id);
-    const avatar = this.avatars.find((a) => a.id === id) ?? null;
+    const avatar = this.avatars.find(a => a.id === id) ?? null;
     this.group.patchValue({ avatarId: avatar?.id ?? null });
     this.avatarSelected.emit(avatar);
   }
 
   get selectedAvatar(): Avatar | undefined {
     const id = this.group.get('avatarId')?.value;
-    return this.avatars.find((a) => a.id === id);
+    return this.avatars.find(a => a.id === id);
   }
 
   ngOnChanges(changes: SimpleChanges) {

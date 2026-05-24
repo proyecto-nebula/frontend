@@ -1,0 +1,127 @@
+<div class="admin-page">
+  @if (viewMode() === 'list') {
+    <div class="admin-page__toolbar">
+      <h2>Reportes de problemas</h2>
+    </div>
+
+    <p-table
+      [value]="items()"
+      [paginator]="true"
+      [rows]="25"
+      [rowsPerPageOptions]="[25, 50, 100]"
+      [globalFilterFields]="['gameTitle', 'description']"
+      styleClass="p-datatable-sm"
+      #dt
+    >
+      <ng-template pTemplate="caption">
+        <div class="admin-table__search">
+          <i class="pi pi-search"></i>
+          <input
+            type="text"
+            placeholder="Buscar reporte..."
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          />
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="id" class="admin-col-id">
+            ID
+            <p-sortIcon field="id" />
+          </th>
+          <th pSortableColumn="gameTitle">
+            Juego
+            <p-sortIcon field="gameTitle" />
+          </th>
+          <th class="admin-col-type hide-sm">Tipo</th>
+          <th class="hide-sm">Descripción</th>
+          <th pSortableColumn="createdAt" class="admin-col-date-lg hide-sm">
+            Fecha
+            <p-sortIcon field="createdAt" />
+          </th>
+          <th class="admin-col-resolved hide-sm">Resuelto</th>
+          <th class="admin-col-actions admin-table__actions"><span class="th-label">Acciones</span></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>{{ item.id }}</td>
+          <td>
+            @if (item.gameSlug) {
+              <a [routerLink]="['/games', item.gameSlug]" target="_blank" class="table-link">
+                {{ item.gameTitle ?? '—' }}
+              </a>
+            } @else {
+              {{ item.gameTitle ?? '—' }}
+            }
+          </td>
+          <td class="hide-sm">{{ typeLabel(item.type) }}</td>
+          <td class="hide-sm admin-td-truncate">
+            {{ item.description || '—' }}
+          </td>
+          <td class="hide-sm">{{ item.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+          <td class="hide-sm admin-td-center">
+            <p-toggleswitch
+              [ngModel]="!!item.isSolved"
+              (ngModelChange)="toggleSolved(item.id, $event)"
+            ></p-toggleswitch>
+          </td>
+          <td class="admin-table__actions">
+            <div class="actions-cell">
+              <button class="btn-icon" title="Ver / editar" (click)="goEdit(item.id)">
+                <i class="pi pi-pencil"></i>
+              </button>
+              <button class="btn-icon danger" title="Eliminar" (click)="remove(item.id)">
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="admin-td-empty">No hay reportes</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  } @else {
+    <div class="admin-page__toolbar">
+      <h2>Reporte #{{ editingItem()?.id }}</h2>
+      <button class="btn ghost" (click)="cancel()">
+        <i class="pi pi-arrow-left"></i>
+        Volver
+      </button>
+    </div>
+
+    @if (editingItem(); as item) {
+      <form (ngSubmit)="save()" class="admin-form">
+        <div class="admin-form__grid">
+          <label class="admin-form__field">
+            <span>Juego</span>
+            <input type="text" [value]="item.gameTitle ?? item.gameId" disabled />
+          </label>
+          <label class="admin-form__field">
+            <span>Tipo</span>
+            <input type="text" [value]="typeLabel(item.type)" disabled />
+          </label>
+          <label class="admin-form__field admin-form__field--full">
+            <span>Descripción</span>
+            <textarea rows="4" [value]="item.description ?? ''" disabled></textarea>
+          </label>
+          <label class="admin-form__field">
+            <span>Fecha</span>
+            <input type="text" [value]="item.createdAt | date: 'dd/MM/yyyy HH:mm'" disabled />
+          </label>
+          <label class="admin-form__field">
+            <span>Resuelto</span>
+            <p-toggleswitch [(ngModel)]="solved" name="isSolved"></p-toggleswitch>
+          </label>
+        </div>
+        <div class="admin-form__actions">
+          <button type="button" class="btn ghost" (click)="cancel()">Cancelar</button>
+          <button type="submit" class="btn">Guardar</button>
+        </div>
+      </form>
+    }
+  }
+</div>

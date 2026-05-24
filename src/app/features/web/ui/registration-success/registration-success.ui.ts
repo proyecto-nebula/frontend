@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedUiModule } from '../../../../shared/ui/ui.module';
 
@@ -8,7 +8,6 @@ import { SharedUiModule } from '../../../../shared/ui/ui.module';
   standalone: true,
   imports: [CommonModule, SharedUiModule],
   templateUrl: './registration-success.ui.html',
-  styleUrls: ['./registration-success.ui.scss'],
 })
 export class WebRegistrationSuccessUi {
   @Input() username?: string | null;

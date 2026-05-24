@@ -32,14 +32,14 @@
         class="reg-input"
         [type]="showPassword ? 'text' : 'password'"
         formControlName="password"
-        placeholder="Mínimo 8 caracteres"
+        placeholder="Mínimo 6 caracteres"
         autocomplete="new-password"
       />
-      <button type="button" class="reg-input-icon toggle-pw" (click)="togglePassword()" tabindex="-1">
-        {{ showPassword ? '🙈' : '👁' }}
+      <button type="button" class="reg-input-icon toggle-pw" (click)="togglePassword()" tabindex="-1" aria-label="Mostrar contraseña">
+        <i class="pi" [class.pi-eye]="!showPassword" [class.pi-eye-slash]="showPassword"></i>
       </button>
     </div>
-    @if (passwordCtrl?.value) {
+    @if (passwordCtrl?.value && passwordValidationEnabled) {
       <div class="pw-checks">
         @for (c of passwordStrengthChecks; track c.label) {
           <div class="pw-check" [class.ok]="c.ok">
@@ -78,7 +78,7 @@
     </div>
     @if (
       (group.get('birthdateDay')?.invalid || group.get('birthdateMonth')?.invalid || group.get('birthdateYear')?.invalid)
-      && group.get('birthdateDay')?.touched
+      && showValidation
     ) {
       <div class="reg-error">Introduce tu fecha de nacimiento completa</div>
     }

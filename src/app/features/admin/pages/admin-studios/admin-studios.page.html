@@ -1,0 +1,80 @@
+<div class="admin-page">
+  @if (viewMode() === 'list') {
+    <div class="admin-page__toolbar">
+      <h2>Estudios</h2>
+      <button class="btn" (click)="goCreate()">+ Nuevo</button>
+    </div>
+
+    <p-table
+      [value]="items()"
+      [paginator]="true"
+      [rows]="25"
+      [rowsPerPageOptions]="[25, 50, 100]"
+      [globalFilterFields]="['name']"
+      styleClass="p-datatable-sm"
+      #dt
+    >
+      <ng-template pTemplate="caption">
+        <div class="admin-table__search">
+          <i class="pi pi-search"></i>
+          <input
+            type="text"
+            placeholder="Buscar estudio..."
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          />
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="id" class="admin-col-id">
+            ID
+            <p-sortIcon field="id" />
+          </th>
+          <th pSortableColumn="name">
+            Nombre
+            <p-sortIcon field="name" />
+          </th>
+          <th class="admin-col-actions admin-table__actions"><span class="th-label">Acciones</span></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
+          <td class="admin-table__actions">
+            <div class="actions-cell">
+              <button class="btn-icon" title="Editar" (click)="goEdit(item.id)"><i class="pi pi-pencil"></i></button>
+              <button class="btn-icon danger" title="Eliminar" (click)="remove(item.id)">
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="3" class="admin-td-empty">No hay estudios</td></tr>
+      </ng-template>
+    </p-table>
+  } @else {
+    <div class="admin-page__toolbar">
+      <h2>{{ editingId() ? 'Editar estudio' : 'Nuevo estudio' }}</h2>
+      <button class="btn ghost" (click)="cancel()">
+        <i class="pi pi-arrow-left"></i>
+        Volver
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="admin-form">
+      <div class="admin-form__grid">
+        <label class="admin-form__field">
+          <span>Nombre *</span>
+          <input formControlName="name" type="text" placeholder="Nombre del estudio" />
+        </label>
+      </div>
+      <div class="admin-form__actions">
+        <button type="button" class="btn ghost" (click)="cancel()">Cancelar</button>
+        <button type="submit" class="btn" [disabled]="saving()">{{ saving() ? 'Guardando...' : 'Guardar' }}</button>
+      </div>
+    </form>
+  }
+</div>

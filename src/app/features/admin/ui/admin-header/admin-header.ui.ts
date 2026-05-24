@@ -1,18 +1,17 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { filter, map, startWith } from 'rxjs/operators';
-import { AuthService } from '@services/auth.service';
 import { HttpClient } from '@angular/common/http';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { API_ROUTES } from '@config/api.routes';
-import { ReportsBadgeService } from '../../services/reports-badge.service';
+import { AuthService } from '@services/auth.service';
+import { filter, map, startWith } from 'rxjs/operators';
+import { ReportsBadgeService } from '@services/reports-badge.service';
 
 @Component({
   selector: 'app-admin-header',
   standalone: true,
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './admin-header.ui.html',
-  styleUrls: ['./admin-header.ui.scss'],
 })
 export class AdminHeaderUi implements OnInit {
   private readonly router = inject(Router);
@@ -38,8 +37,12 @@ export class AdminHeaderUi implements OnInit {
     });
   }
 
-  toggleMenu(): void { this.menuOpen.update(v => !v); }
-  closeMenu(): void  { this.menuOpen.set(false); }
+  toggleMenu(): void {
+    this.menuOpen.update(v => !v);
+  }
+  closeMenu(): void {
+    this.menuOpen.set(false);
+  }
 
   logout(): void {
     this.auth.logout();

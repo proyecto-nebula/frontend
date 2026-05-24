@@ -1,0 +1,268 @@
+<div class="admin-page">
+  @if (viewMode() === 'list') {
+    <div class="admin-page__toolbar">
+      <h2>Juegos</h2>
+      <button class="btn" (click)="goCreate()">+ Nuevo</button>
+    </div>
+
+    <p-table
+      [value]="items()"
+      [paginator]="true"
+      [rows]="25"
+      [rowsPerPageOptions]="[25, 50, 100]"
+      [globalFilterFields]="['title', 'developer.name', 'releaseDate']"
+      styleClass="p-datatable-sm"
+      #dt
+    >
+      <ng-template pTemplate="caption">
+        <div class="admin-table__search">
+          <i class="pi pi-search"></i>
+          <input
+            type="text"
+            placeholder="Buscar juego..."
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          />
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="id" class="admin-col-id">
+            ID
+            <p-sortIcon field="id" />
+          </th>
+          <th pSortableColumn="title">
+            Título
+            <p-sortIcon field="title" />
+          </th>
+          <th class="hide-sm">Desarrollador</th>
+          <th pSortableColumn="releaseDate" class="admin-col-date hide-sm">
+            Fecha
+            <p-sortIcon field="releaseDate" />
+          </th>
+          <th pSortableColumn="isActive" class="admin-col-status hide-sm">
+            Activo
+            <p-sortIcon field="isActive" />
+          </th>
+          <th pSortableColumn="isFeatured" class="admin-col-featured hide-sm">
+            Dest.
+            <p-sortIcon field="isFeatured" />
+          </th>
+          <th class="admin-col-actions-wide admin-table__actions"><span class="th-label">Acciones</span></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>{{ item.id }}</td>
+          <td>
+            <div class="table-game-title">
+              @if (item.bannerUrl) {
+                <img [src]="item.bannerUrl" [alt]="item.title" class="table-game-banner" />
+              }
+              <a [routerLink]="['/games', item.slug]" target="_blank" class="table-link">{{ item.title }}</a>
+            </div>
+          </td>
+          <td class="hide-sm">{{ item.developer?.name ?? '—' }}</td>
+          <td class="hide-sm">{{ item.releaseDate }}</td>
+          <td class="hide-sm">
+            <p-toggleswitch
+              [ngModel]="!!item.isActive"
+              (ngModelChange)="toggleField(item.id, 'isActive', $event)"
+            ></p-toggleswitch>
+          </td>
+          <td class="hide-sm">
+            <p-toggleswitch
+              [ngModel]="!!item.isFeatured"
+              (ngModelChange)="toggleField(item.id, 'isFeatured', $event)"
+            ></p-toggleswitch>
+          </td>
+          <td class="admin-table__actions">
+            <div class="actions-cell">
+              <button class="btn-icon" title="Ver" (click)="goView(item.id)"><i class="pi pi-eye"></i></button>
+              <button class="btn-icon" title="Editar" (click)="goEdit(item.id)"><i class="pi pi-pencil"></i></button>
+              <button class="btn-icon danger" title="Eliminar" (click)="remove(item.id)">
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="7" class="admin-td-empty">No hay juegos</td></tr>
+      </ng-template>
+    </p-table>
+  } @else {
+    <div class="admin-page__toolbar">
+      <h2>{{ viewOnly() ? 'Ver juego' : editingId() ? 'Editar juego' : 'Nuevo juego' }}</h2>
+      <button class="btn ghost" (click)="cancel()">
+        <i class="pi pi-arrow-left"></i>
+        Volver
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="admin-form">
+      <div class="admin-form__section">
+        <h4 class="admin-form__section-title">Información básica</h4>
+        <div class="admin-form__grid">
+          <label class="admin-form__field">
+            <span>Título *</span>
+            <input formControlName="title" type="text" placeholder="Título del juego" />
+          </label>
+          <label class="admin-form__field">
+            <span>Slug</span>
+            <input formControlName="slug" type="text" placeholder="titulo-del-juego" />
+          </label>
+        </div>
+      </div>
+
+      <div class="admin-form__section">
+        <h4 class="admin-form__section-title">Distribución y clasificación</h4>
+        <div class="admin-form__grid">
+          <label class="admin-form__field">
+            <span>Desarrollador</span>
+            <select formControlName="developerId">
+              <option [value]="null">— Sin desarrollador —</option>
+              @for (s of studios(); track s.id) {
+                <option [value]="s.id">{{ s.name }}</option>
+              }
+            </select>
+          </label>
+          <label class="admin-form__field">
+            <span>Publisher</span>
+            <select formControlName="publisherId">
+              <option [value]="null">— Sin publisher —</option>
+              @for (s of studios(); track s.id) {
+                <option [value]="s.id">{{ s.name }}</option>
+              }
+            </select>
+          </label>
+          <label class="admin-form__field">
+            <span>Clasificación PEGI</span>
+            <select formControlName="pegiId">
+              <option [value]="null">— Sin clasificación —</option>
+              @for (p of pegiList(); track p.id) {
+                <option [value]="p.id">{{ p.name }}</option>
+              }
+            </select>
+          </label>
+          <label class="admin-form__field">
+            <span>Fecha de lanzamiento</span>
+            <input formControlName="releaseDate" type="date" />
+          </label>
+          <label class="admin-form__field">
+            <span>Puntuación Metacritic</span>
+            <input formControlName="metacriticScore" type="number" min="0" max="100" placeholder="0–100" />
+          </label>
+        </div>
+      </div>
+
+      <div class="admin-form__section">
+        <h4 class="admin-form__section-title">Identificadores externos</h4>
+        <div class="admin-form__grid">
+          <label class="admin-form__field">
+            <span>Steam ID</span>
+            <input formControlName="steamId" type="number" placeholder="Ej: 108600" />
+          </label>
+          <label class="admin-form__field">
+            <span>IGDB ID</span>
+            <input formControlName="igdbId" type="number" placeholder="Ej: 3189" />
+          </label>
+          <label class="admin-form__field">
+            <span>Fecha de publicación</span>
+            <input formControlName="publishedAt" type="datetime-local" />
+          </label>
+        </div>
+      </div>
+
+      <div class="admin-form__section">
+        <h4 class="admin-form__section-title">
+          Imágenes
+          <small>(se auto-rellenan al introducir Steam ID)</small>
+        </h4>
+        <div class="admin-form__grid">
+          @for (field of ['coverUrl', 'bannerUrl', 'heroUrl', 'logoUrl']; track field) {
+            <label class="admin-form__field admin-form__field--url">
+              <span>{{ field }}</span>
+              <div class="admin-form__url-row">
+                <input [formControlName]="field" type="text" placeholder="https://..." />
+                <button
+                  type="button"
+                  class="btn-sm"
+                  title="Previsualizar"
+                  (click)="openPreview(form.get(field)?.value)"
+                >
+                  <i class="pi pi-eye"></i>
+                </button>
+              </div>
+            </label>
+          }
+        </div>
+      </div>
+
+      <div class="admin-form__section">
+        <h4 class="admin-form__section-title">Textos</h4>
+        <div class="admin-form__grid">
+          <label class="admin-form__field admin-form__field--full">
+            <span>Resumen</span>
+            <input formControlName="summary" type="text" placeholder="Breve descripción para listados..." />
+          </label>
+          <label class="admin-form__field admin-form__field--full">
+            <span>Descripción completa</span>
+            <textarea
+              formControlName="description"
+              rows="12"
+              placeholder="Descripción detallada del juego..."
+            ></textarea>
+          </label>
+        </div>
+      </div>
+
+      <div class="admin-form__section">
+        <h4 class="admin-form__section-title">Estado</h4>
+        <div class="admin-form__grid">
+          <div class="admin-form__field admin-form__field--toggle">
+            <p-toggleswitch formControlName="isFeatured"></p-toggleswitch>
+            <span>Destacado</span>
+          </div>
+          <div class="admin-form__field admin-form__field--toggle">
+            <p-toggleswitch formControlName="isActive"></p-toggleswitch>
+            <span>Activo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-form__actions">
+        @if (viewOnly()) {
+          <button type="button" class="btn" (click)="goEdit(editingId()!)">Editar</button>
+        } @else {
+          <button type="button" class="btn ghost" (click)="cancel()">Cancelar</button>
+          <button type="submit" class="btn" [disabled]="saving()">{{ saving() ? 'Guardando...' : 'Guardar' }}</button>
+        }
+      </div>
+    </form>
+
+    @if (previewUrl()) {
+      <div
+        class="img-preview-overlay"
+        role="button"
+        tabindex="0"
+        aria-label="Cerrar previsualización"
+        (click)="previewUrl.set(null)"
+        (keydown.enter)="previewUrl.set(null)"
+        (keydown.escape)="previewUrl.set(null)"
+      >
+        <div
+          class="img-preview-content"
+          role="button"
+          tabindex="-1"
+          (click)="$event.stopPropagation()"
+          (keydown)="$event.stopPropagation()"
+        >
+          <button class="img-preview-close" type="button" (click)="previewUrl.set(null)">
+            <i class="pi pi-times"></i>
+          </button>
+          <img [src]="previewUrl()!" alt="Preview" />
+        </div>
+      </div>
+    }
+  }
+</div>

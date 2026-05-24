@@ -2,6 +2,7 @@
 @use 'base';
 @use 'layout';
 @use 'transitions';
+@use 'shared';
 
 @use 'web';
 @use 'auth';
@@ -62,7 +63,9 @@
       width: 2rem;
       height: 2rem;
       border-radius: 50%;
-      transition: background 0.15s, color 0.15s;
+      transition:
+        background 0.15s,
+        color 0.15s;
 
       &:hover {
         background: rgba(255, 255, 255, 0.08);

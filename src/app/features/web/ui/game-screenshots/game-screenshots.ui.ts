@@ -11,7 +11,6 @@ export type MediaItem = VideoItem | ScreenshotItem;
   standalone: true,
   imports: [CommonModule, CarouselComponent],
   templateUrl: './game-screenshots.ui.html',
-  styles: [`:host { display: block; }`],
 })
 export class GameScreenshotsUi {
   @Input() screenshots: { thumbUrl: string; imageUrl: string }[] | null = null;

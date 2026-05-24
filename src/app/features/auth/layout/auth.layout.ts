@@ -1,10 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { HeaderUi } from '../../web/ui/header/header.ui';
 
 @Component({
   selector: 'app-auth-layout',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, HeaderUi],
   templateUrl: './auth.layout.html',
 })
 export class AuthLayout implements OnDestroy {

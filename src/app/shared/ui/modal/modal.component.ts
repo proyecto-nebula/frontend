@@ -8,9 +8,6 @@ import { DialogModule } from 'primeng/dialog';
   standalone: true,
   imports: [CommonModule, DialogModule],
   templateUrl: './modal.component.html',
-  styles: [`
-    :host { display: contents; }
-  `],
 })
 export class ModalComponent implements OnChanges, OnDestroy {
   @Input() header?: string;
@@ -33,9 +30,7 @@ export class ModalComponent implements OnChanges, OnDestroy {
   private readonly sanitizer = inject(DomSanitizer);
 
   get safeEmbedUrl(): SafeResourceUrl | null {
-    return this.galleryEmbedUrl
-      ? this.sanitizer.bypassSecurityTrustResourceUrl(this.galleryEmbedUrl)
-      : null;
+    return this.galleryEmbedUrl ? this.sanitizer.bypassSecurityTrustResourceUrl(this.galleryEmbedUrl) : null;
   }
 
   @Output() prev = new EventEmitter<void>();

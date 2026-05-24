@@ -1,17 +1,16 @@
 <div class="join-page">
 
-  <!-- Logo fijo en la parte superior -->
-  <div class="join-logo">
-    <app-logo height="38px" />
-  </div>
-
   <div class="join-root">
     <div class="phases" [style.transform]="'translateX(-' + (phase * 20) + '%)'">
 
       <!-- Fase 0: Cuenta -->
       <section class="phase">
         <h2 class="phase-title">Crea tu cuenta</h2>
-        <auth-registration-account-ui [formGroup]="account"></auth-registration-account-ui>
+        <auth-registration-account-ui
+          [formGroup]="account"
+          [showValidation]="showValidation"
+          [passwordValidationEnabled]="(settings.passwordValidationEnabled$ | async) || false"
+        ></auth-registration-account-ui>
       </section>
 
       <!-- Fase 1: Verificación de email -->

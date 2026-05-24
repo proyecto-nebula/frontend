@@ -1,4 +1,4 @@
-<app-modal header="Registro completado" [visible]="visible" (visibleChange)="onModalVisibleChange($event)" [width]="'520px'">
+<app-modal [visible]="visible" (visibleChange)="onModalVisibleChange($event)" [width]="'520px'">
   <div class="rs-modal">
     <h2>Registro completado</h2>
     @if (username) { <p>Bienvenido, <strong>{{ username }}</strong>!</p> }
