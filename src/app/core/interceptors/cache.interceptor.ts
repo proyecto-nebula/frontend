@@ -12,8 +12,28 @@ const TTL = 5 * 60 * 1000; // 5 minutos
 
 const store = new Map<string, { body: unknown; exp: number }>();
 
+/** Elimina del store todas las entradas del mismo recurso base (sin query string). */
+function invalidate(url: string): void {
+  const base = url.split('?')[0];
+  for (const key of store.keys()) {
+    if (key.startsWith(base)) store.delete(key);
+  }
+}
+
 export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
-  if (req.method !== 'GET') return next(req);
+  // Mutations: forward and invalidate cache for the affected resource on success
+  if (req.method !== 'GET') {
+    return next(req).pipe(
+      tap(event => {
+        if (event instanceof HttpResponse && event.status >= 200 && event.status < 300) {
+          invalidate(req.url);
+        }
+      }),
+    );
+  }
+
+  // Exclude requests containing user_id (user-specific, mutable data)
+  if (req.params.has('user_id') || req.urlWithParams.includes('user_id=')) return next(req);
   if (NO_CACHE_PATTERNS.some(p => req.url.includes(p))) return next(req);
 
   const key = req.urlWithParams;

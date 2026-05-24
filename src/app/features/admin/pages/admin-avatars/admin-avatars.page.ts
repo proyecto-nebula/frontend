@@ -38,8 +38,8 @@ export class AdminAvatarsPage implements OnInit {
         this.editingId.set(Number(id));
         this.viewMode.set('form');
         this.form = this.fb.group({ name: ['', Validators.required], imageUrl: ['', Validators.required] });
-        this.http.get<AvatarItem[]>(`${API_ROUTES.avatars}?id=${id}`).subscribe(items => {
-          if (items[0]) this.form.patchValue(items[0]);
+        this.http.get<AvatarItem>(`${API_ROUTES.avatars}?id=${id}`).subscribe(item => {
+          if (item) this.form.patchValue(item);
         });
       } else if (isNew) {
         this.editingId.set(null);

@@ -5,16 +5,18 @@
     <div class="error">{{ error() }}</div>
   } @else {
     <div class="game-detail">
-      <app-game-header
-        [game]="game()"
-        mode="detail"
-        [slug]="slug"
-        [isLoggedIn]="isLoggedIn()"
-        [hasPlan]="hasPlan()"
-        [isFavorite]="isFavorite()"
-        [favoriteLoading]="favoriteLoading()"
-        (favToggle)="toggleFavorite()"
-      ></app-game-header>
+      <div class="game-header">
+        <app-game-hero
+          [game]="game()"
+          mode="detail"
+          [slug]="slug"
+          [isLoggedIn]="isLoggedIn()"
+          [hasPlan]="hasPlan()"
+          [isFavorite]="isFavorite()"
+          [favoriteLoading]="favoriteLoading()"
+          (favToggle)="toggleFavorite()"
+        ></app-game-hero>
+      </div>
 
       <div class="game-content">
         <div class="game-content__description">

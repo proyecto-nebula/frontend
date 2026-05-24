@@ -74,8 +74,8 @@ export class AdminPlansPage implements OnInit {
         this.editingId.set(Number(id));
         this.viewMode.set('form');
         this.form = planForm();
-        this.http.get<Plan[]>(`${API_ROUTES.plans}?id=${id}`).subscribe(items => {
-          if (items[0]) this.form.patchValue(items[0]);
+        this.http.get<Plan>(`${API_ROUTES.plans}?id=${id}`).subscribe(item => {
+          if (item) this.form.patchValue(item);
         });
       } else if (isNew) {
         this.editingId.set(null);

@@ -3,12 +3,12 @@ import { Component, computed, inject, Input, OnInit, AfterViewInit, OnDestroy, E
 import { CarouselModule } from 'primeng/carousel';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
-import { GameHeaderUi } from '../game-header/game-header.ui';
+import { GameHeroUi } from '../game-hero/game-hero.ui';
 
 @Component({
   selector: 'app-game-featured',
   standalone: true,
-  imports: [CommonModule, CarouselModule, GameHeaderUi],
+  imports: [CommonModule, CarouselModule, GameHeroUi],
   templateUrl: './game-featured.ui.html',
 })
 export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
@@ -72,11 +72,11 @@ export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
     const viewport = root.querySelector('.game-featured-carousel .p-carousel-viewport') as HTMLElement | null;
     if (!viewport) return;
 
-    // Always measure the inner app-game-header content element (not the absolutely-
+    // Always measure the inner app-game-hero content element (not the absolutely-
     // positioned p-carousel-item whose height == viewport height → circular dependency).
     const activeItem = root.querySelector('.game-featured-carousel .p-carousel-item[data-p-carousel-item-active="true"]') as HTMLElement | null;
-    const target = (activeItem?.querySelector('app-game-header') as HTMLElement | null)
-      ?? (root.querySelector('.game-featured-carousel app-game-header') as HTMLElement | null);
+    const target = (activeItem?.querySelector('app-game-hero') as HTMLElement | null)
+      ?? (root.querySelector('.game-featured-carousel app-game-hero') as HTMLElement | null);
 
     if (!target) {
       viewport.style.height = '';

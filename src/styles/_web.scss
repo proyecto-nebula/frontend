@@ -35,6 +35,16 @@ app-game-featured {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
+  //top: var(--hero-top);
+}
+
+.game-header {
+  display: block;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  //top: var(--hero-top);
 }
 
 /* PrimeNG Carousel: fade transition for featured carousel */
@@ -53,6 +63,7 @@ app-game-featured {
 .game-featured-carousel .p-carousel-item {
   position: absolute !important;
   inset: 0;
+
   width: 100%;
   opacity: 0;
   transition: opacity 600ms ease;
@@ -76,37 +87,63 @@ app-game-featured {
   min-height: 520px;
 }
 
-/* Game header shared component (detail + featured modes) */
-.game-header {
-  position: relative;
+body.hero main {
+  padding-top: 0;
 }
 
-.game-header--detail {
+/* Game hero - shared component (featured carousel + game detail) */
+.game-hero {
+  position: relative;
   min-height: 520px;
 }
 
-.game-hero {
+.game-hero-image {
   position: absolute;
-  top: var(--hero-top);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: -1;
-  width: 100vw;
+  top: 0;
+
+  width: 100%;
   height: 520px;
   object-fit: cover;
   pointer-events: none;
+  z-index: 0;
   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0));
   -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0));
   mask-size: 100% 100%;
   -webkit-mask-size: 100% 100%;
 }
 
+.game-hero__content {
+  position: relative;
+  z-index: 1;
+  min-height: inherit;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-inline: var(--page-width);
+}
+
 .game-logo {
-  height: 240px;
-  max-width: 480px;
+  max-height: 200px;
+  max-width: 400px;
   object-fit: contain;
   display: block;
-  margin: 0;
+  margin-bottom: 0.75rem;
+}
+
+.game-hero__title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+}
+
+.game-hero__summary {
+  max-width: 640px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin-bottom: 1rem;
 }
 
 .game-studios {
@@ -122,15 +159,15 @@ app-game-featured {
   }
 }
 
-.game-header__categories {
+.game-hero__categories {
   margin: 0.5rem 0 0;
 }
 
-.game-header__actions {
+.game-hero__actions {
   display: flex;
   align-items: stretch;
   gap: 0.5rem;
-  margin: 1rem 0 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .btn-favorite-icon {
@@ -160,7 +197,7 @@ app-game-featured {
 }
 
 /* Secondary actions bar below main CTA (detail mode) */
-.game-header__secondary-actions {
+.game-hero__secondary-actions {
   display: flex;
   gap: 0.5rem;
   margin-top: 0.5rem;
@@ -332,66 +369,23 @@ app-game-featured {
   justify-content: flex-end;
 }
 
-/* Featured carousel: apply full-width to app-game-header host */
-.game-featured-carousel app-game-header {
+/* Featured carousel: app-game-featured host is already full-bleed (see earlier rule) */
+.game-featured-carousel app-game-hero {
   display: block;
   width: 100%;
 }
 
-/* Featured header: hero as absolute background, content overlaid */
-.game-header--featured {
+/* Detail mode: break out of padded content area, align content via padding-inline */
+.game-hero--detail {
+  width: 100vw;
   position: relative;
-  min-height: 520px;
-  overflow: hidden;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 2rem;
+}
 
-  .featured-hero {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    z-index: 0;
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 40%, rgba(0, 0, 0, 0.15));
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 40%, rgba(0, 0, 0, 0.15));
-    mask-size: 100% 100%;
-    -webkit-mask-size: 100% 100%;
-  }
-
-  .featured-logo,
-  h2,
-  .featured-summary,
-  .game-header__actions {
-    position: relative;
-    z-index: 1;
-  }
-
-  .featured-logo {
-    max-height: 80px;
-    width: auto;
-    max-width: 320px;
-    object-fit: contain;
-    display: block;
-    margin: 2.5rem 2rem 0;
-  }
-
-  h2 {
-    margin: 2.5rem 2rem 0;
-    font-size: 2rem;
-    font-weight: 800;
-  }
-
-  .featured-summary {
-    margin: 0.75rem 2rem 0;
-    max-width: 640px;
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 0.92rem;
-    line-height: 1.55;
-  }
-
-  .game-header__actions {
-    margin: 1.25rem 2rem 2.5rem;
-  }
+/* Featured mode: smaller logo in the carousel card */
+.game-hero--featured {
 }
 
 .game-collection {
@@ -1063,8 +1057,8 @@ body.is-admin .header-wrapper {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 8px 0;
-  height: 56px;
+  height: 100%;
+
   flex-wrap: nowrap;
 }
 
@@ -1373,7 +1367,7 @@ body.is-admin .drawer-panel {
 // ─── app-game-* display:block ─────────────────────────────────────────────────
 app-game-videos,
 app-game-screenshots,
-app-game-header,
+app-game-hero,
 app-game-collection {
   display: block;
 }

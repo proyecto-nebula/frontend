@@ -17,24 +17,16 @@ import { Game } from '@models/game.model';
 import { AuthService } from '@services/auth.service';
 import { FavoritesService } from '@services/favorites.service';
 import { GameService } from '@services/game.service';
+import { ToastService } from '@shared/ui/toast/toast.service';
+import { SharedUiModule } from '@shared/ui/ui.module';
 import { Subscription } from 'rxjs';
-import { SharedUiModule } from '../../../../shared/ui/ui.module';
-import { ToastService } from '../../../../shared/ui/toast/toast.service';
-import { GameHeaderUi } from '../game-header/game-header.ui';
+import { GameHeroUi } from '../game-hero/game-hero.ui';
 import { GameScreenshotsUi } from '../game-screenshots/game-screenshots.ui';
 
 @Component({
   selector: 'app-game-details',
   standalone: true,
-  imports: [
-    CommonModule,
-    DatePipe,
-    DecimalPipe,
-    RouterModule,
-    GameHeaderUi,
-    GameScreenshotsUi,
-    SharedUiModule,
-  ],
+  imports: [CommonModule, DatePipe, DecimalPipe, RouterModule, GameHeroUi, GameScreenshotsUi, SharedUiModule],
   templateUrl: './game-details.ui.html',
 })
 export class GameDetailsUi implements OnChanges {
@@ -50,10 +42,8 @@ export class GameDetailsUi implements OnChanges {
 
   readonly mediaItems = computed(() => {
     const game = this.game();
-    const items: Array<
-      | { kind: 'screenshot'; itemImageSrc: string; alt: string }
-      | { kind: 'video'; embedUrl: string }
-    > = [];
+    const items: ({ kind: 'screenshot'; itemImageSrc: string; alt: string } | { kind: 'video'; embedUrl: string })[] =
+      [];
     const vids = game?.videos ?? [];
     if (vids.length > 0) {
       const trailerIdx = vids.findIndex(v => v.name && v.name.toLowerCase().includes('trailer'));
@@ -61,7 +51,7 @@ export class GameDetailsUi implements OnChanges {
       items.push({ kind: 'video', embedUrl: `${chosen.embedUrl}?autoplay=1&rel=0&modestbranding=1` });
     }
     (game?.screenshots ?? []).forEach((s, i) =>
-      items.push({ kind: 'screenshot', itemImageSrc: s.imageUrl, alt: `${game?.title ?? 'Screenshot'} ${i + 1}` })
+      items.push({ kind: 'screenshot', itemImageSrc: s.imageUrl, alt: `${game?.title ?? 'Screenshot'} ${i + 1}` }),
     );
     return items;
   });
@@ -217,11 +207,11 @@ export class GameDetailsUi implements OnChanges {
   private static readonly PLATFORM_TYPES = new Set([13, 16, 17, 22, 23, 24]);
 
   readonly platformSites = computed(() =>
-    (this.game()?.websites ?? []).filter(s => GameDetailsUi.PLATFORM_TYPES.has(s.type))
+    (this.game()?.websites ?? []).filter(s => GameDetailsUi.PLATFORM_TYPES.has(s.type)),
   );
 
   readonly otherSites = computed(() =>
-    (this.game()?.websites ?? []).filter(s => !GameDetailsUi.PLATFORM_TYPES.has(s.type))
+    (this.game()?.websites ?? []).filter(s => !GameDetailsUi.PLATFORM_TYPES.has(s.type)),
   );
 
   websiteLabel(category: number): string {
@@ -241,7 +231,7 @@ export class GameDetailsUi implements OnChanges {
           this.isFavorite.set(false);
           this.favoriteLoading.set(false);
         },
-        error: (err) => {
+        error: err => {
           console.error('[toggleFavorite] removeFavorite error', err);
           this.favoriteLoading.set(false);
           this.toast.error('No se pudo quitar de favoritos. Inténtalo de nuevo.');
@@ -253,7 +243,7 @@ export class GameDetailsUi implements OnChanges {
           this.isFavorite.set(true);
           this.favoriteLoading.set(false);
         },
-        error: (err) => {
+        error: err => {
           console.error('[toggleFavorite] addFavorite error', err);
           this.favoriteLoading.set(false);
           this.toast.error('No se pudo añadir a favoritos. Inténtalo de nuevo.');

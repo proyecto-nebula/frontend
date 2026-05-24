@@ -1,12 +1,15 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { Injector, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '@services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
-  const auth = inject(AuthService);
+  // Use Injector to lazily resolve AuthService and avoid circular DI:
+  // AuthService.constructor makes HTTP calls → interceptor runs → inject(AuthService)
+  // would try to resolve AuthService while it is still being constructed → NG0200.
+  const injector = inject(Injector);
   const token = localStorage.getItem('token');
   const isAuthLoginRequest = req.url.includes('/auth');
 
@@ -24,7 +27,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       if ((error.status === 401 || error.status === 403) && !isAuthLoginRequest && token) {
         console.warn('[authInterceptor] 401/403 on', clonedReq.method, clonedReq.url, error.error);
-        auth.logout();
+        // AuthService is fully constructed by the time a response error arrives (async)
+        injector.get(AuthService).logout();
         router.navigate(['/auth/login']);
       }
       return throwError(() => error);

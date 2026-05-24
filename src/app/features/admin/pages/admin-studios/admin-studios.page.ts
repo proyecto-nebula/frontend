@@ -33,8 +33,8 @@ export class AdminStudiosPage implements OnInit {
         this.editingId.set(Number(id));
         this.viewMode.set('form');
         this.form = this.fb.group({ name: ['', Validators.required] });
-        this.http.get<Studio[]>(`${API_ROUTES.studios}?id=${id}`).subscribe(items => {
-          if (items[0]) this.form.patchValue(items[0]);
+        this.http.get<Studio>(`${API_ROUTES.studios}?id=${id}`).subscribe(item => {
+          if (item) this.form.patchValue(item);
         });
       } else if (isNew) {
         this.editingId.set(null);

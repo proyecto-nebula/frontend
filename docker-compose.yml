@@ -1,0 +1,7 @@
+services:
+  frontend:
+    container_name: frontend
+    build: .
+    restart: unless-stopped
+    ports:
+      - "4200:80"

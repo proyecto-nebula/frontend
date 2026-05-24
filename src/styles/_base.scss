@@ -32,21 +32,9 @@ body.is-admin {
   padding-top: var(--admin-header-height);
 }
 
-// Web/settings have a fixed app-header; add its height as top padding.
-// When the admin bar is also visible, stack both offsets.
-body.web,
-body.settings {
-  padding-top: var(--header-height);
-}
-
-body.web.is-admin,
-body.settings.is-admin {
-  padding-top: calc(var(--header-height) + var(--admin-header-height));
-}
-
 body main {
   padding-inline: var(--page-width);
-  padding-top: 2rem;
+  padding-top: var(--padding-main);
 }
 
 // ─── Global buttons ──────────────────────────────────────────────

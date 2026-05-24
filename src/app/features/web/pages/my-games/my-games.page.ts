@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { forkJoin } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, distinctUntilChanged, forkJoin, map, of, switchMap } from 'rxjs';
 import { Game } from '@models/game.model';
+import { AuthService } from '@services/auth.service';
 import { GameService } from '@services/game.service';
-import { UserService } from '@services/user.service';
 import { GameCollectionUi } from '@web/ui/game-collection/game-collection.ui';
 import { GameListUi } from '@web/ui/game-list/game-list.ui';
 
@@ -14,8 +14,8 @@ import { GameListUi } from '@web/ui/game-list/game-list.ui';
   imports: [CommonModule, GameCollectionUi, GameListUi],
   templateUrl: './my-games.page.html',
 })
-export class MyGamesPage implements OnInit {
-  private userService = inject(UserService);
+export class MyGamesPage {
+  private authService = inject(AuthService);
   private gameService = inject(GameService);
 
   readonly isLoading = signal(true);
@@ -31,31 +31,35 @@ export class MyGamesPage implements OnInit {
     return { hours, minutes };
   });
 
-  ngOnInit(): void {
-    this.userService.me().pipe(take(1)).subscribe(user => {
-      if (user) {
-        this.loadData(user.id);
-      } else {
-        this.isLoading.set(false);
-      }
-    });
-  }
-
-  private loadData(userId: number): void {
-    forkJoin({
-      favorites:    this.gameService.getFavoriteGames(userId),
-      lastPlayed:   this.gameService.getLastPlayedGames(userId),
-      mostPlayed:   this.gameService.getMostPlayedGames(userId, 1000),
-      recommended:  this.gameService.getRecommended(userId),
-    }).subscribe({
-      next: ({ favorites, lastPlayed, mostPlayed, recommended }) => {
-        this.favoriteGames.set(favorites);
-        this.lastPlayedGames.set(lastPlayed);
-        this.mostPlayedGames.set(mostPlayed);
-        this.recommendedGames.set(recommended);
-        this.isLoading.set(false);
-      },
-      error: () => this.isLoading.set(false),
+  constructor() {
+    this.authService.user$.pipe(
+      map(u => u?.id ?? null),
+      distinctUntilChanged(),
+      switchMap(userId => {
+        this.isLoading.set(true);
+        if (userId === null) {
+          this.favoriteGames.set(null);
+          this.lastPlayedGames.set(null);
+          this.mostPlayedGames.set(null);
+          this.recommendedGames.set(null);
+          this.isLoading.set(false);
+          return of(null);
+        }
+        return forkJoin({
+          favorites:   this.gameService.getFavoriteGames(userId).pipe(catchError(() => of([]))),
+          lastPlayed:  this.gameService.getLastPlayedGames(userId).pipe(catchError(() => of([]))),
+          mostPlayed:  this.gameService.getMostPlayedGames(userId, 1000).pipe(catchError(() => of([]))),
+          recommended: this.gameService.getRecommended(userId).pipe(catchError(() => of([]))),
+        });
+      }),
+      takeUntilDestroyed(),
+    ).subscribe(result => {
+      if (!result) return;
+      this.favoriteGames.set(result.favorites);
+      this.lastPlayedGames.set(result.lastPlayed);
+      this.mostPlayedGames.set(result.mostPlayed);
+      this.recommendedGames.set(result.recommended);
+      this.isLoading.set(false);
     });
   }
 }
