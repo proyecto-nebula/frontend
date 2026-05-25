@@ -31,15 +31,15 @@
     {
       "name": "api-public",
       "urls": [
-        "https://api.tu-dominio.com/api/v1/games**",
-        "https://api.tu-dominio.com/api/v1/studios**",
-        "https://api.tu-dominio.com/api/v1/pegi**",
-        "https://api.tu-dominio.com/api/v1/categories**",
-        "https://api.tu-dominio.com/api/v1/plans**",
-        "https://api.tu-dominio.com/api/v1/avatars**"
+        "https://backend-production-a381.up.railway.app/api/v1/games**",
+        "https://backend-production-a381.up.railway.app/api/v1/studios**",
+        "https://backend-production-a381.up.railway.app/api/v1/pegi**",
+        "https://backend-production-a381.up.railway.app/api/v1/categories**",
+        "https://backend-production-a381.up.railway.app/api/v1/plans**",
+        "https://backend-production-a381.up.railway.app/api/v1/avatars**"
       ],
       "cacheConfig": {
-        "strategy": "performance",
+        "strategy": "freshness",
         "maxSize": 150,
         "maxAge": "1h",
         "timeout": "10s"
