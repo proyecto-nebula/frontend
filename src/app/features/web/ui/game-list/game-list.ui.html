@@ -15,7 +15,7 @@
           <a class="game-list__row" [routerLink]="['/games', game.slug]">
             <span class="game-list__rank">{{ i + 1 }}</span>
             @if (game.bannerUrl) {
-              <img class="game-list__banner" [src]="game.bannerUrl" [alt]="game.title" />
+              <img class="game-list__banner" [src]="game.bannerUrl" [alt]="game.title" loading="lazy" />
             } @else {
               <div class="game-list__banner game-list__banner--empty"></div>
             }

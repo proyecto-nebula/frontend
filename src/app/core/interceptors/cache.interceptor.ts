@@ -9,14 +9,32 @@ const NO_CACHE_PATTERNS = ['/auth', '/sessions', '/favorites', '/users'];
 
 /** Tiempo de vida de cada entrada (ms). */
 const TTL = 5 * 60 * 1000; // 5 minutos
+const PFX = 'nc_';
 
-const store = new Map<string, { body: unknown; exp: number }>();
+function getCached(key: string): unknown | null {
+  try {
+    const raw = sessionStorage.getItem(PFX + btoa(key));
+    if (!raw) return null;
+    const entry = JSON.parse(raw) as { body: unknown; exp: number };
+    if (Date.now() >= entry.exp) { sessionStorage.removeItem(PFX + btoa(key)); return null; }
+    return entry.body;
+  } catch { return null; }
+}
 
-/** Elimina del store todas las entradas del mismo recurso base (sin query string). */
+function setCached(key: string, body: unknown): void {
+  try {
+    sessionStorage.setItem(PFX + btoa(key), JSON.stringify({ body, exp: Date.now() + TTL }));
+  } catch { /* quota exceeded — ignorar */ }
+}
+
 function invalidate(url: string): void {
   const base = url.split('?')[0];
-  for (const key of store.keys()) {
-    if (key.startsWith(base)) store.delete(key);
+  for (let i = sessionStorage.length - 1; i >= 0; i--) {
+    const k = sessionStorage.key(i);
+    if (!k?.startsWith(PFX)) continue;
+    try {
+      if (atob(k.slice(PFX.length)).startsWith(base)) sessionStorage.removeItem(k);
+    } catch { /* ignorar */ }
   }
 }
 
@@ -37,16 +55,15 @@ export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
   if (NO_CACHE_PATTERNS.some(p => req.url.includes(p))) return next(req);
 
   const key = req.urlWithParams;
-  const hit = store.get(key);
-
-  if (hit && Date.now() < hit.exp) {
-    return of(new HttpResponse({ body: hit.body, status: 200 }));
+  const hit = getCached(key);
+  if (hit !== null) {
+    return of(new HttpResponse({ body: hit, status: 200 }));
   }
 
   return next(req).pipe(
     tap(event => {
       if (event instanceof HttpResponse && event.status === 200) {
-        store.set(key, { body: event.body, exp: Date.now() + TTL });
+        setCached(key, event.body);
       }
     }),
   );
