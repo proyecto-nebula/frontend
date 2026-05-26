@@ -1,13 +1,13 @@
 <div class="reg-payment" [formGroup]="group">
 
   <div class="reg-field">
-    <label class="reg-label">Nombre en la tarjeta</label>
-    <input class="reg-input" type="text" formControlName="nameOnCard" autocomplete="cc-name" />
+    <label class="reg-label" for="reg-cc-name">Nombre en la tarjeta</label>
+    <input id="reg-cc-name" class="reg-input" type="text" formControlName="nameOnCard" autocomplete="cc-name" />
   </div>
 
   <div class="reg-field">
-    <label class="reg-label">Número de tarjeta</label>
-    <div class="card-boxes">
+    <label class="reg-label" id="reg-cc-number-label">Número de tarjeta</label>
+    <div class="card-boxes" role="group" aria-labelledby="reg-cc-number-label">
       @for (g of cardGroups; track $index) {
         <input
           #cardBox
@@ -26,12 +26,12 @@
 
   <div class="reg-row">
     <div class="reg-field">
-      <label class="reg-label">Caducidad</label>
-      <input class="reg-input" type="text" formControlName="expiry" placeholder="MM/AA" autocomplete="cc-exp" />
+      <label class="reg-label" for="reg-cc-exp">Caducidad</label>
+      <input id="reg-cc-exp" class="reg-input" type="text" formControlName="expiry" placeholder="MM/AA" autocomplete="cc-exp" />
     </div>
     <div class="reg-field">
-      <label class="reg-label">CVC</label>
-      <input class="reg-input" type="text" formControlName="cvc" placeholder="123" autocomplete="cc-csc" maxlength="4" />
+      <label class="reg-label" for="reg-cc-cvc">CVC</label>
+      <input id="reg-cc-cvc" class="reg-input" type="text" formControlName="cvc" placeholder="123" autocomplete="cc-csc" maxlength="4" />
     </div>
   </div>
 

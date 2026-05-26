@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { filter, take } from 'rxjs/operators';
 import { Game } from '@models/game.model';
 import { AuthService } from '@services/auth.service';
@@ -19,6 +20,7 @@ export class HomePage implements OnInit {
   private route = inject(ActivatedRoute);
   private gameService = inject(GameService);
   readonly authService = inject(AuthService);
+  private title = inject(Title);
 
   showSuccess = false;
   successUsername?: string | null = null;
@@ -33,6 +35,7 @@ export class HomePage implements OnInit {
   readonly recommended         = signal<Game[] | null>(null);
 
   ngOnInit(): void {
+    this.title.setTitle('Inicio — Nebula');
     const qp = this.route.snapshot.queryParamMap;
     if (qp.has('registered')) {
       this.showSuccess = true;

@@ -1,7 +1,7 @@
-<section class="game-collection">
+<section class="game-collection" [attr.aria-labelledby]="title ? 'col-' + title : null">
   @if (title) {
     <header>
-      <h3>{{ title }}</h3>
+      <h3 [id]="'col-' + title">{{ title }}</h3>
     </header>
   }
 
@@ -14,7 +14,7 @@
       [items]="collection ?? []"
       [styleClass]="'game-collection-carousel'"
       [showIndicators]="false"
-      [itemMinWidth]="167"
+      [itemMinWidth]="150"
       [gap]="20"
       [mask]="true"
     >

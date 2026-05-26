@@ -55,7 +55,7 @@
 
   label {
     font-size: 0.82rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.65);
   }
 
   input {
@@ -72,8 +72,12 @@
     &:focus {
       border-color: rgba(108, 92, 231, 0.55);
     }
+    &:focus-visible {
+      outline: 2px solid rgba(108, 92, 231, 0.8);
+      outline-offset: 1px;
+    }
     &::placeholder {
-      color: rgba(255, 255, 255, 0.22);
+      color: rgba(255, 255, 255, 0.45);
     }
     &.invalid {
       border-color: rgba(231, 76, 60, 0.5);
@@ -107,12 +111,17 @@
 
 .login-forgot {
   font-size: 0.82rem;
-  color: rgba(108, 92, 231, 0.8);
+  color: #a78bff;
   text-decoration: none;
   transition: color 0.15s;
 
   &:hover {
-    color: #a29bfe;
+    color: #c4b0ff;
+  }
+  &:focus-visible {
+    outline: 2px solid #a78bff;
+    outline-offset: 2px;
+    border-radius: 2px;
   }
 }
 
@@ -242,11 +251,15 @@ body.auth main {
   box-sizing: border-box;
 
   &::placeholder {
-    color: rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.45);
   }
   &:focus {
     border-color: rgba(108, 92, 231, 0.6);
     background: rgba(108, 92, 231, 0.06);
+  }
+  &:focus-visible {
+    outline: 2px solid rgba(108, 92, 231, 0.8);
+    outline-offset: 1px;
   }
 
   .is-error & {
@@ -316,6 +329,10 @@ body.auth main {
   }
   &:focus {
     border-color: rgba(108, 92, 231, 0.6);
+  }
+  &:focus-visible {
+    outline: 2px solid rgba(108, 92, 231, 0.8);
+    outline-offset: 1px;
   }
 }
 

@@ -1,8 +1,8 @@
 <div class="reg-profile" [formGroup]="group">
 
   <div class="reg-field">
-    <label class="reg-label">Nombre público</label>
-    <input class="reg-input" type="text" formControlName="username" placeholder="Tu nombre en Nebula" autocomplete="nickname" />
+    <label class="reg-label" for="reg-username">Nombre público</label>
+    <input id="reg-username" class="reg-input" type="text" formControlName="username" placeholder="Tu nombre en Nebula" autocomplete="nickname" />
     @if (group.get('username')?.invalid && group.get('username')?.touched) {
       <div class="reg-error">El nombre público es obligatorio</div>
     }
@@ -19,7 +19,7 @@
           (keyup.enter)="selectAvatar(a.id)"
           [class.selected]="group.get('avatarId')?.value === a.id"
           [attr.aria-pressed]="group.get('avatarId')?.value === a.id"
-          [attr.title]="a.name || ('Avatar ' + a.id)"
+          [attr.aria-label]="a.name || ('Avatar ' + a.id)"
         >
           <img [src]="a.imageUrl" [alt]="a.name || 'avatar'" />
         </button>

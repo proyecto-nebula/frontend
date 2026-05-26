@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
 import { Game } from '@models/game.model';
 import { AuthService } from '@services/auth.service';
 import { GameService } from '@services/game.service';
@@ -32,6 +33,7 @@ export class MyGamesPage {
   });
 
   constructor() {
+    inject(Title).setTitle('Mis juegos — Nebula');
     this.authService.user$
       .pipe(
         map(u => u?.id ?? null),

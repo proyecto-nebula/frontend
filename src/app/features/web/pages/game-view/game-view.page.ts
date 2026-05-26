@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
 import { GameDetailsUi } from '@features/web/ui/game-details/game-details.ui';
@@ -15,6 +16,7 @@ import { GameCollectionUi } from '@web/ui/game-collection/game-collection.ui';
 export class GameViewPage {
   private route = inject(ActivatedRoute);
   private gameService = inject(GameService);
+  private titleService = inject(Title);
 
   slug = signal<string>('');
   readonly similarGames    = signal<Game[] | null>(null);
@@ -32,6 +34,7 @@ export class GameViewPage {
   }
 
   onGameLoaded(game: Game): void {
+    this.titleService.setTitle((game.title ?? 'Juego') + ' — Nebula');
     const slug = this.slug();
     this.developerName.set(game.developer?.name ?? null);
     this.gameService.getSimilarGames(slug).subscribe(g => this.similarGames.set(g));

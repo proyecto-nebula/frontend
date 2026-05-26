@@ -7,6 +7,40 @@
   box-sizing: border-box;
 }
 
+// ─── Accessibility utilities ──────────────────────────────────────
+// Visually hidden but available to screen readers
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Skip to main content link
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 99999;
+  padding: 0.6rem 1.2rem;
+  background: #7c5cff;
+  color: #fff;
+  border-radius: 0 0 6px 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: top 0.15s;
+
+  &:focus {
+    top: 0;
+  }
+}
+
 html,
 body {
   height: 100%;
@@ -63,6 +97,10 @@ body main {
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+  &:focus-visible {
+    outline: 2px solid #a78bff;
+    outline-offset: 2px;
   }
 
   &.ghost {
@@ -221,5 +259,41 @@ body main {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+// ─── Movimiento reducido (WCAG 2.3.3) ────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// ─── Alto contraste forzado (Windows / forced-colors) ──────────
+@media (forced-colors: active) {
+  .btn {
+    forced-color-adjust: none;
+    border: 2px solid ButtonText;
+    background: ButtonFace;
+    color: ButtonText;
+
+    &:focus-visible {
+      outline: 3px solid Highlight;
+    }
+  }
+  .skip-link {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+  .reg-input,
+  .reg-select {
+    forced-color-adjust: none;
+    border: 1px solid ButtonText;
   }
 }

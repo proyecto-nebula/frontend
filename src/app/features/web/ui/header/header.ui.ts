@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { LoginFormComponent } from '@auth/components/login-form/login-form.component';
 import { Game } from '@models/game.model';
@@ -41,6 +49,9 @@ export class HeaderUi implements OnInit, OnDestroy {
   private loginModal = inject(LoginModalService);
   private gameService = inject(GameService);
   private cdr = inject(ChangeDetectorRef);
+  private elRef = inject(ElementRef<HTMLElement>);
+
+  private hamburgerBtn: HTMLElement | null = null;
 
   // Quick search
   searchOpen = false;
@@ -62,6 +73,37 @@ export class HeaderUi implements OnInit, OnDestroy {
   @HostListener('window:scroll')
   onScroll(): void {
     this.isScrolled = window.scrollY > 20;
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    if (!this.drawerVisible) return;
+    if (event.key === 'Escape') {
+      this.closeDrawer();
+      return;
+    }
+    if (event.key !== 'Tab') return;
+    const drawer = this.elRef.nativeElement.querySelector('#mobile-drawer') as HTMLElement | null;
+    if (!drawer) return;
+    const focusables = (Array.from(
+      drawer.querySelectorAll(
+        'a[href]:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    ) as HTMLElement[]).filter(el => !el.closest('[aria-hidden="true"]'));
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (event.shiftKey) {
+      if (document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
   }
 
   ngOnInit() {
@@ -101,6 +143,31 @@ export class HeaderUi implements OnInit, OnDestroy {
         this.showLoginModal = true;
       }
     });
+  }
+
+  toggleDrawer(): void {
+    if (this.drawerVisible) {
+      this.closeDrawer();
+    } else {
+      this.openDrawer();
+    }
+  }
+
+  openDrawer(): void {
+    this.hamburgerBtn = this.elRef.nativeElement.querySelector('.hamburger-btn') as HTMLElement | null;
+    this.drawerVisible = true;
+    setTimeout(() => {
+      const drawer = this.elRef.nativeElement.querySelector('#mobile-drawer') as HTMLElement | null;
+      const first = drawer?.querySelector(
+        'a[href]:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ) as HTMLElement | null;
+      first?.focus();
+    }, 50);
+  }
+
+  closeDrawer(): void {
+    this.drawerVisible = false;
+    setTimeout(() => this.hamburgerBtn?.focus(), 50);
   }
 
   logout() {

@@ -9,6 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { RegistrationAccountUi } from '../../ui/registration-account.ui';
 import { RegistrationPaymentUi } from '../../ui/registration-payment.ui';
 import { RegistrationPlanUi } from '../../ui/registration-plan.ui';
@@ -80,7 +81,9 @@ export class JoinPage {
     private plansService: PlansService,
     private auth: AuthService,
     public settings: SettingsService,
+    private titleService: Title,
   ) {
+    this.titleService.setTitle('Crear cuenta — Nebula');
     const pwValidators = [Validators.required];
     if (this.settings.getPasswordValidationEnabled()) pwValidators.push(passwordStrengthValidator);
 

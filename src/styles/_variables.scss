@@ -50,7 +50,7 @@ $carousel-hover-dim: 0.45;
   --xxl: 1600px;
 
   --page-max: var(--xxl);
-  --page-gutter: 3rem;
+  --page-gutter: 5%;
   --page-width: max(var(--page-gutter), calc((100% - var(--page-max)) / 2));
   --admin-header-height: 3rem;
   --header-height: 4rem;
@@ -58,7 +58,7 @@ $carousel-hover-dim: 0.45;
 
   --hero-top: calc((var(--header-height) + var(--padding-main)) * -1);
 
-  --rounded-corners: 16px;
+  --rounded-corners: 8px;
 
   --carousel-hover-dim: 0.45;
 }

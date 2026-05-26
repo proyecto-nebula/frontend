@@ -11,6 +11,36 @@ a {
   }
 }
 
+/* Distribuir `game-info-bar` con proporciones específicas por defecto
+   (categorías:3, lanzamiento:2, añadido:2, desarrollador:3, distribuidor:3).
+   Cada columna tiene un ancho mínimo; al reducirse, los items harán wrap. */
+.game-info-bar {
+  flex-wrap: wrap;
+
+  &__item {
+    /* valores por defecto si no se especifica el modifier */
+    flex: 1 1 0;
+  }
+
+  /* Use semantic modifier classes so layout doesn't break when some items are absent */
+  .game-info-bar__item--categories {
+    flex: 3 1 0;
+    min-width: 220px;
+  }
+
+  .game-info-bar__item--release,
+  .game-info-bar__item--added {
+    flex: 2 1 0;
+    min-width: 160px;
+  }
+
+  .game-info-bar__item--developer,
+  .game-info-bar__item--publisher {
+    flex: 3 1 0;
+    min-width: 200px;
+  }
+}
+
 // Configuración de scrollbars estilo "Dark Nebula"
 ::-webkit-scrollbar {
 }
@@ -36,6 +66,41 @@ app-game-featured {
   left: 50%;
   transform: translateX(-50%);
   //top: var(--hero-top);
+}
+
+/* Game featured wrapper: positions the pause button */
+.game-featured-wrapper {
+  position: relative;
+}
+
+.carousel-pause-btn {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 10;
+  background: transparent;
+  border: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: color 0.15s;
+  padding: 0;
+
+  &:hover {
+    color: #fff;
+  }
+  &:focus-visible {
+    outline: 2px solid #a78bff;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 }
 
 .game-header {
@@ -110,6 +175,8 @@ body.hero main {
   -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0));
   mask-size: 100% 100%;
   -webkit-mask-size: 100% 100%;
+  transition: opacity 2s ease;
+  will-change: opacity;
 }
 
 .game-hero__content {
@@ -122,14 +189,22 @@ body.hero main {
   align-items: flex-start;
   justify-content: center;
   padding-inline: var(--page-width);
+  padding-top: 2rem;
 }
 
 .game-logo {
-  max-height: 200px;
-  max-width: 400px;
+  max-height: 240px;
+  max-width: 460px;
   object-fit: contain;
   display: block;
-  margin-bottom: 0.75rem;
+  transition:
+    max-width 220ms ease,
+    max-height 220ms ease,
+    width 220ms ease,
+    height 220ms ease,
+    transform 220ms ease,
+    margin 220ms ease;
+  will-change: transform, width, height;
 }
 
 .game-hero__title {
@@ -144,6 +219,9 @@ body.hero main {
   font-size: 0.92rem;
   line-height: 1.55;
   margin-bottom: 1rem;
+  text-shadow:
+    0 1px 8px rgba(0, 0, 0, 0.8),
+    0 2px 16px rgba(0, 0, 0, 0.6);
 }
 
 .game-studios {
@@ -185,6 +263,10 @@ body.hero main {
   &:hover {
     background: rgba(255, 255, 255, 0.08);
   }
+  &:focus-visible {
+    outline: 2px solid #a78bff;
+    outline-offset: 2px;
+  }
 
   &--active {
     color: #e84393;
@@ -209,7 +291,7 @@ body.hero main {
   gap: 0.45rem;
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.13);
-  border-radius: 999px;
+  border-radius: var(--rounded-corners);
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.82rem;
   font-weight: 500;
@@ -222,6 +304,10 @@ body.hero main {
   &:hover {
     background: rgba(255, 255, 255, 0.13);
     color: #fff;
+  }
+  &:focus-visible {
+    outline: 2px solid #a78bff;
+    outline-offset: 2px;
   }
 
   i {
@@ -321,7 +407,16 @@ body.hero main {
     color 0.15s;
 
   input[type='radio'] {
-    display: none;
+    // Visualmente oculto pero accesible para lectores de pantalla (WCAG 1.3.1)
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   &.selected {
@@ -451,6 +546,8 @@ body.hero main {
   &__description {
     flex: 1;
     min-width: 0;
+    container-type: inline-size;
+    container-name: game-desc;
 
     p {
       margin: 0 0 10px 0;
@@ -518,6 +615,45 @@ body.hero main {
   }
 }
 
+/* If the description column is narrower than the mediano breakpoint, switch
+   the game-info-bar to a vertical list: each item becomes a row with the
+   label on the left and the value on the right, with horizontal separators. */
+@container (max-width: 940px) {
+  .game-content__description {
+    .game-info-bar {
+      flex-direction: column;
+    }
+
+    .game-info-bar__item {
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 0.75rem;
+      padding: 0.65rem 0;
+      width: 100%;
+      border-left: none;
+      transition:
+        padding 220ms ease,
+        gap 220ms ease,
+        border-color 220ms ease;
+    }
+
+    .game-info-bar__item + .game-info-bar__item {
+      border-left: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .game-info-bar__item:first-child {
+      padding-left: 0;
+    }
+
+    .game-info-bar__label {
+      flex: 0 0 160px;
+      min-width: 0;
+    }
+  }
+}
+
 .metacritic-score {
   display: inline-block;
   padding: 0.15rem 0.6rem;
@@ -543,8 +679,9 @@ body.hero main {
 /* Tag pills (game modes, perspectives, etc.) */
 .game-tags {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  gap: 0.5rem;
 }
 
 .game-tag {
@@ -565,13 +702,27 @@ body.hero main {
   align-items: flex-start;
   margin-top: 1.5rem;
 
+  /* Allow container queries so the bar can adapt when its container is narrow
+     (apply mediano styles based on the container width, not only viewport). */
+  container-type: inline-size;
+  container-name: game-info;
+
+  /* Smooth adjustments when responsive rules change spacing/visuals */
+  transition:
+    gap 220ms ease,
+    margin-top 220ms ease;
+
   &__item {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     padding: 0.75rem 1.25rem;
     flex: 1;
-    min-width: 0;
+
+    transition:
+      padding 220ms ease,
+      gap 220ms ease,
+      border-color 220ms ease;
 
     & + & {
       border-left: 1px solid rgba(255, 255, 255, 0.12);
@@ -590,6 +741,10 @@ body.hero main {
     color: rgba(255, 255, 255, 0.42);
   }
 }
+
+/* Keep the desktop horizontal layout for `.game-info-bar` as the base across
+   breakpoints — semantic modifier classes control proportions (categories:3,
+   release:2, added:2, developer:3, publisher:3). */
 
 /* Website links in meta panel */
 .game-websites {
@@ -1072,6 +1227,17 @@ body.is-admin .header-wrapper {
   gap: 1.5rem;
 }
 
+.right {
+  gap: 0.75rem;
+}
+
+.header-username {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+}
+
 .desktop-nav {
   display: flex;
   align-items: center;
@@ -1125,9 +1291,17 @@ body.is-admin .header-wrapper {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+
+  a {
+    display: flex;
+    align-items: center;
+  }
 }
 
 @media (max-width: 768px) {
+  .game-hero-image {
+    opacity: 0.5;
+  }
   .nav-list {
     display: none;
   }
@@ -1138,25 +1312,141 @@ body.is-admin .header-wrapper {
     display: none;
   }
   .mobile-logo {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .mobile-hamburger {
     display: inline-flex;
+  }
+  .header-username {
+    display: none;
+  }
+  .header-auth-btns {
+    display: none;
+  }
+  .right {
+    gap: 0.25rem;
+  }
+
+  // Búsqueda en móvil: aparece encima del header y ocupa todo el ancho
+  .search-input-wrap {
+    overflow: visible;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
+    max-width: 100% !important;
+    padding: 0 1rem;
+    background: rgba(13, 13, 26, 0.97);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    width: 100%;
+    transition:
+      transform 0.25s ease,
+      opacity 0.2s ease;
+    z-index: 1015;
+
+    &.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .search-field {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+      background: transparent;
+      color: #fff;
+      padding: 0 2.5rem 0 0.6rem;
+      height: calc(100% - 12px);
+      box-sizing: border-box;
+      border-radius: 0;
+    }
+
+    .search-close {
+      position: static;
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.05rem;
+      padding: 6px;
+      cursor: pointer;
+      display: inline-flex; /* show in mediano/móvil */
+      margin-left: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      width: 32px;
+    }
+  }
+
+  /* En móvil, los resultados de búsqueda ocupan todo el ancho y se posicionan bajo el campo */
+  .search-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    z-index: 1016;
   }
 }
 
 .drawer-list {
   list-style: none;
-  padding: 0;
+  padding: 1rem 0;
   margin: 0;
   color: #fff;
 }
 
 .drawer-link {
   text-decoration: none;
-  color: inherit;
-  display: block;
-  padding: 12px 8px;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  padding: 0.85rem 1.5rem;
+  font-size: 0.93rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition:
+    background 0.15s,
+    color 0.15s;
+  border-left: 2px solid transparent;
+
+  &:hover {
+    background: rgba(108, 92, 231, 0.12);
+    color: #fff;
+  }
+
+  &.active {
+    background: rgba(108, 92, 231, 0.18);
+    color: #a78bff;
+    border-left-color: #a78bff;
+  }
+}
+
+.drawer-auth {
+  margin-top: auto;
+  padding: 0.25rem 0 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  .drawer-link {
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
 }
 
 .overlay {
@@ -1179,18 +1469,21 @@ body.is-admin .header-wrapper {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
-  width: 260px;
+  height: 100dvh;
+  width: 280px;
   transform: translateX(-100%);
-  transition:
-    transform 260ms ease,
-    opacity 260ms ease;
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1002;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 100%);
+  background: rgba(10, 12, 26, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(108, 92, 231, 0.18);
+  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.5);
   color: #fff;
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
   padding-top: var(--header-height);
+  overflow-y: auto;
 
   &.open {
     transform: translateX(0);
@@ -1222,6 +1515,7 @@ body.is-admin .drawer-panel {
   overflow: hidden;
   max-width: 0;
   opacity: 0;
+  pointer-events: none;
   transition:
     max-width 0.35s ease,
     opacity 0.25s ease;
@@ -1229,13 +1523,50 @@ body.is-admin .drawer-panel {
   &.open {
     max-width: 280px;
     opacity: 1;
+    pointer-events: auto;
+    overflow: visible;
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    padding: 0 0.75rem;
+  }
+
+  .search-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-field .search-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: calc(100% - 12px);
+    box-sizing: border-box;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .search-input {
+    border-radius: var(--rounded-corners);
+    padding-right: 40px; /* espacio para el icono de cierre en mobile/med */
+  }
+
+  /* close icon hidden by default (shown only on mediano/móvil) */
+  .search-close {
+    display: none;
+  }
+
+  /* When the search is open on desktop, show the close button inside the field */
+  &.open .search-close {
+    display: inline-flex;
+    margin-left: 8px;
   }
 }
 
 .search-input {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
+  border-radius: var(--rounded-corners);
   color: #fff;
   padding: 6px 12px;
   font-size: 0.9rem;
@@ -1277,6 +1608,12 @@ body.is-admin .drawer-panel {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   z-index: 1010;
+}
+
+.search-dropdown .search-results-body {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding-inline: var(--page-width);
 }
 
 .search-loader {
@@ -1386,8 +1723,6 @@ app-game-collection {
   margin: 8px 0;
 }
 
-// ─── Layout main containers ───────────────────────────────────────────────────
-
 // ─── Media thumbnail helpers (game-videos & game-screenshots carousels) ────────
 .media-thumb,
 .video-thumb,
@@ -1417,4 +1752,223 @@ app-game-collection {
 
 .tag-icon {
   margin-right: 6px;
+}
+
+// ─── Responsive breakpoints ───────────────────────────────────────────────────
+
+// Tablet / medium (≤1100px): hero imagen con menos opacidad + logo responsive
+// game-info-bar pasa a layout vertical estilo game-meta (label izquierda, contenido derecha)
+@media (min-width: 769px) and (max-width: 1100px) {
+  .game-hero-image {
+    opacity: 0.5;
+  }
+
+  /* Mantener el tamaño del logo en breakpoint intermedio; sólo se ajusta en móvil */
+
+  /* Búsqueda: está encima del header (top:0) y ocupa ancho completo en pantalla mediana */
+  .search-input-wrap {
+    overflow: visible;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
+    max-width: 100% !important;
+    padding: 0 1rem;
+    background: rgba(13, 13, 26, 0.97);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform 0.25s ease,
+      opacity 0.2s ease;
+    z-index: 1015;
+
+    &.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .search-field {
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+      background: transparent;
+      color: #fff;
+      padding: 0 2.5rem 0 0.6rem;
+      height: calc(100% - 12px);
+      box-sizing: border-box;
+    }
+
+    .search-close {
+      position: static;
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.05rem;
+      padding: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      margin-left: 8px;
+    }
+  }
+
+  /* En mediano, los resultados se muestran bajo el campo y centrados; mantenemos el layout horizontal de game-info-bar */
+  .search-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    z-index: 1016;
+  }
+
+  /* game-info-bar: switch to stacked rows and remove vertical separators in mediano viewport */
+  .game-info-bar {
+    flex-direction: column;
+  }
+
+  .game-info-bar__item {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.65rem 0;
+    width: 100%;
+    border-left: none;
+    transition:
+      padding 220ms ease,
+      gap 220ms ease,
+      border-color 220ms ease;
+  }
+
+  .game-info-bar__item + .game-info-bar__item {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .game-info-bar__label {
+    flex: 0 0 160px;
+    min-width: 0;
+  }
+}
+
+// Móvil (≤768px): hero centrado, botones igual ancho, info-bar en columna
+@media (max-width: 768px) {
+  // Hero centrado
+  .game-hero__content {
+    align-items: center;
+    text-align: center;
+  }
+
+  .game-hero__secondary-actions {
+    justify-content: center;
+  }
+
+  .game-hero__categories {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .game-studios {
+    justify-content: center;
+  }
+
+  // Botones de hero en móvil: apilados, CTA principal arriba y favorito debajo
+  .game-hero__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+
+    > * {
+      width: 100%;
+      flex: none;
+      justify-content: center;
+    }
+  }
+
+  .btn-favorite-icon {
+    order: 2;
+    margin-top: 0;
+  }
+
+  /* Logo en móvil: ocupar porcentaje alto de la ventana */
+  .game-logo {
+    width: auto;
+    max-width: 360px;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Ocultar el resumen en móvil para simplificar la cabecera */
+  .game-hero__summary {
+    display: none;
+  }
+  /* game-meta en móvil: etiqueta encima del contenido, un único separador entre items */
+  .game-meta__item {
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.6rem 0;
+    border-bottom: none; /* anula la línea inferior de la regla base */
+
+    &:first-child {
+      border-top: none;
+    }
+
+    & + & {
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    > h6 {
+      flex: none;
+      padding-top: 0;
+    }
+
+    > :not(h6) {
+      min-width: 0;
+    }
+  }
+  /* game-info-bar: en móvil, quitar barras verticales y poner el contenido debajo de la etiqueta */
+  .game-info-bar {
+    flex-direction: column;
+  }
+
+  .game-info-bar__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 100%;
+    padding: 0.65rem 0;
+    transition:
+      padding 220ms ease,
+      gap 220ms ease,
+      border-color 220ms ease;
+  }
+
+  .game-info-bar__item:first-child {
+    border-top: none;
+  }
+
+  .game-info-bar__item + .game-info-bar__item {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .game-info-bar__label {
+    flex: none;
+  }
 }

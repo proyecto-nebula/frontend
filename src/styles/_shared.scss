@@ -170,7 +170,7 @@ app-carousel {
   top: 50%;
   transform: translateY(-50%);
   z-index: 2;
-  background: rgba(0, 0, 0, 0.35);
+  background: none;
   border: none;
   color: #fff;
   font-size: 1.75rem;
@@ -191,10 +191,10 @@ app-carousel {
 }
 
 .c-btn-prev {
-  left: 0.4rem;
+  left: -2rem;
 }
 .c-btn-next {
-  right: 0.4rem;
+  right: -2rem;
 }
 
 // ─── Gallery dialog (app-modal gallery mode) ──────────────────────────────────

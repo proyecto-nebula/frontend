@@ -1,7 +1,7 @@
 <div class="game-hero" [class.game-hero--detail]="mode === 'detail'" [class.game-hero--featured]="mode === 'featured'">
   <!-- Hero background -->
   @if (game?.heroUrl) {
-    <img [src]="game!.heroUrl" [alt]="game?.title" class="game-hero-image" />
+    <img [src]="game!.heroUrl" alt="" role="presentation" class="game-hero-image" />
   }
 
   <div class="game-hero__content">

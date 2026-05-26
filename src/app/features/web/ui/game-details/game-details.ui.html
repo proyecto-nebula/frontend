@@ -65,7 +65,7 @@
           ) {
             <div class="game-info-bar">
               @if (game()?.categories?.length) {
-                <div class="game-info-bar__item">
+                <div class="game-info-bar__item game-info-bar__item--categories">
                   <span class="game-info-bar__label">Categorías</span>
                   <div class="game-tags">
                     @for (cat of game()!.categories!; track cat.id) {
@@ -78,25 +78,25 @@
                 </div>
               }
               @if (game()?.releaseDate) {
-                <div class="game-info-bar__item">
+                <div class="game-info-bar__item game-info-bar__item--release">
                   <span class="game-info-bar__label">Lanzamiento</span>
                   <span>{{ game()?.releaseDate | date: 'dd/MM/yyyy' }}</span>
                 </div>
               }
               @if (game()?.publishedAt) {
-                <div class="game-info-bar__item">
+                <div class="game-info-bar__item game-info-bar__item--added">
                   <span class="game-info-bar__label">Añadido a Nebula</span>
                   <span>{{ game()?.publishedAt | date: 'dd/MM/yyyy' }}</span>
                 </div>
               }
               @if (game()?.developer) {
-                <div class="game-info-bar__item">
+                <div class="game-info-bar__item game-info-bar__item--developer">
                   <span class="game-info-bar__label">Desarrollador</span>
                   <span>{{ game()?.developer?.name }}</span>
                 </div>
               }
               @if (game()?.publisher) {
-                <div class="game-info-bar__item">
+                <div class="game-info-bar__item game-info-bar__item--publisher">
                   <span class="game-info-bar__label">Distribuidor</span>
                   <span>{{ game()?.publisher?.name }}</span>
                 </div>

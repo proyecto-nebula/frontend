@@ -2,23 +2,37 @@
   <div class="header-row">
     <!-- Left: hamburger (mobile) + logo + nav (desktop) -->
     <div class="left">
-      <button type="button" class="mobile-hamburger" (click)="drawerVisible = !drawerVisible" aria-label="Toggle menu">
+      <button
+        type="button"
+        class="mobile-hamburger"
+        (click)="toggleDrawer()"
+        [attr.aria-expanded]="drawerVisible"
+        aria-controls="mobile-drawer"
+        aria-label="Abrir menú de navegación"
+      >
         <i class="pi pi-bars" aria-hidden="true"></i>
       </button>
 
-      <a class="desktop-logo" routerLink="/">
+      <a class="desktop-logo" routerLink="/" aria-label="Nebula — Inicio">
         <app-logo />
       </a>
 
       <!-- Desktop nav inline with logo -->
-      <nav class="desktop-nav">
+      <nav class="desktop-nav" aria-label="Navegación principal">
         <ul class="nav-list">
           @for (it of items; track it.label) {
             @if (!it.requiresAuth || auth.isAuthenticated()) {
               <li class="nav-item" [ngClass]="it.styleClass">
-                <a [routerLink]="it.routerLink" class="nav-link">
+                <a
+                  [routerLink]="it.routerLink"
+                  class="nav-link"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: it.routerLink === '/' }"
+                  #rla="routerLinkActive"
+                  [attr.aria-current]="rla.isActive ? 'page' : null"
+                >
                   @if (it.icon) {
-                    <i [class]="it.icon + ' nav-icon'"></i>
+                    <i [class]="it.icon + ' nav-icon'" aria-hidden="true"></i>
                   }
                   <span class="nav-text">{{ it.label }}</span>
                 </a>
@@ -32,41 +46,64 @@
       <!-- Quick search -->
       <div class="search-wrap" (click)="$event.stopPropagation()">
         <div class="search-input-wrap" [class.open]="searchOpen">
-          <input
-            type="text"
-            class="search-input"
-            placeholder="Buscar juegos..."
-            [value]="searchQuery"
-            (input)="onSearchInput($any($event.target).value)"
-            (keydown.escape)="closeSearch()"
-          />
-        </div>
-        <button type="button" class="search-btn" (click)="toggleSearch()" aria-label="Buscar">
-          <i class="pi pi-search"></i>
-        </button>
-        @if (searchOpen && searchQuery.length >= 3) {
-          <div class="search-dropdown">
-            <div class="search-loader" [class.visible]="searchLoading">
-              <i class="pi pi-spinner pi-spin"></i>
-            </div>
-            <div class="search-results-body" [class.visible]="!searchLoading">
-              @if (searchResults.length === 0) {
-                <div class="search-message">Sin resultados</div>
-              }
-              @for (game of searchResults; track game.id) {
-                <a [routerLink]="['/games', game.slug]" class="search-result" (click)="closeSearch()">
-                  <div class="search-result__img">
-                    <img [src]="game.bannerUrl || game.coverUrl" [alt]="game.title" loading="lazy" />
+            <label for="header-search" class="sr-only">Buscar juegos</label>
+            <div class="search-field">
+              <input
+                id="header-search"
+                type="search"
+                class="search-input"
+                placeholder="Buscar juegos..."
+                [value]="searchQuery"
+                aria-label="Buscar juegos"
+                aria-autocomplete="list"
+                [attr.aria-expanded]="searchOpen && searchQuery.length >= 3"
+                aria-controls="search-results-dropdown"
+                (input)="onSearchInput($any($event.target).value)"
+                (keydown.escape)="closeSearch()"
+              />
+              <button type="button" class="search-close" (click)="closeSearch()" aria-label="Cerrar búsqueda">
+                <i class="pi pi-times" aria-hidden="true"></i>
+              </button>
+
+              @if (searchOpen && searchQuery.length >= 3) {
+                <div
+                  id="search-results-dropdown"
+                  class="search-dropdown"
+                  role="listbox"
+                  aria-label="Resultados de búsqueda"
+                >
+                  <div class="search-loader" [class.visible]="searchLoading" aria-hidden="true">
+                    <i class="pi pi-spinner pi-spin"></i>
                   </div>
-                  <div class="search-result__info">
-                    <span class="search-result__name">{{ game.title }}</span>
-                    <span class="search-result__year">{{ game.releaseDate | date: 'yyyy' }}</span>
+                  <div
+                    class="search-results-body"
+                    [class.visible]="!searchLoading"
+                    aria-live="polite"
+                    aria-atomic="false"
+                  >
+                    @if (searchResults.length === 0) {
+                      <div class="search-message" role="option">Sin resultados</div>
+                    }
+                    @for (game of searchResults; track game.id) {
+                      <a [routerLink]="['/games', game.slug]" class="search-result" role="option" (click)="closeSearch()">
+                        <div class="search-result__img">
+                          <img [src]="game.bannerUrl || game.coverUrl" [alt]="game.title" loading="lazy" />
+                        </div>
+                        <div class="search-result__info">
+                          <span class="search-result__name">{{ game.title }}</span>
+                          <span class="search-result__year">{{ game.releaseDate | date: 'yyyy' }}</span>
+                        </div>
+                      </a>
+                    }
                   </div>
-                </a>
+                </div>
               }
             </div>
           </div>
-        }
+        <button type="button" class="search-btn" (click)="toggleSearch()" aria-label="Buscar">
+          <i class="pi pi-search" aria-hidden="true"></i>
+        </button>
+        
       </div>
 
       @if (auth.isAuthenticated()) {
@@ -75,19 +112,25 @@
           [image]="currentAvatarUrl ?? 'assets/default-avatar.png'"
           shape="circle"
           styleClass="cursor-pointer border-1 border-300"
+          [attr.aria-label]="'Menú de ' + (currentUser?.username ?? 'perfil')"
+          aria-haspopup="menu"
+          tabindex="0"
           (click)="menuPerfil.toggle($event)"
+          (keydown.enter)="menuPerfil.toggle($event)"
         ></p-avatar>
         <p-tieredMenu #menuPerfil [model]="profileItems" [popup]="true"></p-tieredMenu>
       } @else {
-        <a class="btn ghost" href="/auth/login" (click)="openLoginModal(); $event.preventDefault()">Login</a>
-        <a class="btn" [routerLink]="['/auth/join']">Join</a>
+        <div class="header-auth-btns">
+          <a class="btn ghost" href="/auth/login" (click)="openLoginModal(); $event.preventDefault()">Login</a>
+          <a class="btn" [routerLink]="['/auth/join']">Registro</a>
+        </div>
       }
     </div>
   </div>
 
   <!-- Mobile centered logo (when desktop logo hidden) -->
   <div class="mobile-logo" aria-hidden="true">
-    <a routerLink="/">
+    <a routerLink="/" tabindex="-1">
       <app-logo />
     </a>
   </div>
@@ -99,18 +142,34 @@
     role="button"
     aria-label="Cerrar menú"
     tabindex="0"
-    (click)="drawerVisible = false"
-    (keydown.enter)="drawerVisible = false"
-    (keydown.space)="drawerVisible = false"
+    (click)="closeDrawer()"
+    (keydown.enter)="closeDrawer()"
+    (keydown.space)="closeDrawer()"
   ></div>
 
-  <aside class="drawer-panel" [class.open]="drawerVisible" role="dialog" aria-hidden="{{ !drawerVisible }}">
-    <nav>
+  <aside
+    id="mobile-drawer"
+    class="drawer-panel"
+    [class.open]="drawerVisible"
+    role="dialog"
+    aria-label="Menú de navegación"
+    [attr.aria-hidden]="!drawerVisible"
+    [attr.aria-modal]="drawerVisible"
+  >
+    <nav aria-label="Menú móvil">
       <ul class="drawer-list">
         @for (it of items; track it.label) {
           @if (!it.requiresAuth || auth.isAuthenticated()) {
             <li class="drawer-item">
-              <a [routerLink]="it.routerLink" (click)="drawerVisible = false" class="drawer-link">
+              <a
+                [routerLink]="it.routerLink"
+                (click)="closeDrawer()"
+                class="drawer-link"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: it.routerLink === '/' }"
+                #rlaD="routerLinkActive"
+                [attr.aria-current]="rlaD.isActive ? 'page' : null"
+              >
                 <span>{{ it.label }}</span>
               </a>
             </li>
@@ -118,6 +177,22 @@
         }
       </ul>
     </nav>
+    @if (!auth.isAuthenticated()) {
+      <div class="drawer-auth">
+        <ul class="drawer-list">
+          <li class="drawer-item">
+            <a class="drawer-link" href="/auth/login" (click)="openLoginModal(); $event.preventDefault(); closeDrawer()">
+              Login
+            </a>
+          </li>
+          <li class="drawer-item">
+            <a class="drawer-link" [routerLink]="['/auth/join']" (click)="closeDrawer()">
+              Registro
+            </a>
+          </li>
+        </ul>
+      </div>
+    }
   </aside>
   <!-- Login modal (opened from header) -->
   <app-modal [(visible)]="showLoginModal" [width]="'420px'">

@@ -1,43 +1,46 @@
 <div class="reg-account" [formGroup]="group">
   <!-- Email -->
   <div class="reg-field" [class.is-error]="emailCtrl?.invalid && emailCtrl?.touched">
-    <label class="reg-label">Correo electrónico</label>
+    <label class="reg-label" for="reg-email">Correo electrónico</label>
     <div class="reg-input-wrap">
-      <input class="reg-input" type="email" formControlName="email" placeholder="tu@email.com" autocomplete="email" />
+      <input id="reg-email" class="reg-input" type="email" formControlName="email" placeholder="tu@email.com" autocomplete="email" />
       @if (emailChecking) {
-        <span class="reg-input-icon spin">⏳</span>
+        <i class="pi pi-spin pi-spinner reg-input-icon spin" aria-hidden="true"></i>
       } @else if (emailCtrl?.valid && !emailTaken) {
-        <span class="reg-input-icon ok">✓</span>
+        <i class="pi pi-check-circle reg-input-icon ok" aria-hidden="true"></i>
       }
     </div>
     @if (emailCtrl?.touched) {
       @if (emailCtrl?.hasError('required')) {
-        <div class="reg-error">El email es obligatorio</div>
+        <div class="reg-error" role="alert"><i class="pi pi-exclamation-circle" aria-hidden="true"></i> El email es obligatorio</div>
       } @else if (emailCtrl?.hasError('email')) {
-        <div class="reg-error">Introduce un email válido</div>
+        <div class="reg-error" role="alert"><i class="pi pi-exclamation-circle" aria-hidden="true"></i> Introduce un email válido</div>
       } @else if (emailCtrl?.hasError('emailTaken')) {
-        <div class="reg-error">Este email ya está registrado</div>
+        <div class="reg-error" role="alert"><i class="pi pi-exclamation-circle" aria-hidden="true"></i> Este email ya está registrado</div>
       }
     }
   </div>
 
   <!-- Contraseña -->
   <div class="reg-field" [class.is-error]="passwordCtrl?.invalid && passwordCtrl?.touched">
-    <label class="reg-label">Contraseña</label>
+    <label class="reg-label" for="reg-password">Contraseña</label>
     <div class="reg-input-wrap">
       <input
+        id="reg-password"
         class="reg-input"
         [type]="showPassword ? 'text' : 'password'"
         formControlName="password"
         placeholder="Mínimo 6 caracteres"
         autocomplete="new-password"
+        [attr.aria-describedby]="(passwordCtrl?.value && passwordValidationEnabled) ? 'reg-pw-checks' : null"
       />
       <button
         type="button"
         class="reg-input-icon toggle-pw"
         (click)="togglePassword()"
-        tabindex="-1"
-        aria-label="Mostrar contraseña"
+        tabindex="0"
+        [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        [attr.aria-pressed]="showPassword"
       >
         <i class="pi" [class.pi-eye]="!showPassword" [class.pi-eye-slash]="showPassword"></i>
       </button>
@@ -46,11 +49,11 @@
       <div class="pw-checks">
         @for (c of passwordStrengthChecks; track c.label) {
           <div class="pw-check" [class.ok]="c.ok">
-            <span class="pw-check__icon">{{ c.ok ? '✓' : '✗' }}</span>
+            <i class="pi pw-check__icon" [class.pi-check-circle]="c.ok" [class.pi-times-circle]="!c.ok" aria-hidden="true"></i>
             <span>{{ c.label }}</span>
           </div>
         }
-        <div class="pw-strength pw-strength--{{ passwordStrengthLevel }}">
+        <div id="reg-pw-checks" class="pw-strength pw-strength--{{ passwordStrengthLevel }}">
           <div class="pw-strength__bar"></div>
           <div class="pw-strength__bar"></div>
           <div class="pw-strength__bar"></div>
@@ -65,35 +68,30 @@
   </div>
 
   <!-- Fecha de nacimiento -->
-  <div class="reg-field">
-    <label class="reg-label">Fecha de nacimiento</label>
+  <fieldset class="reg-field">
+    <legend class="reg-label">Fecha de nacimiento</legend>
     <div class="reg-date-row">
-      <select class="reg-select" formControlName="birthdateDay">
+      <select id="reg-bd-day" class="reg-select" formControlName="birthdateDay" aria-label="Día">
         <option [ngValue]="null" disabled>Día</option>
         @for (d of days; track d) {
           <option [ngValue]="d">{{ d }}</option>
         }
       </select>
-      <select class="reg-select" formControlName="birthdateMonth">
+      <select id="reg-bd-month" class="reg-select" formControlName="birthdateMonth" aria-label="Mes">
         <option [ngValue]="null" disabled>Mes</option>
         @for (m of MONTHS; track $index) {
           <option [ngValue]="$index + 1">{{ m }}</option>
         }
       </select>
-      <select class="reg-select" formControlName="birthdateYear">
+      <select id="reg-bd-year" class="reg-select" formControlName="birthdateYear" aria-label="Año">
         <option [ngValue]="null" disabled>Año</option>
         @for (y of years; track y) {
           <option [ngValue]="y">{{ y }}</option>
         }
       </select>
     </div>
-    @if (
-      (group.get('birthdateDay')?.invalid ||
-        group.get('birthdateMonth')?.invalid ||
-        group.get('birthdateYear')?.invalid) &&
-      showValidation
-    ) {
-      <div class="reg-error">Introduce tu fecha de nacimiento completa</div>
+    @if (showValidation) {
+      <div class="reg-error" role="alert"><i class="pi pi-exclamation-circle" aria-hidden="true"></i> Introduce tu fecha de nacimiento completa</div>
     }
-  </div>
+  </fieldset>
 </div>

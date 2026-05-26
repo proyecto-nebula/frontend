@@ -25,6 +25,8 @@ export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
   @Input() autoplayInterval = 5000;
 
   readonly games = signal<Game[]>([]);
+  readonly paused = signal(false);
+  readonly currentPage = signal(0);
   readonly featuredGames = computed(() =>
     this.games().filter(g => {
       const v = g.isFeatured;
@@ -32,10 +34,44 @@ export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
     }),
   );
 
+  private autoplayTimer: ReturnType<typeof setInterval> | null = null;
+
   private readonly gameService = inject(GameService);
   private readonly host = inject(ElementRef<HTMLElement>);
   private resizeListener?: () => void;
   private observer: MutationObserver | null = null;
+
+  togglePause(): void {
+    this.paused.update(p => !p);
+    if (this.paused()) {
+      this.stopAutoplay();
+    } else {
+      this.startAutoplay();
+    }
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage.set(page);
+  }
+
+  private startAutoplay(): void {
+    this.stopAutoplay();
+    if (this.autoplayInterval > 0) {
+      this.autoplayTimer = setInterval(() => {
+        const total = this.featuredGames().length;
+        if (total > 1) {
+          this.currentPage.update(p => (p + 1) % total);
+        }
+      }, this.autoplayInterval);
+    }
+  }
+
+  private stopAutoplay(): void {
+    if (this.autoplayTimer !== null) {
+      clearInterval(this.autoplayTimer);
+      this.autoplayTimer = null;
+    }
+  }
 
   ngOnInit(): void {
     this.gameService.getGames().subscribe({
@@ -51,14 +87,12 @@ export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    // initial adjust after view render
     setTimeout(() => this.adjustCarouselHeight(), 0);
+    this.startAutoplay();
 
-    // handle window resize
     this.resizeListener = () => this.adjustCarouselHeight();
     window.addEventListener('resize', this.resizeListener);
 
-    // observe active item attribute changes to update height when carousel slides
     const root = this.host.nativeElement as HTMLElement;
     const carouselEl = root.querySelector('.game-featured-carousel');
     if (carouselEl) {
@@ -72,6 +106,7 @@ export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.stopAutoplay();
     if (this.resizeListener) {
       window.removeEventListener('resize', this.resizeListener);
     }
@@ -86,8 +121,6 @@ export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
     const viewport = root.querySelector('.game-featured-carousel .p-carousel-viewport') as HTMLElement | null;
     if (!viewport) return;
 
-    // Always measure the inner app-game-hero content element (not the absolutely-
-    // positioned p-carousel-item whose height == viewport height → circular dependency).
     const activeItem = root.querySelector(
       '.game-featured-carousel .p-carousel-item[data-p-carousel-item-active="true"]',
     ) as HTMLElement | null;
