@@ -2,6 +2,7 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { Injector, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@services/auth.service';
+import { environment } from '@env/environment';
 import { catchError, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
@@ -12,10 +13,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const injector = inject(Injector);
   const token = localStorage.getItem('token');
   const isAuthLoginRequest = req.url.includes('/auth');
+  // Solo adjuntar el JWT a peticiones dirigidas a nuestra propia API
+  const isOwnApi = req.url.startsWith(environment.apiUrl);
 
   let clonedReq = req;
-  // Solo añadir Authorization si hay token y no es login
-  if (token && !isAuthLoginRequest) {
+  // Solo añadir Authorization si hay token, no es login y es nuestra API
+  if (token && !isAuthLoginRequest && isOwnApi) {
     clonedReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,

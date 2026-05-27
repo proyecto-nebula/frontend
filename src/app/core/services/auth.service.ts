@@ -22,8 +22,8 @@ export class AuthService {
       tap(res => {
         if (res.token) {
           localStorage.setItem('token', res.token);
-          // Fetch profile and update internal signals/subjects so UI updates reactively
-          this.http.get<User>(`${API_ROUTES.users}?token=${encodeURIComponent(res.token)}`).subscribe(
+          // Fetch profile; el interceptor añade el Bearer header automáticamente
+          this.http.get<User>(API_ROUTES.users).subscribe(
             u => {
               this._user.set(u ?? null);
               this._userSubject.next(u ?? null);
@@ -40,7 +40,7 @@ export class AuthService {
   constructor() {
     const token = this.getToken();
     if (token) {
-      this.http.get<User>(`${API_ROUTES.users}?token=${encodeURIComponent(token)}`).subscribe(
+      this.http.get<User>(API_ROUTES.users).subscribe(
         u => {
           this._user.set(u ?? null);
           this._userSubject.next(u ?? null);
