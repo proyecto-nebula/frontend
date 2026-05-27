@@ -1,5 +1,13 @@
 <div [class]="styleClass" [style.--c-item-w]="cssItemW" [style.--c-gap]="cssGap">
-  <div class="c-overflow" [class.c-mask-left]="mask && hasPrev" [class.c-mask-right]="mask && hasNext">
+  <div
+    class="c-overflow"
+    [class.c-mask-left]="mask && hasPrev"
+    [class.c-mask-right]="mask && hasNext"
+    [class.c-dragging]="isDragging"
+    (touchstart)="onTouchStart($any($event))"
+    (touchend)="onTouchEnd()"
+    (touchcancel)="onTouchEnd()"
+  >
     <div class="c-track" [style.transform]="trackTransform">
       @for (item of items; track $index; let i = $index) {
         <div class="c-item">

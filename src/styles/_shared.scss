@@ -78,6 +78,11 @@ app-modal {
 }
 
 // ─── app-carousel ────────────────────────────────────────────────────────────
+// Configurable snap animation — adjust these to change the swipe feel:
+// · $c-snap-duration  duration of the snap-to-item transition after lifting finger
+// · $c-snap-easing    easing curve; the default is a smooth decelerate-out
+$c-snap-duration: 320ms;
+$c-snap-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 app-carousel {
   display: block;
   position: relative;
@@ -106,6 +111,8 @@ app-carousel {
 
 .c-overflow {
   overflow: hidden;
+  /* Allow vertical scroll on touch devices; horizontal is captured by JS swipe handler */
+  touch-action: pan-y;
   --mask-width: 10%;
   --mask-duration: 0.5s;
   -webkit-mask-image: linear-gradient(
@@ -155,7 +162,12 @@ app-carousel {
   flex-wrap: nowrap;
   gap: var(--c-gap, 0px);
   will-change: transform;
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform $c-snap-duration $c-snap-easing;
+}
+
+/* During active touch drag: follow finger instantly, no transition */
+.c-overflow.c-dragging .c-track {
+  transition: none;
 }
 
 .c-item {

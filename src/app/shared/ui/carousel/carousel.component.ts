@@ -36,9 +36,19 @@ export class CarouselComponent implements AfterViewInit, OnChanges, OnDestroy {
   _numVisible = 1;
   _currentIndex = 0;
 
+  // ── Touch drag state ───────────────────────────────────────────────────────
+  isDragging = false;
+  private _dragOffsetPx = 0;
+  private _touchStartX = 0;
+  private _touchStartY = 0;
+  private _isHorizontalDrag: boolean | null = null;
+  private _touchMoveHandler?: (e: Event) => void;
+  // ──────────────────────────────────────────────────────────────────────────
+
   get trackTransform(): string {
     const step = this._getItemPx() + this.gap;
-    return `translateX(-${this._currentIndex * step}px)`;
+    const base = this._currentIndex * step;
+    return `translateX(${-base + this._dragOffsetPx}px)`;
   }
 
   get hasPrev(): boolean {
@@ -92,6 +102,13 @@ export class CarouselComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   ngAfterViewInit(): void {
     this._update();
+    // Register non-passive touchmove listener so we can prevent default for
+    // horizontal drags without triggering the passive-listener warning.
+    const overflow = (this.el.nativeElement as HTMLElement).querySelector('.c-overflow') as HTMLElement | null;
+    if (overflow) {
+      this._touchMoveHandler = (e: Event) => this.onTouchMove(e as TouchEvent);
+      overflow.addEventListener('touchmove', this._touchMoveHandler, { passive: false });
+    }
     if (this.numVisible !== undefined) return;
     this._ro = new ResizeObserver(() => {
       const n = this._calc();
@@ -108,6 +125,10 @@ export class CarouselComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this._ro?.disconnect();
+    const overflow = (this.el.nativeElement as HTMLElement).querySelector('.c-overflow') as HTMLElement | null;
+    if (overflow && this._touchMoveHandler) {
+      overflow.removeEventListener('touchmove', this._touchMoveHandler);
+    }
   }
 
   private _update(): void {
@@ -125,4 +146,54 @@ export class CarouselComponent implements AfterViewInit, OnChanges, OnDestroy {
   private _clampIndex(): void {
     this._currentIndex = Math.max(0, Math.min(this._currentIndex, this._maxIndex));
   }
+
+  // ── Touch swipe handlers ───────────────────────────────────────────────────
+  onTouchStart(e: TouchEvent): void {
+    this._touchStartX = e.touches[0].clientX;
+    this._touchStartY = e.touches[0].clientY;
+    this._dragOffsetPx = 0;
+    this._isHorizontalDrag = null;
+    this.isDragging = false;
+  }
+
+  onTouchMove(e: TouchEvent): void {
+    const dx = e.touches[0].clientX - this._touchStartX;
+    const dy = e.touches[0].clientY - this._touchStartY;
+
+    // Determine drag axis on first noticeable movement
+    if (this._isHorizontalDrag === null && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+      this._isHorizontalDrag = Math.abs(dx) > Math.abs(dy);
+    }
+
+    if (!this._isHorizontalDrag) return; // let vertical scroll through
+
+    e.preventDefault(); // block page scroll during horizontal drag
+    this.isDragging = true;
+    this._dragOffsetPx = dx;
+    this.cdr.markForCheck();
+  }
+
+  onTouchEnd(): void {
+    if (!this.isDragging) {
+      this._dragOffsetPx = 0;
+      this._isHorizontalDrag = null;
+      return;
+    }
+
+    const itemW = this._getItemPx() + this.gap;
+    // Snap threshold: 25% of an item width triggers a page change
+    const threshold = itemW * 0.25;
+
+    if (this._dragOffsetPx < -threshold && this.hasNext) {
+      this._currentIndex = Math.min(this._maxIndex, this._currentIndex + this.numScroll);
+    } else if (this._dragOffsetPx > threshold && this.hasPrev) {
+      this._currentIndex = Math.max(0, this._currentIndex - this.numScroll);
+    }
+
+    this._dragOffsetPx = 0;
+    this.isDragging = false;
+    this._isHorizontalDrag = null;
+    this.cdr.markForCheck();
+  }
+  // ──────────────────────────────────────────────────────────────────────────
 }

@@ -112,34 +112,55 @@ app-game-featured {
   //top: var(--hero-top);
 }
 
-/* PrimeNG Carousel: fade transition for featured carousel */
+// ─── Configurable featured carousel entrance animation ────────────────────────
+// Change these three variables to adjust the lateral-fade slide-in effect:
+$featured-enter-duration: 700ms !default;
+$featured-enter-easing:   cubic-bezier(0.22, 0.61, 0.36, 1) !default; // smooth decel
+$featured-enter-distance: 50px !default;  // translateX offset (right → centre)
+
+@keyframes featured-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX($featured-enter-distance);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* PrimeNG Carousel: lateral-fade transition for featured carousel */
 .game-featured-carousel .p-carousel-viewport {
   position: relative;
+  /* Allow vertical scroll through the carousel on touch devices */
+  touch-action: pan-y;
 }
 
 .game-featured-carousel .p-carousel-item-list {
-  transform: none !important; /* disable slide transform */
+  transform: none !important; /* disable PrimeNG’s native slide transform */
   transition: none !important;
   display: block !important;
   position: relative;
   height: 100%;
+  touch-action: pan-y;
 }
 
 .game-featured-carousel .p-carousel-item {
   position: absolute !important;
   inset: 0;
-
   width: 100%;
   opacity: 0;
-  transition: opacity 600ms ease;
+  /* Fast fade-out for the leaving slide */
+  transition: opacity 250ms ease;
   pointer-events: none;
   visibility: visible !important;
 }
 
 .game-featured-carousel .p-carousel-item[data-p-carousel-item-active='true'] {
-  opacity: 1;
   pointer-events: auto;
   z-index: 2;
+  /* Lateral fade-in: enters from the right and fades in simultaneously */
+  animation: featured-slide-in $featured-enter-duration $featured-enter-easing forwards;
 }
 
 /* Ensure active item remains visible even when PrimeNG hides others */
