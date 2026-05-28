@@ -5,7 +5,7 @@
     </header>
   }
   @if (games === null) {
-    <div class="game-list__loading">Cargando...</div>
+    <div class="game-list__loading page-spinner--inline"><i class="pi pi-spin pi-spinner"></i></div>
   } @else if (!games.length) {
     <div class="game-list__empty">Todavía no has jugado a ningún juego</div>
   } @else {

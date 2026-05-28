@@ -297,3 +297,19 @@ body main {
     border: 1px solid ButtonText;
   }
 }
+
+
+// ─── Loading spinner shared utility ──────────────────────────────────────────
+.page-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem 0;
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.page-spinner--inline {
+  padding: 2rem 0;
+  font-size: 1.4rem;
+}

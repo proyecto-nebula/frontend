@@ -4,10 +4,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { Game } from '@models/game.model';
 import { AuthService } from '@services/auth.service';
+import { FavoritesService } from '@services/favorites.service';
 import { GameService } from '@services/game.service';
 import { GameCollectionUi } from '@web/ui/game-collection/game-collection.ui';
 import { GameListUi } from '@web/ui/game-list/game-list.ui';
-import { catchError, distinctUntilChanged, forkJoin, map, of, switchMap } from 'rxjs';
+import { catchError, distinctUntilChanged, first, forkJoin, map, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-my-games-page',
@@ -18,6 +19,7 @@ import { catchError, distinctUntilChanged, forkJoin, map, of, switchMap } from '
 export class MyGamesPage {
   private authService = inject(AuthService);
   private gameService = inject(GameService);
+  private favoritesService = inject(FavoritesService);
 
   readonly isLoading = signal(true);
   readonly favoriteGames = signal<Game[] | null>(null);
@@ -64,6 +66,17 @@ export class MyGamesPage {
         this.mostPlayedGames.set(result.mostPlayed);
         this.recommendedGames.set(result.recommended);
         this.isLoading.set(false);
+      });
+
+    this.favoritesService.changed$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        this.authService.user$.pipe(first()).subscribe(user => {
+          if (!user) return;
+          this.gameService.getFavoriteGames(user.id)
+            .pipe(catchError(() => of([])))
+            .subscribe(games => this.favoriteGames.set(games));
+        });
       });
   }
 }

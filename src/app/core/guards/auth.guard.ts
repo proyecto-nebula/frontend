@@ -1,21 +1,23 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { filter, map, take } from 'rxjs';
 import { AuthService } from '@services/auth.service';
 
-export const authGuard: CanActivateFn = (route, state) => {
+/**
+ * Espera a que el estado de autenticación esté completamente cargado antes de decidir.
+ * Esto evita redirecciones falsas cuando la cookie se verifica de forma asíncrona al inicio.
+ */
+export const authGuard: CanActivateFn = (_route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // 1. Si está autenticado, adelante
-  if (authService.isAuthenticated()) {
-    return true;
-  }
-
-  // 2. Si NO está autenticado y NO está ya en el login, redirigir
-  // state.url nos dice a dónde intenta ir el usuario
-  if (state.url === '/auth/login') {
-    return true;
-  }
-
-  return router.parseUrl('/auth/login');
+  return authService.loaded$.pipe(
+    filter(loaded => loaded),
+    take(1),
+    map(() => {
+      if (authService.isAuthenticated()) return true;
+      if (state.url === '/auth/login') return true;
+      return router.parseUrl('/auth/login');
+    }),
+  );
 };

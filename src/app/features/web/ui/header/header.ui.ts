@@ -130,6 +130,7 @@ export class HeaderUi implements OnInit, OnDestroy {
     this.auth.user$.subscribe(u => {
       this.currentUser = u;
       this.currentAvatarUrl = u?.avatar?.imageUrl ?? null;
+      this.cdr.markForCheck();
       console.log('[HeaderUi] auth.user$', u, 'avatarUrl=', this.currentAvatarUrl, 'token=', this.auth.getToken());
     });
 
@@ -172,9 +173,13 @@ export class HeaderUi implements OnInit, OnDestroy {
 
   logout() {
     this.auth.logout();
+    // Ensure header reflects logged-out state immediately and navigate home.
+    this.currentUser = null;
+    this.currentAvatarUrl = null;
+    this.cdr.detectChanges();
     // Navigate internally to avoid full page reload and the white flash.
-    // Components subscribed to `auth.user$` will update reactively.
-    this.router.navigate(['/']);
+    // Components subscribed to `auth.user$` will also update reactively.
+    void this.router.navigate(['/']).then(() => this.cdr.detectChanges());
   }
 
   openLoginModal() {

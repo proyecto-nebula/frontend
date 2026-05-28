@@ -1,9 +1,7 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   Component,
   computed,
-  ElementRef,
   inject,
   Input,
   OnDestroy,
@@ -12,21 +10,23 @@ import {
 } from '@angular/core';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
-import { CarouselModule } from 'primeng/carousel';
 import { GameHeroUi } from '../game-hero/game-hero.ui';
 
 @Component({
   selector: 'app-game-featured',
   standalone: true,
-  imports: [CommonModule, CarouselModule, GameHeroUi],
+  imports: [CommonModule, GameHeroUi],
   templateUrl: './game-featured.ui.html',
 })
-export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
+export class GameFeaturedUi implements OnInit, OnDestroy {
   @Input() autoplayInterval = 5000;
 
   readonly games = signal<Game[]>([]);
   readonly paused = signal(false);
   readonly currentPage = signal(0);
+  /** Índice del slide que está saliendo (animación leave). -1 = ninguno. */
+  readonly prevPage = signal(-1);
+
   readonly featuredGames = computed(() =>
     this.games().filter(g => {
       const v = g.isFeatured;
@@ -35,11 +35,8 @@ export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
   );
 
   private autoplayTimer: ReturnType<typeof setInterval> | null = null;
-
+  private clearPrevTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly gameService = inject(GameService);
-  private readonly host = inject(ElementRef<HTMLElement>);
-  private resizeListener?: () => void;
-  private observer: MutationObserver | null = null;
 
   togglePause(): void {
     this.paused.update(p => !p);
@@ -50,8 +47,13 @@ export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  onPageChange(page: number): void {
-    this.currentPage.set(page);
+  goTo(index: number): void {
+    if (index === this.currentPage()) return;
+    this.prevPage.set(this.currentPage());
+    this.currentPage.set(index);
+    // limpia el slide saliente después de la animación
+    if (this.clearPrevTimer !== null) clearTimeout(this.clearPrevTimer);
+    this.clearPrevTimer = setTimeout(() => this.prevPage.set(-1), 900);
   }
 
   private startAutoplay(): void {
@@ -60,7 +62,7 @@ export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
       this.autoplayTimer = setInterval(() => {
         const total = this.featuredGames().length;
         if (total > 1) {
-          this.currentPage.update(p => (p + 1) % total);
+          this.goTo((this.currentPage() + 1) % total);
         }
       }, this.autoplayInterval);
     }
@@ -77,83 +79,17 @@ export class GameFeaturedUi implements OnInit, AfterViewInit, OnDestroy {
     this.gameService.getGames().subscribe({
       next: gs => {
         this.games.set(gs || []);
-        setTimeout(() => this.adjustCarouselHeight(), 0);
+        this.startAutoplay();
       },
       error: () => {
         this.games.set([]);
-        setTimeout(() => this.adjustCarouselHeight(), 0);
       },
     });
   }
 
-  ngAfterViewInit(): void {
-    setTimeout(() => this.adjustCarouselHeight(), 0);
-    this.startAutoplay();
-
-    this.resizeListener = () => this.adjustCarouselHeight();
-    window.addEventListener('resize', this.resizeListener);
-
-    const root = this.host.nativeElement as HTMLElement;
-    const carouselEl = root.querySelector('.game-featured-carousel');
-    if (carouselEl) {
-      this.observer = new MutationObserver(() => this.adjustCarouselHeight());
-      this.observer.observe(carouselEl, {
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['data-p-carousel-item-active'],
-      });
-    }
-  }
-
   ngOnDestroy(): void {
     this.stopAutoplay();
-    if (this.resizeListener) {
-      window.removeEventListener('resize', this.resizeListener);
-    }
-    if (this.observer) {
-      this.observer.disconnect();
-      this.observer = null;
-    }
-  }
-
-  private adjustCarouselHeight(): void {
-    const root = this.host.nativeElement as HTMLElement;
-    const viewport = root.querySelector('.game-featured-carousel .p-carousel-viewport') as HTMLElement | null;
-    if (!viewport) return;
-
-    const activeItem = root.querySelector(
-      '.game-featured-carousel .p-carousel-item[data-p-carousel-item-active="true"]',
-    ) as HTMLElement | null;
-    const target =
-      (activeItem?.querySelector('app-game-hero') as HTMLElement | null) ??
-      (root.querySelector('.game-featured-carousel app-game-hero') as HTMLElement | null);
-
-    if (!target) {
-      viewport.style.height = '';
-      return;
-    }
-
-    const imgs = Array.from(target.querySelectorAll('img')) as HTMLImageElement[];
-    const unfinished = imgs.filter(img => !img.complete);
-    if (unfinished.length > 0) {
-      let remaining = unfinished.length;
-      const onLoad = () => {
-        remaining--;
-        if (remaining <= 0) this.setViewportHeight(viewport, target);
-      };
-      unfinished.forEach(img => img.addEventListener('load', onLoad, { once: true }));
-      setTimeout(() => this.setViewportHeight(viewport, target), 1000);
-    } else {
-      this.setViewportHeight(viewport, target);
-    }
-  }
-
-  private setViewportHeight(viewport: HTMLElement, target: HTMLElement): void {
-    const h = target.offsetHeight || target.clientHeight || 0;
-    if (h > 0) {
-      viewport.style.height = `${h}px`;
-    } else {
-      viewport.style.height = '';
-    }
+    if (this.clearPrevTimer !== null) clearTimeout(this.clearPrevTimer);
   }
 }
+

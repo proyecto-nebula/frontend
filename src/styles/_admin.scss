@@ -18,6 +18,80 @@
   }
 }
 
+/* --- Security log page --- */
+.admin-log-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.admin-log-hint {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  margin-bottom: 1rem;
+}
+
+.log-mono {
+  font-family: monospace;
+  font-size: 0.82rem;
+}
+
+.log-ua {
+  font-size: 0.78rem;
+  opacity: 0.6;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.log-context {
+  font-size: 0.85rem;
+}
+
+.log-event-badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.08);
+  &.log-success  { background: rgba(72,199,142,0.2); color: #48c78e; }
+  &.log-danger   { background: rgba(241,70,104,0.2);  color: #f14668; }
+  &.log-warn     { background: rgba(255,221,87,0.2);  color: #ffd95a; }
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background 150ms;
+  &:hover { background: rgba(255,255,255,0.14); }
+  &:disabled { opacity: 0.4; cursor: default; }
+}
+
+.btn-danger {
+  background: rgba(241,70,104,0.15);
+  border: 1px solid rgba(241,70,104,0.4);
+  color: #f14668;
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background 150ms;
+  &:hover { background: rgba(241,70,104,0.25); }
+  &:disabled { opacity: 0.4; cursor: default; }
+}
+
 .admin-form {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);

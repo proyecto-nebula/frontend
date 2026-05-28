@@ -51,6 +51,7 @@
   border-radius: 14px;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
   color: #f0f6fc;
+  max-width: 90%;
 
   .p-dialog-header {
     background: #1e1a2e;
@@ -92,4 +93,29 @@
   &:not(:has(.p-dialog-header)) .p-dialog-content {
     border-radius: 14px;
   }
+}
+
+/* ─── View Transitions (Angular router) ─────────────────────────────────── */
+@keyframes vt-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+::view-transition-old(root) {
+  animation: 220ms ease vt-fade-out;
+}
+::view-transition-new(root) {
+  animation: 280ms ease vt-fade-in;
 }

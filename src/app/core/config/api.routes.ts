@@ -14,4 +14,5 @@ export const API_ROUTES = {
   studios:  `${API_URL}/studios`,
   pegi:     `${API_URL}/pegi`,
   reports:  `${API_URL}/reports`,
+  logs:     `${API_URL}/logs`,
 };

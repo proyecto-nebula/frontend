@@ -1,26 +1,38 @@
 <div class="game-featured-wrapper">
-  <p-carousel
-    [value]="featuredGames()"
-    [numVisible]="1"
-    [numScroll]="1"
-    [circular]="true"
-    [showNavigators]="false"
-    [autoplayInterval]="0"
-    [page]="currentPage()"
-    (pageChange)="onPageChange($any($event))"
-    class="game-featured-carousel"
-  >
-    <ng-template pTemplate="item" let-game>
-      <app-game-hero [game]="game" mode="featured"></app-game-hero>
-    </ng-template>
-  </p-carousel>
+  <div class="game-featured-track">
+    @for (game of featuredGames(); track game.id; let i = $index) {
+      <div
+        class="game-featured-slide"
+        [class.is-active]="i === currentPage()"
+        [class.is-leaving]="i === prevPage() && i !== currentPage()"
+        [attr.aria-hidden]="i !== currentPage()"
+      >
+        <app-game-hero [game]="game" mode="featured"></app-game-hero>
+      </div>
+    }
+  </div>
   <button
     type="button"
     class="carousel-pause-btn"
     (click)="togglePause()"
-    [attr.aria-label]="paused() ? 'Reanudar presentaci\u00f3n de juegos' : 'Pausar presentaci\u00f3n de juegos'"
+    [attr.aria-label]="paused() ? 'Reanudar presentación de juegos' : 'Pausar presentación de juegos'"
     [attr.aria-pressed]="paused()"
   >
     <i class="pi" [class.pi-pause]="!paused()" [class.pi-play]="paused()" aria-hidden="true"></i>
   </button>
 </div>
+
+  @if (featuredGames().length > 1) {
+    <div class="game-featured-dots" role="tablist" aria-label="Selector de juegos destacados">
+      @for (game of featuredGames(); track game.id; let i = $index) {
+        <button
+          type="button"
+          class="game-featured-dot"
+          [class.is-active]="i === currentPage()"
+          (click)="goTo(i)"
+          [attr.aria-label]="'Ir a ' + (game.title || ('slide ' + (i + 1)))"
+        ></button>
+      }
+    </div>
+  }
+

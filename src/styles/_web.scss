@@ -112,75 +112,93 @@ app-game-featured {
   //top: var(--hero-top);
 }
 
-// ─── Configurable featured carousel entrance animation ────────────────────────
-// Change these three variables to adjust the lateral-fade slide-in effect:
+// --- Configurable featured slider animation ---
+// Ajusta estas variables para controlar la animacion lateral+fade del slider:
 $featured-enter-duration: 700ms !default;
 $featured-enter-easing:   cubic-bezier(0.22, 0.61, 0.36, 1) !default; // smooth decel
-$featured-enter-distance: 50px !default;  // translateX offset (right → centre)
+$featured-enter-distance: 60px !default;  // translateX offset (right to centre)
 
 @keyframes featured-slide-in {
-  from {
-    opacity: 0;
-    transform: translateX($featured-enter-distance);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX($featured-enter-distance); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
-/* PrimeNG Carousel: lateral-fade transition for featured carousel */
-.game-featured-carousel .p-carousel-viewport {
+@keyframes featured-slide-out {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(calc(-1 * #{$featured-enter-distance})); }
+}
+
+/* Custom slider (replaces p-carousel) */
+.game-featured-track {
   position: relative;
-  /* Allow vertical scroll through the carousel on touch devices */
-  touch-action: pan-y;
+  overflow: hidden;
 }
 
-.game-featured-carousel .p-carousel-item-list {
-  transform: none !important; /* disable PrimeNG’s native slide transform */
-  transition: none !important;
-  display: block !important;
-  position: relative;
-  height: 100%;
-  touch-action: pan-y;
-}
-
-.game-featured-carousel .p-carousel-item {
-  position: absolute !important;
-  inset: 0;
+.game-featured-slide {
+  display: none;
   width: 100%;
-  opacity: 0;
-  /* Fast fade-out for the leaving slide */
-  transition: opacity 250ms ease;
-  pointer-events: none;
-  visibility: visible !important;
+
+  &.is-active {
+    display: block;
+    animation: featured-slide-in $featured-enter-duration $featured-enter-easing both;
+  }
+
+  &.is-leaving {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    animation: featured-slide-out $featured-enter-duration $featured-enter-easing both;
+
+    app-game-hero { height: 100%; }
+  }
 }
 
-.game-featured-carousel .p-carousel-item[data-p-carousel-item-active='true'] {
-  pointer-events: auto;
-  z-index: 2;
-  /* Lateral fade-in: enters from the right and fades in simultaneously */
-  animation: featured-slide-in $featured-enter-duration $featured-enter-easing forwards;
+/* Minimal paginator dots for featured slider */
+.game-featured-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
 }
-
-/* Ensure active item remains visible even when PrimeNG hides others */
-.game-featured-carousel .p-items-hidden .p-carousel-item {
-  visibility: visible !important;
+.game-featured-dot {
+  width: 28px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.22);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 120ms ease, transform 120ms ease;
 }
-
-/* Fix: ensure viewport has height so absolutely positioned items are visible */
-.game-featured-carousel .p-carousel-viewport {
-  min-height: 520px;
+.game-featured-dot:hover { transform: translateY(-1px); }
+.game-featured-dot.is-active {
+  background: rgba(255,255,255,0.96);
 }
 
 body.hero main {
   padding-top: 0;
 }
 
-/* Game hero - shared component (featured carousel + game detail) */
+/* Game hero - shared component (featured slider + game detail) */
 .game-hero {
   position: relative;
   min-height: 520px;
+}
+
+/* Si el header admin está activo, ajustar la posición del search overlay (móvil/tabla) */
+body.is-admin .search-input-wrap {
+  top: var(--admin-header-height);
+}
+
+/* Login/register buttons: visible on desktop, hidden on mobile via existing media query */
+@media (min-width: 769px) {
+  .header-wrapper .header-auth-btns {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
 }
 
 .game-hero-image {
@@ -1325,6 +1343,12 @@ body.is-admin .header-wrapper {
   }
   .nav-list {
     display: none;
+  }
+  /* Mostrar y espaciar botones de autenticación en escritorio */
+  .header-auth-btns {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
   }
   .desktop-logo {
     display: none;

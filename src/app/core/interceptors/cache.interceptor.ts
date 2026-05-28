@@ -1,14 +1,15 @@
 import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { of, tap } from 'rxjs';
+import { API_ROUTES } from '@config/api.routes';
 
 /**
  * Endpoints excluidos del caché — datos de autenticación o mutables por usuario.
  * Los GET al resto (games, studios, pegi, categories, plans...) sí se cachean.
  */
-const NO_CACHE_PATTERNS = ['/auth', '/sessions', '/favorites', '/users'];
+const NO_CACHE_PATTERNS = ['/auth', '/sessions', '/favorites', '/users', '/logs'];
 
 /** Tiempo de vida de cada entrada (ms). */
-const TTL = 5 * 60 * 1000; // 5 minutos
+const TTL = 30 * 1000; // 30 segundos
 const PFX = 'nc_';
 
 function getCached(key: string): unknown | null {
@@ -44,7 +45,20 @@ export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req).pipe(
       tap(event => {
         if (event instanceof HttpResponse && event.status >= 200 && event.status < 300) {
+          // Invalidate caches for the mutated resource
           invalidate(req.url);
+          // If favorites were changed, also invalidate cached games collections
+          try {
+            if (req.url.includes(API_ROUTES.favorites) || req.url.includes('/favorites')) {
+              invalidate(API_ROUTES.games);
+              // Notify other parts of the app that favorites were mutated (after cache invalidation)
+              try {
+                if (typeof window !== 'undefined' && 'CustomEvent' in window) {
+                  window.dispatchEvent(new CustomEvent('nebula:mutated', { detail: { resource: 'favorites' } }));
+                }
+              } catch { /* ignore */ }
+            }
+          } catch { /* ignore */ }
         }
       }),
     );

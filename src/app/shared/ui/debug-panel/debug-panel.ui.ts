@@ -51,12 +51,14 @@ export class DebugPanelUi implements OnInit {
   }
 
   private loadUsers(): void {
-    this.http.get<User[]>(API_ROUTES.users).subscribe({
-      next: list => {
+    this.http.get<User[] | User>(`${API_ROUTES.users}?list=1`).subscribe({
+      next: res => {
+        const list = Array.isArray(res) ? res : [];
         this.users = list;
         localStorage.setItem('debugUsers', JSON.stringify(list));
         const debugId = localStorage.getItem('debugUserId');
-        if (debugId) {
+        // Only auto-apply a persisted debug user when there's no authenticated session
+        if (debugId && !this.auth.isAuthenticated()) {
           const u = list.find(u => String(u.id) === debugId);
           if (u) this.auth.debugSetUser(u);
         }

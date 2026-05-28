@@ -1,6 +1,6 @@
 <h1>Juegos</h1>
 @if (isLoading()) {
-  <p>Cargando juegos...</p>
+  <div class="page-spinner"><i class="pi pi-spin pi-spinner"></i></div>
 } @else if (errorMessage()) {
   <p class="error">{{ errorMessage() }}</p>
 } @else {

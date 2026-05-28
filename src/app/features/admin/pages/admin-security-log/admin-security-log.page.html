@@ -1,0 +1,48 @@
+<div class="admin-page">
+  <div class="admin-page__toolbar">
+    <h2>Log de seguridad</h2>
+    <div class="admin-log-actions">
+      <button class="btn-secondary" (click)="load()" [disabled]="loading()">
+        <i class="pi pi-refresh"></i> Actualizar
+      </button>
+      <button class="btn-danger" (click)="clearLog()" [disabled]="clearing() || loading()">
+        <i class="pi pi-trash"></i> Limpiar log
+      </button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="page-spinner page-spinner--inline"><i class="pi pi-spin pi-spinner"></i></div>
+  } @else if (!entries().length) {
+    <p class="admin-log-hint">El log está vacío.</p>
+  } @else {
+    <p class="admin-log-hint">Mostrando las {{ entries().length }} entradas más recientes (orden inverso).</p>
+
+    <p-table
+      [value]="entries()"
+      [paginator]="true"
+      [rows]="50"
+      [rowsPerPageOptions]="[25, 50, 100]"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width:160px">Timestamp</th>
+          <th style="width:220px">Evento</th>
+          <th style="width:130px">IP</th>
+          <th>Contexto</th>
+          <th>User-Agent</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-entry>
+        <tr [class]="eventClass(entry.event)">
+          <td class="log-mono">{{ entry.timestamp }}</td>
+          <td><span class="log-event-badge" [class]="eventClass(entry.event)">{{ entry.event }}</span></td>
+          <td class="log-mono">{{ entry.ip }}</td>
+          <td class="log-context">{{ extraContext(entry) }}</td>
+          <td class="log-ua" [title]="entry.ua ?? ''">{{ entry.ua ?? '—' }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</div>

@@ -13,7 +13,8 @@ export class AuthService {
   public user$ = this._userSubject.asObservable();
   private _loadedSubject = new BehaviorSubject<boolean>(false);
   readonly loaded$ = this._loadedSubject.asObservable();
-  isAuthenticated = computed(() => !!this._user() || !!this.getToken());
+  // isAuthenticated se basa solo en el signal: el token vive en cookie HttpOnly
+  isAuthenticated = computed(() => !!this._user());
   isAdmin = computed(() => this._user()?.roleId === 1);
   isUser = computed(() => this._user()?.roleId === 2);
 
@@ -21,8 +22,8 @@ export class AuthService {
     return this.http.post<AuthResponse>(API_ROUTES.auth, { email, password }).pipe(
       tap(res => {
         if (res.token) {
-          localStorage.setItem('token', res.token);
-          // Fetch profile; el interceptor añade el Bearer header automáticamente
+          // El servidor estableció la cookie HttpOnly — no se guarda en localStorage.
+          // Cargamos el perfil usando dicha cookie (el interceptor envía withCredentials).
           this.http.get<User>(API_ROUTES.users).subscribe(
             u => {
               this._user.set(u ?? null);
@@ -38,30 +39,28 @@ export class AuthService {
   }
 
   constructor() {
-    const token = this.getToken();
-    if (token) {
-      this.http.get<User>(API_ROUTES.users).subscribe(
-        u => {
-          this._user.set(u ?? null);
-          this._userSubject.next(u ?? null);
-          this._loadedSubject.next(true);
-        },
-        err => {
-          console.error('[AuthService] failed to fetch profile on init', err);
-          this._loadedSubject.next(true);
-        },
-      );
-    } else {
-      this._loadedSubject.next(true);
-    }
+    // Intentar restaurar sesión desde la cookie HttpOnly del servidor
+    this.http.get<User>(API_ROUTES.users).subscribe(
+      u => {
+        this._user.set(u ?? null);
+        this._userSubject.next(u ?? null);
+        this._loadedSubject.next(true);
+      },
+      () => {
+        // 401 = no hay sesión activa — no es un error de red
+        this._loadedSubject.next(true);
+      },
+    );
   }
 
-  getToken() {
-    return localStorage.getItem('token');
+  /** El token vive en una cookie HttpOnly y no es accesible desde JS. */
+  getToken(): string | null {
+    return null;
   }
 
   logout() {
-    localStorage.removeItem('token');
+    // Pedir al servidor que invalide la cookie
+    this.http.delete(API_ROUTES.auth).subscribe({ error: () => {} });
     this._user.set(null);
     this._userSubject.next(null);
   }
@@ -72,3 +71,4 @@ export class AuthService {
     this._userSubject.next(user);
   }
 }
+
