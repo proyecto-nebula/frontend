@@ -6,18 +6,22 @@
   </button>
 
   <nav class="admin-header__nav" [class.open]="menuOpen()">
-    <a routerLink="/admin/games" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Juegos</a>
-    <a routerLink="/admin/avatars" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Avatars</a>
-    <a routerLink="/admin/categories" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Categorías</a>
-    <a routerLink="/admin/studios" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Estudios</a>
-    <a routerLink="/admin/plans" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Planes</a>
-    <a routerLink="/admin/reports" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">
-      Reportes
-      @if (badge.count() > 0) {
-        <span class="admin-nav-badge">{{ badge.count() }}</span>
-      }
-    </a>
-    <a routerLink="/admin/security-log" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Seguridad</a>
+    @if (auth.isEditor()) {
+      <a routerLink="/admin/games" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Juegos</a>
+      <a routerLink="/admin/avatars" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Avatars</a>
+      <a routerLink="/admin/categories" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Categorías</a>
+      <a routerLink="/admin/studios" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Estudios</a>
+      <a routerLink="/admin/plans" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Planes</a>
+      <a routerLink="/admin/reports" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">
+        Reportes
+        @if (badge.count() > 0) {
+          <span class="admin-nav-badge">{{ badge.count() }}</span>
+        }
+      </a>
+    }
+    @if (auth.isAdmin()) {
+      <a routerLink="/admin/security-log" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Seguridad</a>
+    }
   </nav>
 
   <div class="admin-header__right">

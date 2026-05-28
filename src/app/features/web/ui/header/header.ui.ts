@@ -1,13 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  HostListener,
-  inject,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { LoginFormComponent } from '@auth/components/login-form/login-form.component';
 import { Game } from '@models/game.model';
@@ -85,11 +77,11 @@ export class HeaderUi implements OnInit, OnDestroy {
     if (event.key !== 'Tab') return;
     const drawer = this.elRef.nativeElement.querySelector('#mobile-drawer') as HTMLElement | null;
     if (!drawer) return;
-    const focusables = (Array.from(
-      drawer.querySelectorAll(
-        'a[href]:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])',
-      ),
-    ) as HTMLElement[]).filter(el => !el.closest('[aria-hidden="true"]'));
+    const focusables = (
+      Array.from(
+        drawer.querySelectorAll('a[href]:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])'),
+      ) as HTMLElement[]
+    ).filter(el => !el.closest('[aria-hidden="true"]'));
     if (focusables.length === 0) return;
     const first = focusables[0];
     const last = focusables[focusables.length - 1];
@@ -110,6 +102,7 @@ export class HeaderUi implements OnInit, OnDestroy {
     this.items = [
       { label: 'Inicio', routerLink: '/' },
       { label: 'Juegos', routerLink: '/games' },
+      { label: 'Descubrir', routerLink: '/discover' },
       { label: 'Mis Juegos', routerLink: '/my-games' },
       { label: 'Mi suscripción', routerLink: '/settings/plan', requiresAuth: true },
     ];

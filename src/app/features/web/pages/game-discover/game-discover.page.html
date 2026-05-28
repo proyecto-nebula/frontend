@@ -1,0 +1,380 @@
+<div class="discover-page">
+  <!-- Toolbar (title + mobile filter toggle) -->
+  <div class="discover-toolbar">
+    <h1 class="discover-toolbar__title">Descubrir</h1>
+    <div class="discover-toolbar__right">
+      @if (!isLoading()) {
+        <span class="results-count">{{ searchedGames().length }} juegos</span>
+      }
+      <button class="btn ghost discover-filter-btn" type="button" (click)="toggleSidebar()">
+        <i class="pi pi-sliders-h" aria-hidden="true"></i>
+        Filtros
+        @if (activeFilterCount() > 0) {
+          <span class="filter-badge">{{ activeFilterCount() }}</span>
+        }
+      </button>
+    </div>
+  </div>
+
+  <div class="discover-layout">
+    <!-- Sidebar overlay (mobile) -->
+    @if (sidebarOpen()) {
+      <div
+        class="discover-overlay"
+        role="button"
+        aria-label="Cerrar filtros"
+        tabindex="0"
+        (click)="closeSidebar()"
+        (keydown.enter)="closeSidebar()"
+      ></div>
+    }
+
+    <!-- ─── Sidebar ─────────────────────────────────────────── -->
+    <aside class="discover-sidebar" [class.open]="sidebarOpen()">
+      <div class="sidebar-header">
+        <span class="sidebar-title">Filtros</span>
+        <div class="sidebar-header__actions">
+          @if (activeFilterCount() > 0) {
+            <button class="btn-link" type="button" (click)="clearFilters()">Limpiar todo</button>
+          }
+          <button class="btn-icon sidebar-close" type="button" (click)="closeSidebar()" aria-label="Cerrar filtros">
+            <i class="pi pi-times" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Developer -->
+      <div class="filter-section">
+        <h3 class="filter-title">Desarrollador</h3>
+        <input
+          type="search"
+          class="filter-search"
+          placeholder="Buscar desarrollador..."
+          [value]="studioSearch()"
+          (input)="studioSearch.set($any($event.target).value)"
+          aria-label="Buscar desarrollador"
+        />
+        <ul class="filter-list" role="group" aria-label="Filtro por desarrollador">
+          @for (studio of filteredStudios(); track studio.id) {
+            <li class="filter-item">
+              <label class="filter-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="filters().developerIds.includes(studio.id)"
+                  (change)="toggleDeveloper(studio.id)"
+                />
+                <span>{{ studio.name }}</span>
+              </label>
+            </li>
+          }
+          @if (filteredStudios().length === 0) {
+            <li class="filter-empty">Sin resultados</li>
+          }
+        </ul>
+      </div>
+
+      <!-- Publisher -->
+      <div class="filter-section">
+        <h3 class="filter-title">Distribuidor</h3>
+        <input
+          type="search"
+          class="filter-search"
+          placeholder="Buscar distribuidor..."
+          [value]="publisherSearch()"
+          (input)="publisherSearch.set($any($event.target).value)"
+          aria-label="Buscar distribuidor"
+        />
+        <ul class="filter-list" role="group" aria-label="Filtro por distribuidor">
+          @for (studio of filteredPublishers(); track studio.id) {
+            <li class="filter-item">
+              <label class="filter-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="filters().publisherIds.includes(studio.id)"
+                  (change)="togglePublisher(studio.id)"
+                />
+                <span>{{ studio.name }}</span>
+              </label>
+            </li>
+          }
+          @if (filteredPublishers().length === 0) {
+            <li class="filter-empty">Sin resultados</li>
+          }
+        </ul>
+      </div>
+
+      <!-- Categories — toggle buttons, 2 columns, OR logic (moved up) -->
+      <div class="filter-section">
+        <h3 class="filter-title">Categorías</h3>
+        <div class="cat-grid" role="group" aria-label="Filtro por categoría">
+          @for (cat of categories(); track cat.id) {
+            <button
+              type="button"
+              class="cat-btn"
+              [class.active]="filters().categoryIds.includes(cat.id)"
+              (click)="toggleCategory(cat.id)"
+              [attr.aria-pressed]="filters().categoryIds.includes(cat.id)"
+            >
+              <span>{{ cat.name }}</span>
+              @if (cat.icon) {
+                <i [class]="'pi ' + cat.icon" aria-hidden="true"></i>
+              }
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Release date range -->
+      <div class="filter-section">
+        <h3 class="filter-title">Año de lanzamiento</h3>
+        <div class="filter-range">
+          <div class="filter-range__field">
+            <label for="release-min-input" class="filter-label">Desde</label>
+            <input
+              id="release-min-input"
+              type="number"
+              class="filter-input"
+              placeholder="Año"
+              min="1970"
+              [max]="currentYear"
+              [value]="filters().releaseDateMin ?? ''"
+              (input)="setReleaseMin($any($event.target).value)"
+            />
+          </div>
+          <span class="filter-range__sep">—</span>
+          <div class="filter-range__field">
+            <label for="release-max-input" class="filter-label">Hasta</label>
+            <input
+              id="release-max-input"
+              type="number"
+              class="filter-input"
+              placeholder="Año"
+              min="1970"
+              [max]="currentYear"
+              [value]="filters().releaseDateMax ?? ''"
+              (input)="setReleaseMax($any($event.target).value)"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Published in Nebula — period selector -->
+      <div class="filter-section">
+        <h3 class="filter-title">Publicado en Nebula</h3>
+        <select
+          class="filter-input filter-select"
+          [value]="filters().publishedAtPeriod"
+          (change)="setPublishedPeriod($any($event.target).value)"
+          aria-label="Período de publicación en Nebula"
+        >
+          @for (opt of publishedPeriodOptions; track opt.value) {
+            <option [value]="opt.value">{{ opt.label }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Metacritic score range -->
+      <div class="filter-section">
+        <h3 class="filter-title">Puntuación Metacritic</h3>
+        <div class="filter-range">
+          <div class="filter-range__field">
+            <label for="meta-min-input" class="filter-label">Mín.</label>
+            <input
+              id="meta-min-input"
+              type="number"
+              class="filter-input"
+              placeholder="0"
+              min="0"
+              max="100"
+              [value]="filters().metacriticMin ?? ''"
+              (input)="setMetacriticMin($any($event.target).value)"
+            />
+          </div>
+          <span class="filter-range__sep">—</span>
+          <div class="filter-range__field">
+            <label for="meta-max-input" class="filter-label">Máx.</label>
+            <input
+              id="meta-max-input"
+              type="number"
+              class="filter-input"
+              placeholder="100"
+              min="0"
+              max="100"
+              [value]="filters().metacriticMax ?? ''"
+              (input)="setMetacriticMax($any($event.target).value)"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- PEGI (moved to the end) -->
+      <div class="filter-section">
+        <h3 class="filter-title">PEGI</h3>
+        <ul class="filter-list filter-list--pegi" role="group" aria-label="Filtro por clasificación PEGI">
+          @for (pegi of pegiList(); track pegi.id) {
+            <li class="filter-item">
+              <label class="filter-checkbox filter-checkbox--pegi">
+                <input type="checkbox" [checked]="filters().pegiIds.includes(pegi.id)" (change)="togglePegi(pegi.id)" />
+                @if (pegi.imageUrl) {
+                  <img [src]="pegi.imageUrl" [alt]="pegi.name" class="pegi-badge" />
+                } @else {
+                  <span class="pegi-text">{{ pegi.name }}</span>
+                }
+              </label>
+            </li>
+          }
+        </ul>
+      </div>
+    </aside>
+
+    <!-- ─── Results ────────────────────────────────────────── -->
+    <section class="discover-results" aria-label="Resultados de búsqueda">
+      @if (isLoading()) {
+        <div class="page-spinner"><i class="pi pi-spin pi-spinner"></i></div>
+      } @else {
+        <!-- Search bar above results -->
+        <div class="results-searchbar">
+          <i class="pi pi-search results-searchbar__icon" aria-hidden="true"></i>
+          <input
+            type="search"
+            class="results-searchbar__input"
+            placeholder="Buscar en resultados..."
+            [value]="searchQuery()"
+            (input)="setSearchQuery($any($event.target).value)"
+            aria-label="Buscar en resultados"
+          />
+          @if (searchQuery()) {
+            <button
+              class="results-searchbar__clear"
+              type="button"
+              (click)="setSearchQuery('')"
+              aria-label="Limpiar búsqueda"
+            >
+              <i class="pi pi-times" aria-hidden="true"></i>
+            </button>
+          }
+        </div>
+
+        @if (searchedGames().length === 0) {
+          <div class="discover-empty">
+            <i class="pi pi-search" aria-hidden="true"></i>
+            <p>No hay juegos que coincidan con los filtros seleccionados.</p>
+            @if (activeFilterCount() > 0 || searchQuery()) {
+              <button class="btn ghost" type="button" (click)="clearFilters()">Limpiar filtros</button>
+            }
+          </div>
+        } @else {
+          <div class="discover-game-list">
+            @for (game of pagedGames(); track game.id) {
+              <a [routerLink]="['/games', game.slug]" class="discover-card" [attr.aria-label]="game.title">
+                <!-- Banner -->
+                <div class="discover-card__banner">
+                  @if (game.bannerUrl) {
+                    <img [src]="game.bannerUrl" [alt]="" loading="lazy" />
+                  } @else {
+                    <div class="discover-card__no-img"><i class="pi pi-image" aria-hidden="true"></i></div>
+                  }
+                </div>
+
+                <!-- Info -->
+                <div class="discover-card__body">
+                  <div class="discover-card__top">
+                    <span class="discover-card__title">{{ game.title }}</span>
+                    <div class="discover-card__meta">
+                      <span class="meta-year">{{ getReleaseYear(game) }}</span>
+                      @if (game.developer?.name) {
+                        <span class="meta-sep" aria-hidden="true">·</span>
+                        <span class="meta-studio" title="Desarrollador">{{ game.developer!.name }}</span>
+                      }
+                      @if (game.publisher?.name && game.publisher!.id !== game.developer?.id) {
+                        <span class="meta-sep meta-pub-mobile" aria-hidden="true">·</span>
+                        <span class="meta-studio meta-studio--pub meta-pub-mobile" title="Distribuidor">
+                          {{ game.publisher!.name }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                  <!-- categories moved to right-side tags (desktop only) -->
+                </div>
+
+                <!-- Right: category tags (left) and metacritic + pegi (right) -->
+                <div class="discover-card__aside">
+                  @if ((game.categories ?? []).length > 0) {
+                    <div class="discover-card__tags desktop-only" role="list">
+                      @for (cat of game.categories; track cat.id) {
+                        <span class="cat-chip">
+                          <span class="cat-name">{{ cat.name }}</span>
+                          @if (cat.icon) {
+                            <i [class]="'pi ' + cat.icon" aria-hidden="true"></i>
+                          }
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  <div class="discover-card__metaaside">
+                    @if (
+                      game.metacriticScore !== null && game.metacriticScore !== undefined && game.metacriticScore !== ''
+                    ) {
+                      <span
+                        class="metacritic-score"
+                        [class]="metacriticClass(game.metacriticScore)"
+                        title="Puntuación Metacritic"
+                      >
+                        {{ game.metacriticScore }}
+                      </span>
+                    }
+                    @if (game.pegi?.imageUrl) {
+                      <img [src]="game.pegi!.imageUrl" [alt]="'PEGI ' + game.pegi!.name" class="pegi-badge-sm" />
+                    }
+                  </div>
+                </div>
+              </a>
+            }
+          </div>
+
+          <!-- Pagination -->
+          @if (totalPages() > 1) {
+            <nav class="discover-pagination" aria-label="Páginas de resultados">
+              <button
+                class="page-btn page-btn--nav"
+                type="button"
+                [disabled]="currentPage() === 1"
+                (click)="goToPage(currentPage() - 1)"
+                aria-label="Página anterior"
+              >
+                <i class="pi pi-chevron-left" aria-hidden="true"></i>
+              </button>
+
+              @for (p of pageNumbers(); track $index) {
+                @if (p === 0) {
+                  <span class="page-ellipsis" aria-hidden="true">…</span>
+                } @else {
+                  <button
+                    class="page-btn"
+                    type="button"
+                    [class.active]="p === currentPage()"
+                    [attr.aria-current]="p === currentPage() ? 'page' : null"
+                    (click)="goToPage(p)"
+                  >
+                    {{ p }}
+                  </button>
+                }
+              }
+
+              <button
+                class="page-btn page-btn--nav"
+                type="button"
+                [disabled]="currentPage() === totalPages()"
+                (click)="goToPage(currentPage() + 1)"
+                aria-label="Página siguiente"
+              >
+                <i class="pi pi-chevron-right" aria-hidden="true"></i>
+              </button>
+            </nav>
+          }
+        }
+      }
+    </section>
+  </div>
+</div>

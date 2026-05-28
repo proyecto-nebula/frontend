@@ -1,11 +1,20 @@
+import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
+import { AuthService } from '@services/auth.service';
 
 export const ADMIN_ROUTES: Routes = [
   {
     path: '',
     loadComponent: () => import('./layout/admin.layout').then(m => m.AdminLayout),
     children: [
-      { path: '', redirectTo: 'games', pathMatch: 'full' },
+      {
+        path: '',
+        redirectTo: () => {
+          const auth = inject(AuthService);
+          return auth.isAdmin() ? '/admin/security-log' : '/admin/games';
+        },
+        pathMatch: 'full',
+      },
       {
         path: 'games',
         loadComponent: () => import('./pages/admin-games/admin-games.page').then(m => m.AdminGamesPage),

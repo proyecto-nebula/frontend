@@ -24,7 +24,10 @@ export const WEB_ROUTES: Routes = [
         canActivate: [authGuard],
         loadComponent: () => import('./pages/my-games/my-games.page').then(m => m.MyGamesPage),
       },
-      
+      {
+        path: 'discover',
+        loadComponent: () => import('./pages/game-discover/game-discover.page').then(m => m.GameDiscoverPage),
+      },
     ],
   },
 ];

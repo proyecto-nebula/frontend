@@ -15,7 +15,7 @@ import { filter, map, startWith } from 'rxjs/operators';
 })
 export class AdminHeaderUi implements OnInit {
   private readonly router = inject(Router);
-  private readonly auth = inject(AuthService);
+  readonly auth = inject(AuthService);
   private readonly http = inject(HttpClient);
   readonly badge = inject(ReportsBadgeService);
 

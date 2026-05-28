@@ -16,7 +16,9 @@ export class AuthService {
   // isAuthenticated se basa solo en el signal: el token vive en cookie HttpOnly
   isAuthenticated = computed(() => !!this._user());
   isAdmin = computed(() => this._user()?.roleId === 1);
-  isUser = computed(() => this._user()?.roleId === 2);
+  isEditor = computed(() => this._user()?.roleId === 2);
+  isUser = computed(() => this._user()?.roleId === 3);
+  isAdminOrEditor = computed(() => (this._user()?.roleId ?? 0) <= 2 && (this._user()?.roleId ?? 0) >= 1);
 
   login(email: string, password: string) {
     return this.http.post<AuthResponse>(API_ROUTES.auth, { email, password }).pipe(
