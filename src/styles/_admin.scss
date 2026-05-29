@@ -2,6 +2,10 @@
 
 /* padding-top handled by body.admin in _base.scss */
 
+body.admin main {
+  padding-top: 3rem;
+}
+
 .admin-page {
   margin: 0 auto;
 
@@ -54,15 +58,24 @@
   border-radius: 4px;
   font-size: 0.78rem;
   font-weight: 600;
-  background: rgba(255,255,255,0.08);
-  &.log-success  { background: rgba(72,199,142,0.2); color: #48c78e; }
-  &.log-danger   { background: rgba(241,70,104,0.2);  color: #f14668; }
-  &.log-warn     { background: rgba(255,221,87,0.2);  color: #ffd95a; }
+  background: rgba(255, 255, 255, 0.08);
+  &.log-success {
+    background: rgba(72, 199, 142, 0.2);
+    color: #48c78e;
+  }
+  &.log-danger {
+    background: rgba(241, 70, 104, 0.2);
+    color: #f14668;
+  }
+  &.log-warn {
+    background: rgba(255, 221, 87, 0.2);
+    color: #ffd95a;
+  }
 }
 
 .btn-secondary {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #fff;
   padding: 0.4rem 0.9rem;
   border-radius: 6px;
@@ -72,13 +85,18 @@
   align-items: center;
   gap: 0.4rem;
   transition: background 150ms;
-  &:hover { background: rgba(255,255,255,0.14); }
-  &:disabled { opacity: 0.4; cursor: default; }
+  &:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
 }
 
 .btn-danger {
-  background: rgba(241,70,104,0.15);
-  border: 1px solid rgba(241,70,104,0.4);
+  background: rgba(241, 70, 104, 0.15);
+  border: 1px solid rgba(241, 70, 104, 0.4);
   color: #f14668;
   padding: 0.4rem 0.9rem;
   border-radius: 6px;
@@ -88,8 +106,13 @@
   align-items: center;
   gap: 0.4rem;
   transition: background 150ms;
-  &:hover { background: rgba(241,70,104,0.25); }
-  &:disabled { opacity: 0.4; cursor: default; }
+  &:hover {
+    background: rgba(241, 70, 104, 0.25);
+  }
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
 }
 
 .admin-form {
@@ -856,7 +879,9 @@
   cursor: pointer;
   padding: 0;
   overflow: hidden;
-  transition: border-color 150ms, transform 120ms;
+  transition:
+    border-color 150ms,
+    transform 120ms;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -945,8 +970,12 @@
     resize: vertical;
     outline: none;
     font-family: inherit;
-    &:focus { border-color: rgba(239, 68, 68, 0.5); }
-    &::placeholder { color: rgba(255, 255, 255, 0.3); }
+    &:focus {
+      border-color: rgba(239, 68, 68, 0.5);
+    }
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
   }
 
   &__actions {
