@@ -28,6 +28,10 @@
           <a routerLink="/auth/join" class="btn-play btn-play--register">Regístrate ahora para jugar</a>
         } @else if (!hasPlan) {
           <a routerLink="/settings/plan" class="btn-play btn-play--premium">Hazte premium para jugar</a>
+        } @else if (ageRestricted) {
+          <button type="button" class="btn-play btn-play--restricted" disabled>
+            🔞 Juego restringido por edad
+          </button>
         } @else {
           <a [routerLink]="['/play', slug]" class="btn-play btn-play--play">▶ Jugar ahora</a>
         }

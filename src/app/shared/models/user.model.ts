@@ -40,6 +40,7 @@ export interface User {
   birthDate?: string | null;
   lastLoginAt?: string | null;
   isActive: boolean;
+  banReason?: string | null;
   createdAt: string;
 }
 

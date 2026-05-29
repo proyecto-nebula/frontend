@@ -15,6 +15,7 @@ export class AuthService {
   readonly loaded$ = this._loadedSubject.asObservable();
   // isAuthenticated se basa solo en el signal: el token vive en cookie HttpOnly
   isAuthenticated = computed(() => !!this._user());
+  readonly user = this._user.asReadonly();
   isAdmin = computed(() => this._user()?.roleId === 1);
   isEditor = computed(() => this._user()?.roleId === 2);
   isUser = computed(() => this._user()?.roleId === 3);

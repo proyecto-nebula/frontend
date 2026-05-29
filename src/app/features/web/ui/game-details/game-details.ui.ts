@@ -93,6 +93,21 @@ export class GameDetailsUi implements OnChanges {
     return u != null && u.planId != null && Number(u.planId) > 0;
   });
 
+  readonly ageRestricted = computed(() => {
+    const user = this.currentUser();
+    const game = this.game();
+    if (!user?.birthDate || !game?.pegi?.name) return false;
+    const match = /\d+/.exec(game.pegi.name);
+    const pegiAge = match ? parseInt(match[0], 10) : NaN;
+    if (isNaN(pegiAge)) return false;
+    const birth = new Date(user.birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+    return age < pegiAge;
+  });
+
   private _favoriteSub?: Subscription;
 
   private readonly _favoriteEffect = effect(() => {

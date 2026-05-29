@@ -3,11 +3,12 @@ import { CanMatchFn } from '@angular/router';
 import { filter, map, take } from 'rxjs';
 import { AuthService } from '@services/auth.service';
 
-export const adminGuard: CanMatchFn = () => {
+/** Allows only Editors (roleId=2). Returns false to let Angular fall through to the next matching route. */
+export const editorGuard: CanMatchFn = () => {
   const authService = inject(AuthService);
   return authService.loaded$.pipe(
     filter(loaded => loaded),
     take(1),
-    map(() => authService.isAdminOrEditor()),
+    map(() => authService.isEditor()),
   );
 };

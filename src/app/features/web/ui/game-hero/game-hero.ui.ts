@@ -32,6 +32,7 @@ export class GameHeroUi implements OnInit, OnDestroy {
   @Input() slug = '';
   @Input() isLoggedIn = false;
   @Input() hasPlan = false;
+  @Input() ageRestricted = false;
   @Input() isFavorite = false;
   @Input() favoriteLoading = false;
 

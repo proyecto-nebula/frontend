@@ -18,7 +18,7 @@ export class App {
 
   constructor() {
     effect(() => {
-      document.body.classList.toggle('is-admin', this.authService.isAdmin());
+      document.body.classList.toggle('is-admin', this.authService.isAdminOrEditor());
     });
   }
 }
