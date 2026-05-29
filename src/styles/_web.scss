@@ -193,7 +193,7 @@ $featured-wipe-softness: 22% !default;
     position: relative;
     z-index: 2;
     pointer-events: auto;
-    animation: wipe-in-prev $featured-wipe-duration $featured-wipe-easing both;
+    animation: wipe-in-next $featured-wipe-duration $featured-wipe-easing both;
   }
 
   &.is-leaving {
@@ -202,7 +202,7 @@ $featured-wipe-softness: 22% !default;
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    animation: wipe-out-prev $featured-wipe-duration $featured-wipe-easing both;
+    animation: wipe-out-next $featured-wipe-duration $featured-wipe-easing both;
 
     app-game-hero {
       height: 100%;
@@ -213,10 +213,10 @@ $featured-wipe-softness: 22% !default;
 // Para la dirección "prev" (volvemos atrás) se invierten las animaciones
 .game-featured-track.dir-prev .game-featured-slide {
   &.is-active {
-    animation-name: wipe-in-next;
+    animation-name: wipe-in-prev;
   }
   &.is-leaving {
-    animation-name: wipe-out-next;
+    animation-name: wipe-out-prev;
   }
 }
 
