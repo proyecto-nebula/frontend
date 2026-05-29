@@ -69,14 +69,14 @@ export class MyGamesPage {
       });
 
     this.favoritesService.changed$
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => {
-        this.authService.user$.pipe(first()).subscribe(user => {
-          if (!user) return;
-          this.gameService.getFavoriteGames(user.id)
-            .pipe(catchError(() => of([])))
-            .subscribe(games => this.favoriteGames.set(games));
-        });
-      });
+      .pipe(
+        takeUntilDestroyed(),
+        switchMap(() => this.authService.user$.pipe(first())),
+        switchMap(user => {
+          if (!user) return of([]);
+          return this.gameService.getFavoriteGames(user.id).pipe(catchError(() => of([])));
+        }),
+      )
+      .subscribe(games => this.favoriteGames.set(games as Game[]));
   }
 }

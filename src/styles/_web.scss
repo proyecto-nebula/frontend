@@ -112,31 +112,68 @@ app-game-featured {
   //top: var(--hero-top);
 }
 
-// --- Configurable featured slider animation ---
-// Ajusta estas variables para controlar la animacion lateral+fade del slider:
-$featured-enter-duration: 700ms !default;
-$featured-enter-easing: cubic-bezier(0.22, 0.61, 0.36, 1) !default; // smooth decel
-$featured-enter-distance: 60px !default; // translateX offset (right to centre)
+// ─── Featured slider: fade-wipe ─────────────────────────────────────────────
+// Parámetros configurables:
+$featured-wipe-duration: 1400ms !default; // duración del barrido
+$featured-wipe-easing: ease-in-out !default;
+// $featured-wipe-softness: tamaño de la zona de fundido en el borde (0 = corte duro, 40% = borde muy suave)
+$featured-wipe-softness: 22% !default;
 
-@keyframes featured-slide-in {
+// Técnica: mask-size: 200% + mask-position de 100%→0% (o 0%→100% para prev).
+//   pos=0%:   mitad negra del gradiente cubre el elemento → totalmente visible
+//   pos=100%: mitad transparente cubre el elemento → totalmente oculto
+//
+// Gradiente A (negro izquierda):  #000 (50%-s) → transparent (50%+s)
+// Gradiente B (transparente izq): transparent (50%-s) → #000 (50%+s)
+//
+// Nota: no se interpolan variables SCSS dentro de @keyframes → definimos los valores
+// directamente usando los valores por defecto de las variables arriba.
+// Si cambias $featured-wipe-softness, ajusta los stops en los @keyframes también:
+//   stop-negro      = 50% - $featured-wipe-softness  → con 22% = 28%
+//   stop-transparent = 50% + $featured-wipe-softness → con 22% = 72%
+
+@keyframes wipe-in-next {
+  // Entra desde izquierda (borde negro barre de izq a der): pos 100% → 0%
   from {
-    opacity: 0;
-    transform: translateX($featured-enter-distance);
+    mask: linear-gradient(90deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(90deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
   }
   to {
-    opacity: 1;
-    transform: translateX(0);
+    mask: linear-gradient(90deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(90deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
   }
 }
-
-@keyframes featured-slide-out {
+@keyframes wipe-out-next {
+  // Sale hacia izquierda: el lado izquierdo desaparece primero → pos 100% → 0%
   from {
-    opacity: 1;
-    transform: translateX(0);
+    mask: linear-gradient(90deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(90deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
   }
   to {
-    opacity: 0;
-    transform: translateX(calc(-1 * #{$featured-enter-distance}));
+    mask: linear-gradient(90deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(90deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
+  }
+}
+@keyframes wipe-in-prev {
+  // Entra desde derecha (borde negro barre de der a izq): pos 0% → 100%
+  from {
+    mask: linear-gradient(90deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(90deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
+  }
+  to {
+    mask: linear-gradient(90deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(90deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
+  }
+}
+@keyframes wipe-out-prev {
+  // Sale hacia derecha: el lado derecho desaparece primero → pos 0% → 100%
+  from {
+    mask: linear-gradient(90deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(90deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
+  }
+  to {
+    mask: linear-gradient(90deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(90deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
   }
 }
 
@@ -152,7 +189,7 @@ $featured-enter-distance: 60px !default; // translateX offset (right to centre)
 
   &.is-active {
     display: block;
-    animation: featured-slide-in $featured-enter-duration $featured-enter-easing both;
+    animation: wipe-in-next $featured-wipe-duration $featured-wipe-easing both;
   }
 
   &.is-leaving {
@@ -161,11 +198,21 @@ $featured-enter-distance: 60px !default; // translateX offset (right to centre)
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    animation: featured-slide-out $featured-enter-duration $featured-enter-easing both;
+    animation: wipe-out-next $featured-wipe-duration $featured-wipe-easing both;
 
     app-game-hero {
       height: 100%;
     }
+  }
+}
+
+// Para la dirección "prev" (volvemos atrás) se invierten las animaciones
+.game-featured-track.dir-prev .game-featured-slide {
+  &.is-active {
+    animation-name: wipe-in-prev;
+  }
+  &.is-leaving {
+    animation-name: wipe-out-prev;
   }
 }
 

@@ -26,6 +26,8 @@ export class GameFeaturedUi implements OnInit, OnDestroy {
   readonly currentPage = signal(0);
   /** Índice del slide que está saliendo (animación leave). -1 = ninguno. */
   readonly prevPage = signal(-1);
+  /** Dirección del cambio: 'next' | 'prev' */
+  readonly direction = signal<'next' | 'prev'>('next');
 
   readonly featuredGames = computed(() =>
     this.games().filter(g => {
@@ -49,7 +51,12 @@ export class GameFeaturedUi implements OnInit, OnDestroy {
 
   goTo(index: number): void {
     if (index === this.currentPage()) return;
-    this.prevPage.set(this.currentPage());
+    const total = this.featuredGames().length;
+    const curr = this.currentPage();
+    // Determine direction: wrapping-aware comparison
+    const forward = (index - curr + total) % total <= total / 2;
+    this.direction.set(forward ? 'next' : 'prev');
+    this.prevPage.set(curr);
     this.currentPage.set(index);
     // limpia el slide saliente después de la animación
     if (this.clearPrevTimer !== null) clearTimeout(this.clearPrevTimer);

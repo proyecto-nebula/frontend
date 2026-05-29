@@ -1,5 +1,5 @@
 <div class="game-featured-wrapper">
-  <div class="game-featured-track">
+  <div class="game-featured-track" [class.dir-prev]="direction() === 'prev'">
     @for (game of featuredGames(); track game.id; let i = $index) {
       <div
         class="game-featured-slide"

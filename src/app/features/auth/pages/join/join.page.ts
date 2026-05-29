@@ -225,7 +225,7 @@ export class JoinPage {
       avatarId: profile.avatarId ?? null,
       planId: plan.planId ?? null,
       birthDate,
-      roleId: 2,
+      roleId: 3,
     };
 
     try {

@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ChangeDetectorRef, Component, ElementRef, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { LoginFormComponent } from '@auth/components/login-form/login-form.component';
@@ -44,6 +45,25 @@ export class HeaderUi implements OnInit, OnDestroy {
   private elRef = inject(ElementRef<HTMLElement>);
 
   private hamburgerBtn: HTMLElement | null = null;
+
+  constructor() {
+    // Subscriptions must be created in constructor so takeUntilDestroyed
+    // has access to the injection context and the component's DestroyRef.
+    this.auth.user$.pipe(takeUntilDestroyed()).subscribe(u => {
+      this.currentUser = u;
+      this.currentAvatarUrl = u?.avatar?.imageUrl ?? null;
+      this.cdr.detectChanges();
+    });
+    this.loginModal.open$.pipe(takeUntilDestroyed()).subscribe(returnUrl => {
+      if (returnUrl === null) {
+        this.showLoginModal = false;
+        this.loginReturnUrl = null;
+      } else {
+        this.loginReturnUrl = returnUrl || this.router.url || '/';
+        this.showLoginModal = true;
+      }
+    });
+  }
 
   // Quick search
   searchOpen = false;
@@ -119,24 +139,6 @@ export class HeaderUi implements OnInit, OnDestroy {
       },
     ];
 
-    // subscribe to auth user so header updates immediately after login/logout
-    this.auth.user$.subscribe(u => {
-      this.currentUser = u;
-      this.currentAvatarUrl = u?.avatar?.imageUrl ?? null;
-      this.cdr.markForCheck();
-      console.log('[HeaderUi] auth.user$', u, 'avatarUrl=', this.currentAvatarUrl, 'token=', this.auth.getToken());
-    });
-
-    // subscribe to login modal open requests from other components
-    this.loginModal.open$.subscribe(returnUrl => {
-      if (returnUrl === null) {
-        this.showLoginModal = false;
-        this.loginReturnUrl = null;
-      } else {
-        this.loginReturnUrl = returnUrl || this.router.url || '/';
-        this.showLoginModal = true;
-      }
-    });
   }
 
   toggleDrawer(): void {
@@ -166,13 +168,7 @@ export class HeaderUi implements OnInit, OnDestroy {
 
   logout() {
     this.auth.logout();
-    // Ensure header reflects logged-out state immediately and navigate home.
-    this.currentUser = null;
-    this.currentAvatarUrl = null;
-    this.cdr.detectChanges();
-    // Navigate internally to avoid full page reload and the white flash.
-    // Components subscribed to `auth.user$` will also update reactively.
-    void this.router.navigate(['/']).then(() => this.cdr.detectChanges());
+    this.router.navigate(['/']);
   }
 
   openLoginModal() {

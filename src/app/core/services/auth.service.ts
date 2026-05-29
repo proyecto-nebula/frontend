@@ -62,10 +62,11 @@ export class AuthService {
   }
 
   logout() {
-    // Pedir al servidor que invalide la cookie
-    this.http.delete(API_ROUTES.auth).subscribe({ error: () => {} });
+    // Clear state synchronously so all signals and observables update immediately.
     this._user.set(null);
     this._userSubject.next(null);
+    // Ask the server to invalidate the HttpOnly cookie in the background.
+    this.http.delete(API_ROUTES.auth).subscribe({ error: () => {} });
   }
 
   /** Debug-only: switch displayed user without changing JWT */

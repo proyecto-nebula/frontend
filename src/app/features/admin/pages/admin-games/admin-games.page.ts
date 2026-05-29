@@ -48,34 +48,37 @@ export class AdminGamesPage implements OnInit {
   };
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    const isNew = this.route.snapshot.url.some(s => s.path === 'new');
-
-    if (id) {
-      this.editingId.set(Number(id));
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      const isNew = this.router.url.includes('/new');
       const isView = this.route.snapshot.queryParamMap.get('view') === '1';
-      this.viewOnly.set(isView);
-      this.viewMode.set('form');
-      this.buildForm();
-      this.http.get<Game>(`${API_ROUTES.games}?id=${id}`).subscribe(game => {
-        this.form.patchValue(
-          { ...game, isFeatured: !!game.isFeatured, isActive: !!game.isActive },
-          { emitEvent: false },
-        );
-        for (const field of this.URL_FIELDS) {
-          if (this.form.get(field)?.value?.trim()) this.manuallyEdited.add(field);
-        }
-        if (isView) this.form.disable();
-      });
-      this.loadStudiosAndPegi();
-    } else if (isNew) {
-      this.viewMode.set('form');
-      this.buildForm();
-      this.loadStudiosAndPegi();
-    } else {
-      this.viewMode.set('list');
-      this.loadList();
-    }
+
+      if (id) {
+        this.editingId.set(Number(id));
+        this.viewOnly.set(isView);
+        this.viewMode.set('form');
+        this.buildForm();
+        this.http.get<Game>(`${API_ROUTES.games}?id=${id}`).subscribe(game => {
+          this.form.patchValue(
+            { ...game, isFeatured: !!game.isFeatured, isActive: !!game.isActive },
+            { emitEvent: false },
+          );
+          for (const field of this.URL_FIELDS) {
+            if (this.form.get(field)?.value?.trim()) this.manuallyEdited.add(field);
+          }
+          if (isView) this.form.disable();
+        });
+        this.loadStudiosAndPegi();
+      } else if (isNew) {
+        this.viewMode.set('form');
+        this.buildForm();
+        this.loadStudiosAndPegi();
+      } else {
+        this.editingId.set(null);
+        this.viewMode.set('list');
+        this.loadList();
+      }
+    });
   }
 
   private buildForm(): void {

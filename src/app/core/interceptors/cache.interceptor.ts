@@ -1,15 +1,13 @@
 import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { of, tap } from 'rxjs';
-import { API_ROUTES } from '@config/api.routes';
 
 /**
  * Endpoints excluidos del caché — datos de autenticación o mutables por usuario.
- * Los GET al resto (games, studios, pegi, categories, plans...) sí se cachean.
  */
 const NO_CACHE_PATTERNS = ['/auth', '/sessions', '/favorites', '/users', '/logs'];
 
 /** Tiempo de vida de cada entrada (ms). */
-const TTL = 30 * 1000; // 30 segundos
+const TTL = 10 * 1000; // 10 segundos
 const PFX = 'nc_';
 
 function getCached(key: string): unknown | null {
@@ -28,43 +26,37 @@ function setCached(key: string, body: unknown): void {
   } catch { /* quota exceeded — ignorar */ }
 }
 
-function invalidate(url: string): void {
-  const base = url.split('?')[0];
-  for (let i = sessionStorage.length - 1; i >= 0; i--) {
-    const k = sessionStorage.key(i);
-    if (!k?.startsWith(PFX)) continue;
-    try {
-      if (atob(k.slice(PFX.length)).startsWith(base)) sessionStorage.removeItem(k);
-    } catch { /* ignorar */ }
-  }
+/** Limpia TODA la caché de la app. Se llama en cualquier mutación para garantizar datos frescos. */
+function invalidateAll(): void {
+  try {
+    for (let i = sessionStorage.length - 1; i >= 0; i--) {
+      const k = sessionStorage.key(i);
+      if (k?.startsWith(PFX)) sessionStorage.removeItem(k);
+    }
+  } catch { /* ignorar */ }
 }
 
 export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
-  // Mutations: forward and invalidate cache for the affected resource on success
+  // Mutations: limpiar TODO el caché y (si son favoritos) notificar subscriptores
   if (req.method !== 'GET') {
     return next(req).pipe(
       tap(event => {
         if (event instanceof HttpResponse && event.status >= 200 && event.status < 300) {
-          // Invalidate caches for the mutated resource
-          invalidate(req.url);
-          // If favorites were changed, also invalidate cached games collections
-          try {
-            if (req.url.includes(API_ROUTES.favorites) || req.url.includes('/favorites')) {
-              invalidate(API_ROUTES.games);
-              // Notify other parts of the app that favorites were mutated (after cache invalidation)
-              try {
-                if (typeof window !== 'undefined' && 'CustomEvent' in window) {
-                  window.dispatchEvent(new CustomEvent('nebula:mutated', { detail: { resource: 'favorites' } }));
-                }
-              } catch { /* ignore */ }
-            }
-          } catch { /* ignore */ }
+          invalidateAll();
+          // Si es una mutación de favoritos, notificar a my-games y componentes similares
+          if (req.url.includes('/favorites')) {
+            try {
+              if (typeof window !== 'undefined' && 'CustomEvent' in window) {
+                window.dispatchEvent(new CustomEvent('nebula:mutated', { detail: { resource: 'favorites' } }));
+              }
+            } catch { /* ignore */ }
+          }
         }
       }),
     );
   }
 
-  // Exclude requests containing user_id (user-specific, mutable data)
+  // Excluir peticiones con user_id (datos mutables por usuario)
   if (req.params.has('user_id') || req.urlWithParams.includes('user_id=')) return next(req);
   if (NO_CACHE_PATTERNS.some(p => req.url.includes(p))) return next(req);
 
