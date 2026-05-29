@@ -1,14 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ChangeDetectorRef, Component, ElementRef, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { LoginFormComponent } from '@auth/components/login-form/login-form.component';
 import { Game } from '@models/game.model';
-import { User } from '@models/user.model';
 import { AuthService } from '@services/auth.service';
 import { GameService } from '@services/game.service';
 import { LoginModalService } from '@services/login-modal.service';
-import { UserService } from '@services/user.service';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -37,23 +35,15 @@ interface NavItem extends MenuItem {
 })
 export class HeaderUi implements OnInit, OnDestroy {
   public auth = inject(AuthService);
-  private userSvc = inject(UserService);
   private router = inject(Router);
   private loginModal = inject(LoginModalService);
   private gameService = inject(GameService);
-  private cdr = inject(ChangeDetectorRef);
   private elRef = inject(ElementRef<HTMLElement>);
 
   private hamburgerBtn: HTMLElement | null = null;
 
   constructor() {
-    // Subscriptions must be created in constructor so takeUntilDestroyed
-    // has access to the injection context and the component's DestroyRef.
-    this.auth.user$.pipe(takeUntilDestroyed()).subscribe(u => {
-      this.currentUser = u;
-      this.currentAvatarUrl = u?.avatar?.imageUrl ?? null;
-      this.cdr.detectChanges();
-    });
+    // loginModal subscription created here so takeUntilDestroyed has the injection context.
     this.loginModal.open$.pipe(takeUntilDestroyed()).subscribe(returnUrl => {
       if (returnUrl === null) {
         this.showLoginModal = false;
@@ -79,8 +69,6 @@ export class HeaderUi implements OnInit, OnDestroy {
   isScrolled = false;
   items: NavItem[] | undefined;
   profileItems: MenuItem[] | undefined;
-  currentUser: User | null = null;
-  currentAvatarUrl: string | null = null;
 
   @HostListener('window:scroll')
   onScroll(): void {
@@ -221,11 +209,9 @@ export class HeaderUi implements OnInit, OnDestroy {
         next: results => {
           this.searchResults = results;
           this.searchLoading = false;
-          this.cdr.markForCheck();
         },
         error: () => {
           this.searchLoading = false;
-          this.cdr.markForCheck();
         },
       });
     }, 300);

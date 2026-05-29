@@ -107,12 +107,12 @@
       </div>
 
       @if (auth.isAuthenticated()) {
-        <span class="header-username">{{ currentUser?.username }}</span>
+        <span class="header-username">{{ auth.user()?.username }}</span>
         <p-avatar
-          [image]="currentAvatarUrl ?? 'assets/default-avatar.png'"
+          [image]="auth.user()?.avatar?.imageUrl ?? 'assets/default-avatar.png'"
           shape="circle"
           styleClass="cursor-pointer border-1 border-300"
-          [attr.aria-label]="'Menú de ' + (currentUser?.username ?? 'perfil')"
+          [attr.aria-label]="'Menú de ' + (auth.user()?.username ?? 'perfil')"
           aria-haspopup="menu"
           tabindex="0"
           (click)="menuPerfil.toggle($event)"
