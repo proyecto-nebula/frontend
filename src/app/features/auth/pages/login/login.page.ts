@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { LoginFormComponent } from '@auth/components/login-form/login-form.component';
+import { LoginFormUi } from '@auth/ui/login-form/login-form.ui';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [LoginFormComponent],
+  imports: [LoginFormUi],
   template: `<app-login-form (loggedIn)="onLoggedIn()"></app-login-form>`,
 })
 export class LoginPage {

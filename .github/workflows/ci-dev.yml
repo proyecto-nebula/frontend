@@ -1,0 +1,31 @@
+name: Continuous Integration - Develop
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+  validate-dev:
+    name: Validar Frontend en Desarrollo
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Instalar dependencias
+      run: npm ci
+
+    - name: Ejecutar Tests Unitarios (Probar Login)
+      run: npm run test -- --watch=false
+
+    - name: Validar Compilación (Build)
+      run: npm run build

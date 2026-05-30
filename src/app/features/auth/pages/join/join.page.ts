@@ -10,11 +10,11 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { RegistrationAccountUi } from '../../ui/registration-account.ui';
-import { RegistrationPaymentUi } from '../../ui/registration-payment.ui';
-import { RegistrationPlanUi } from '../../ui/registration-plan.ui';
-import { RegistrationProfileUi } from '../../ui/registration-profile.ui';
-import { RegistrationVerifyEmailUi } from '../../ui/registration-verify-email.ui';
+import { RegistrationAccountUi } from '../../ui/registration-account/registration-account.ui';
+import { RegistrationPaymentUi } from '../../ui/registration-payment/registration-payment.ui';
+import { RegistrationPlanUi } from '../../ui/registration-plan/registration-plan.ui';
+import { RegistrationProfileUi } from '../../ui/registration-profile/registration-profile.ui';
+import { RegistrationVerifyEmailUi } from '../../ui/registration-verify-email/registration-verify-email.ui';
 // registration success moved to web and shown as modal on home
 import { HttpClient } from '@angular/common/http';
 import { API_ROUTES } from '@config/api.routes';

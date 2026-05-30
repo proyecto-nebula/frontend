@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { LoginFormComponent } from '@auth/components/login-form/login-form.component';
+import { LoginFormUi } from '@auth/ui/login-form/login-form.ui';
 import { Game } from '@models/game.model';
 import { AuthService } from '@services/auth.service';
 import { GameService } from '@services/game.service';
@@ -27,7 +27,7 @@ interface NavItem extends MenuItem {
     AvatarModule,
     TieredMenuModule,
     ButtonModule,
-    LoginFormComponent,
+    LoginFormUi,
     ModalComponent,
     LogoComponent,
   ],
