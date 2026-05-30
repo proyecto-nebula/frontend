@@ -59,7 +59,7 @@ jobs:
 
       - name: Serve production build
         run: |
-          npx http-server dist/frontend -p 4200 -c-1 > server.log 2>&1 &
+          npx http-server dist/frontend/browser -p 4200 -c-1 > server.log 2>&1 &
           for i in $(seq 1 30); do curl --silent --fail http://127.0.0.1:4200/ && break || sleep 1; done
 
       - name: Run Playwright tests
