@@ -1,50 +1,38 @@
 name: Continuous Deployment - Main
 
-# Se activa solo cuando el código entra a main
 on:
   push:
     branches: [ main ]
 
 jobs:
   build-and-deploy:
+    name: Compilación y Publicación en Producción
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout del código
+    - name: Clonar Repositorio
       uses: actions/checkout@v4
 
-    - name: Configurar Node.js
+    - name: Instalar Entorno Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
         cache: 'npm'
 
-    - name: Instalar dependencias
+    - name: Instalación Limpia de Dependencias
       run: npm ci
 
-    - name: Ejecutar Tests Unitarios
+    - name: Suite de Verificación de Regresiones
       run: npm run test -- --watch=false --browsers=ChromeHeadless
 
-    - name: Build de Producción
+    - name: Build con Optimizaciones de Producción
       run: npm run build -- --configuration=production
 
-    # =========================================================================
-    # PASO DE DEPLOY (Elige según la plataforma que uses para el frontend)
-    # =========================================================================
-    
-    # OPCIÓN A: Si usas Vercel
-    - name: Desplegar en Vercel
-      if: success() # Solo se ejecuta si los pasos anteriores (tests/build) pasaron
+    - name: Despliegue Automatizado en Vercel
+      if: success()
       uses: amondnet/vercel-action@v25
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.ORG_ID }}
-        vercel-project-id: ${{ secrets.PROJECT_ID }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
         vercel-args: '--prod'
-
-    # OPCIÓN B: Si usas Railway (Alternativa si tu front requiere build específico)
-    # - name: Desplegar en Railway
-    #   if: success()
-    #   run: npm install -g @railway/cli && railway up
-    #   env:
-    #     RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
