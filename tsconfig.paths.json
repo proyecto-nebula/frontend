@@ -10,6 +10,7 @@
       // Features
       "@features/*": ["./src/app/features/*"],
       "@web/*": ["./src/app/features/web/*"],
+      "@info/*": ["./src/app/features/info/*"],
       "@admin/*": ["./src/app/features/admin/*"],
       "@auth/*": ["./src/app/features/auth/*"],
       "@play/*": ["./src/app/features/play/*"],

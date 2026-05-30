@@ -1,0 +1,65 @@
+@use 'variables' as *;
+
+/* Ensure info page component hosts are visible (workaround for unexpected UA hide) */
+app-legal-notice,
+app-privacy-policy,
+app-cookie-policy,
+app-terms-of-service,
+app-frequently-asked-questions {
+  display: block !important;
+  visibility: visible !important;
+}
+
+/* Info pages content styles (typography & spacing) */
+body.info main {
+  padding-top: 8rem;
+
+  h1 {
+    margin: 0 0 1rem 0;
+    font-weight: 700;
+  }
+
+  h2 {
+    margin: 1.5rem 0 0.75rem 0;
+    font-weight: 700;
+  }
+
+  h3 {
+    margin: 1.25rem 0 0.6rem 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--font-color);
+  }
+
+  p {
+    margin: 0 0 1rem 0;
+    line-height: 1.75;
+    color: rgba(240, 246, 252, 0.92);
+  }
+
+  strong {
+    font-weight: 700;
+  }
+
+  em {
+    font-style: italic;
+    color: rgba(240, 246, 252, 0.92);
+  }
+
+  ul,
+  ol {
+    margin: 0 0 1rem 1.25rem;
+    padding-left: 0.25rem;
+  }
+
+  li {
+    margin: 0.35rem 0;
+  }
+
+  /* Small utility for lead paragraphs */
+  .lead {
+    margin-bottom: 1.5rem;
+    font-size: 1.05rem;
+    color: rgba(240, 246, 252, 0.95);
+  }
+}

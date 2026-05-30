@@ -30,6 +30,10 @@ export const routes: Routes = [
     loadChildren: () => import('@play/play.routes').then(m => m.PLAY_ROUTES),
   },
   {
+    path: 'info',
+    loadChildren: () => import('@info/info.routes').then(m => m.INFO_ROUTES),
+  },
+  {
     path: '**',
     loadComponent: () => import('@shared/error/not-found/not-found.page').then(m => m.NotFoundPage),
   },
