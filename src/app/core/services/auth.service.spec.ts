@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import {
   HttpClientTestingModule,
   HttpTestingController,
@@ -39,7 +39,7 @@ describe('AuthService', () => {
     expect(service.isAuthenticated()).toBe(false);
   });
 
-  it('login() posts credentials and fetches profile', fakeAsync(() => {
+  it('login() posts credentials and fetches profile', async () => {
     let loginDone = false;
 
     service.login('test@nebula.dev', 'secret').subscribe(res => {
@@ -53,27 +53,28 @@ describe('AuthService', () => {
     expect(authReq.request.body).toEqual({ email: 'test@nebula.dev', password: 'secret' });
     authReq.flush({ token: 'jwt-token' });
 
-    tick(); // let tap() run
+    // allow microtasks/promises to settle
+    await Promise.resolve();
 
     // GET /users (profile fetch inside tap)
     const profileReq = http.expectOne(API_ROUTES.users);
     profileReq.flush(mockUser);
 
-    tick();
+    await Promise.resolve();
 
     expect(loginDone).toBe(true);
     expect(service.isAuthenticated()).toBe(true);
     expect(service.user()).toEqual(mockUser);
-  }));
+  });
 
-  it('isAdmin() returns true for roleId 1', fakeAsync(() => {
+  it('isAdmin() returns true for roleId 1', async () => {
     service.login('admin@nebula.dev', 'pass').subscribe();
     http.expectOne(API_ROUTES.auth).flush({ token: 'tok' });
-    tick();
+    await Promise.resolve();
     http.expectOne(API_ROUTES.users).flush({ ...mockUser, roleId: 1 });
-    tick();
+    await Promise.resolve();
     expect(service.isAdmin()).toBe(true);
-  }));
+  });
 
   it('logout() clears user and calls DELETE /auth', () => {
     service.debugSetUser(mockUser);
