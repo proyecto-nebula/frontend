@@ -109,7 +109,6 @@ export class HeaderUi implements OnInit, OnDestroy {
   ngOnInit() {
     this.items = [
       { label: 'Inicio', routerLink: '/' },
-      { label: 'Juegos', routerLink: '/games' },
       { label: 'Descubrir', routerLink: '/discover' },
       { label: 'Mis Juegos', routerLink: '/my-games' },
       { label: 'Mi suscripción', routerLink: '/settings/plan', requiresAuth: true },

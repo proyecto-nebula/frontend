@@ -12,10 +12,6 @@ export const WEB_ROUTES: Routes = [
         loadComponent: () => import('./pages/home/home.page').then(m => m.HomePage),
       },
       {
-        path: 'games',
-        loadComponent: () => import('./pages/game-all/game-all.page').then(m => m.GameAllPage),
-      },
-      {
         path: 'games/:slug',
         loadComponent: () => import('./pages/game-view/game-view.page').then(m => m.GameViewPage),
       },

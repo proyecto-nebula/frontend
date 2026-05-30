@@ -1092,10 +1092,6 @@ body.is-admin .search-input-wrap {
   color: #666;
 }
 
-h/* From: src/app/features/web/pages/game-all/game-all.page.scss */
-h1 {
-  margin-bottom: 2rem;
-}
 
 /* PrimeNG Galleria: rely on PrimeNG's `baseZIndex` and avoid forcing z-index here */
 
@@ -1518,31 +1514,28 @@ body.is-admin .header-wrapper {
   padding: 1rem 0;
   margin: 0;
   color: #fff;
-}
+  .drawer-link {
+    display: flex;
+    align-items: center;
+    padding: 0.85rem 1.5rem;
+    font-size: 0.93rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    transition:
+      background 0.15s,
+      color 0.15s;
+    border-left: 2px solid transparent;
 
-.drawer-link {
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.7);
-  display: flex;
-  align-items: center;
-  padding: 0.85rem 1.5rem;
-  font-size: 0.93rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  transition:
-    background 0.15s,
-    color 0.15s;
-  border-left: 2px solid transparent;
+    &:hover {
+      background: rgba(108, 92, 231, 0.12);
+      color: #fff;
+    }
 
-  &:hover {
-    background: rgba(108, 92, 231, 0.12);
-    color: #fff;
-  }
-
-  &.active {
-    background: rgba(108, 92, 231, 0.18);
-    color: #a78bff;
-    border-left-color: #a78bff;
+    &.active {
+      background: rgba(108, 92, 231, 0.18);
+      color: #a78bff;
+      border-left-color: #a78bff;
+    }
   }
 }
 
