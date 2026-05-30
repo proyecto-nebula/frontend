@@ -6,7 +6,7 @@
     <h2>Acceso a Nebula</h2>
 
     @if (errorMessage()) {
-      <div class="error-banner">
+      <div class="error-banner" role="alert" aria-live="assertive">
         {{ errorMessage() }}
       </div>
     }

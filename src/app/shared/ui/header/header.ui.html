@@ -196,6 +196,6 @@
   </aside>
   <!-- Login modal (opened from header) -->
   <app-modal [(visible)]="showLoginModal" [width]="'420px'">
-    <app-login-form [returnUrl]="loginReturnUrl" (loggedIn)="onLoginSuccess()"></app-login-form>
+    <app-login-form (loggedIn)="onLoginSuccess()"></app-login-form>
   </app-modal>
 </header>

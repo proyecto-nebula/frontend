@@ -1,25 +1,25 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, Input, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '@services/auth.service';
+import { LogoComponent } from '@ui/logo/logo.component';
 import { firstValueFrom } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-import { LogoComponent } from '../../../../shared/ui/logo/logo.component';
 
 @Component({
   selector: 'app-login-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, LogoComponent],
-  templateUrl: './login-form.component.html',
+  templateUrl: './login-form.ui.html',
 })
-export class LoginFormComponent {
+export class LoginFormUi {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
 
   loading = signal(false);
   errorMessage = signal('');
 
-  @Input() returnUrl: string | null = null;
+  /** Emits after a successful login so the parent (page or modal) can react. */
   @Output() loggedIn = new EventEmitter<void>();
 
   loginForm = this.fb.nonNullable.group({
@@ -34,14 +34,12 @@ export class LoginFormComponent {
     this.loading.set(true);
     this.errorMessage.set('');
 
-    const credentials = this.loginForm.getRawValue();
+    const { email, password } = this.loginForm.getRawValue();
 
     try {
-      const response = await firstValueFrom(this.auth.login(credentials.email, credentials.password));
+      const response = await firstValueFrom(this.auth.login(email, password));
 
       if (response?.token) {
-        // AuthService handles storing token and fetching profile.
-        // Notify parent so it can decide whether to navigate or close modal.
         this.loggedIn.emit();
       } else {
         this.errorMessage.set('Respuesta inesperada del servidor');
