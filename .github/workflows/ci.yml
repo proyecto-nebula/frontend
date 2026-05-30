@@ -39,7 +39,7 @@ jobs:
     name: Frontend — E2E (Playwright)
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.40.0-jammy
+      image: mcr.microsoft.com/playwright:v1.60.0-jammy
     steps:
       - name: Checkout
         uses: actions/checkout@v4
