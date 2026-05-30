@@ -1,10 +1,10 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withViewTransitions } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
-import { cacheInterceptor } from '@interceptors/cache.interceptor';
 import { authInterceptor } from '@interceptors/auth.interceptor';
+import { cacheInterceptor } from '@interceptors/cache.interceptor';
 import { httpErrorInterceptor } from '@interceptors/http-error.interceptor';
 import Aura from '@primeuix/themes/aura';
 import { providePrimeNG } from 'primeng/config';
@@ -14,12 +14,11 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withViewTransitions()),
-    provideHttpClient(
-      withInterceptors([cacheInterceptor, httpErrorInterceptor, authInterceptor]),
-    ),
+    provideHttpClient(withInterceptors([cacheInterceptor, httpErrorInterceptor, authInterceptor])),
     provideAnimationsAsync(),
+    // CACHÉ DESACTIVADA — para reactivar: cambiar enabled a !isDevMode()
     provideServiceWorker('ngsw-worker.js', {
-      enabled: !isDevMode(),
+      enabled: false,
       registrationStrategy: 'registerWhenStable:30000',
     }),
     providePrimeNG({
