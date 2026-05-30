@@ -1,5 +1,5 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withViewTransitions } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -16,9 +16,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withViewTransitions()),
     provideHttpClient(withInterceptors([cacheInterceptor, httpErrorInterceptor, authInterceptor])),
     provideAnimationsAsync(),
-    // CACHÉ DESACTIVADA — para reactivar: cambiar enabled a !isDevMode()
     provideServiceWorker('ngsw-worker.js', {
-      enabled: false,
+      enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
     }),
     providePrimeNG({

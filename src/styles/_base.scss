@@ -321,6 +321,7 @@ body main {
   padding: 1.25rem 0;
   font-size: 0.95rem;
   margin-top: 6rem;
+  padding-inline: var(--page-width);
 
   .footer-inner {
     display: flex;
@@ -329,7 +330,6 @@ body main {
     gap: 1rem;
     max-width: var(--page-max);
     margin: 0 auto;
-    padding: 0 var(--page-gutter);
   }
 
   .footer-left {
