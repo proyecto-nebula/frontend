@@ -40,13 +40,13 @@ export class FavoritesService {
 
   addFavorite(userId: number, gameId: number): Observable<any> {
     return this.http.post(API_ROUTES.favorites, { user_id: userId, game_id: gameId }).pipe(
-      tap(() => this.changed$.next()),
+      tap(() => { this.changed$.next(); this.invalidateSwCache(); }),
     );
   }
 
   removeFavorite(gameId: number): Observable<any> {
     return this.http.delete(`${API_ROUTES.favorites}/${gameId}`).pipe(
-      tap(() => this.changed$.next()),
+      tap(() => { this.changed$.next(); this.invalidateSwCache(); }),
     );
   }
 
@@ -54,5 +54,21 @@ export class FavoritesService {
     return this.http
       .get<FavoriteEntry[]>(`${API_ROUTES.favorites}?user_id=${userId}`)
       .pipe(catchError(() => of([])));
+  }
+
+  /**
+   * Borra las entradas de datos del Service Worker para evitar que sirva
+   * respuestas antiguas de la API tras añadir/quitar un favorito.
+   * Solo elimina caches de datos (ngsw:db:*), no los de assets estáticos.
+   */
+  private invalidateSwCache(): void {
+    if (typeof window === 'undefined' || !('caches' in window)) return;
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key =>
+          key.startsWith('ngsw:db:') ? caches.delete(key) : Promise.resolve(false),
+        ),
+      ),
+    );
   }
 }

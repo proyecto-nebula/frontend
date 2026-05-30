@@ -27,5 +27,35 @@
       }
     }
   ],
-  "dataGroups": []
+  "dataGroups": [
+    {
+      "name": "public-static",
+      "urls": [
+        "https://backend-production-a381.up.railway.app/api/v1/plans**",
+        "https://backend-production-a381.up.railway.app/api/v1/categories**",
+        "https://backend-production-a381.up.railway.app/api/v1/pegi**",
+        "https://backend-production-a381.up.railway.app/api/v1/studios**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 50,
+        "maxAge": "10m",
+        "timeout": "5s"
+      }
+    },
+    {
+      "name": "igdb-cdn",
+      "urls": ["https://images.igdb.com/**"],
+      "cacheConfig": { "strategy": "performance", "maxSize": 200, "maxAge": "7d" }
+    },
+    {
+      "name": "steam-cdn",
+      "urls": [
+        "https://cdn.akamai.steamstatic.com/**",
+        "https://steamcdn-a.akamaihd.net/**",
+        "https://store.akamai.steamstatic.com/**"
+      ],
+      "cacheConfig": { "strategy": "performance", "maxSize": 300, "maxAge": "7d" }
+    }
+  ]
 }
