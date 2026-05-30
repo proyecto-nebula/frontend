@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  plugins: [tsconfigPaths({ root: process.cwd() })],
   resolve: {
     alias: {
       '@core': path.resolve(__dirname, 'src/app/core'),

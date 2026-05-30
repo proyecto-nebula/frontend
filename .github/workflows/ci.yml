@@ -54,7 +54,8 @@ jobs:
       - name: Install Playwright
         run: |
           npm install --no-save --no-audit @playwright/test@1.40.0
-          npx playwright install --with-deps
+          npx playwright install-deps
+          npx playwright install
 
       - name: Build production
         run: |
