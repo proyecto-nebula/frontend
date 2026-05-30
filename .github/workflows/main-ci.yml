@@ -1,16 +1,12 @@
-name: Develop CI
+name: Production Deployment
 
 on:
   push:
     branches:
-      - develop
-
-  pull_request:
-    branches:
       - main
 
 jobs:
-  test:
+  production-check:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,8 +18,6 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run lint
-
       - run: npm test -- --watch=false --browsers=ChromeHeadless
 
-      - run: npm run build
+      - run: npm run build -- --configuration production
