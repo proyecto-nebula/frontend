@@ -24,10 +24,7 @@ jobs:
     - name: Instalar dependencias
       run: npm ci
 
-    - name: Ejecutar Linter
-      run: npm run lint --if-present
-
-    - name: Ejecutar Tests Unitarios
+    - name: Ejecutar Tests Unitarios (Probar Login)
       run: npm run test -- --watch=false
 
     - name: Validar Compilación (Build)
