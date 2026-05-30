@@ -1,12 +1,13 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderUi } from '@web/ui/header/header.ui';
+import { HeaderUi } from '@ui/header/header.ui';
+import { FooterUi } from '@ui/footer/footer.ui';
 
 @Component({
   selector: 'app-web-layout',
   standalone: true,
-  imports: [RouterOutlet, HeaderUi],
+  imports: [RouterOutlet, HeaderUi, FooterUi],
   templateUrl: './web.layout.html',
 })
 export class WebLayout implements OnInit, OnDestroy {

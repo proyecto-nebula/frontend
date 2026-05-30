@@ -11,8 +11,8 @@ import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { TieredMenuModule } from 'primeng/tieredmenu';
-import { LogoComponent } from '../../../../shared/ui/logo/logo.component';
-import { SharedUiModule } from '../../../../shared/ui/ui.module';
+import { LogoComponent } from '@ui/logo/logo.component';
+import { ModalComponent } from '@ui/modal/modal.component';
 
 interface NavItem extends MenuItem {
   requiresAuth?: boolean;
@@ -28,7 +28,7 @@ interface NavItem extends MenuItem {
     TieredMenuModule,
     ButtonModule,
     LoginFormComponent,
-    SharedUiModule,
+    ModalComponent,
     LogoComponent,
   ],
   templateUrl: './header.ui.html',

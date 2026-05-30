@@ -4,17 +4,17 @@ import { HeaderUi } from '@ui/header/header.ui';
 import { FooterUi } from '@ui/footer/footer.ui';
 
 @Component({
-  selector: 'app-settings-layout',
+  selector: 'app-info-layout',
   standalone: true,
   imports: [RouterOutlet, HeaderUi, FooterUi],
-  templateUrl: './settings.layout.html',
+  templateUrl: './info.layout.html',
 })
-export class SettingsLayout implements OnDestroy {
+export class InfoLayout implements OnDestroy {
   constructor() {
-    document.body.classList.add('settings');
+    document.body.classList.add('info');
   }
 
   ngOnDestroy(): void {
-    document.body.classList.remove('settings');
+    document.body.classList.remove('info');
   }
 }
