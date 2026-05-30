@@ -8,10 +8,16 @@ export default defineConfig({
   },
   fullyParallel: false,
   use: {
-    baseURL: 'http://127.0.0.1:4200',
+    baseURL: 'http://localhost:4200',
     headless: true,
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
+  },
+  webServer: {
+    command: 'npm run start',
+    url: 'http://localhost:4200',
+    timeout: 120_000,
+    reuseExistingServer: !process.env.CI,
   },
   projects: [
     {
