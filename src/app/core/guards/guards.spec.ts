@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject } from 'rxjs';
@@ -37,40 +37,43 @@ describe('authGuard', () => {
     });
   });
 
-  it('allows access when authenticated', fakeAsync(() => {
+  it('allows access when authenticated', async () => {
     vi.mocked(authMock.isAuthenticated!).mockReturnValue(true);
     let result: any;
-    runGuard(authGuard, fakeRoute, fakeState('/dashboard')).subscribe(
+    const sub = runGuard(authGuard, fakeRoute, fakeState('/dashboard')).subscribe(
       (v: any) => (result = v),
     );
     loadedSubject.next(true);
-    tick();
+    await Promise.resolve();
     expect(result).toBe(true);
-  }));
+    sub.unsubscribe();
+  });
 
-  it('redirects to /auth/login when not authenticated', fakeAsync(() => {
+  it('redirects to /auth/login when not authenticated', async () => {
     vi.mocked(authMock.isAuthenticated!).mockReturnValue(false);
     let result: any;
-    runGuard(authGuard, fakeRoute, fakeState('/dashboard')).subscribe(
+    const sub = runGuard(authGuard, fakeRoute, fakeState('/dashboard')).subscribe(
       (v: any) => (result = v),
     );
     loadedSubject.next(true);
-    tick();
+    await Promise.resolve();
     expect(result).toBeInstanceOf(UrlTree);
     expect(result.toString()).toContain('/auth/login');
-  }));
+    sub.unsubscribe();
+  });
 
-  it('waits for loaded$ before deciding', fakeAsync(() => {
+  it('waits for loaded$ before deciding', async () => {
     vi.mocked(authMock.isAuthenticated!).mockReturnValue(true);
     let emitted = false;
-    runGuard(authGuard, fakeRoute, fakeState('/x')).subscribe(() => (emitted = true));
-    tick();
+    const sub = runGuard(authGuard, fakeRoute, fakeState('/x')).subscribe(() => (emitted = true));
+    await Promise.resolve();
     expect(emitted).toBe(false); // still waiting
 
     loadedSubject.next(true);
-    tick();
+    await Promise.resolve();
     expect(emitted).toBe(true);
-  }));
+    sub.unsubscribe();
+  });
 });
 
 describe('guestGuard', () => {

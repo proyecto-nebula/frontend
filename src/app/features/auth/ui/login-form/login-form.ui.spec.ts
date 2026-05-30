@@ -1,8 +1,8 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { LoginFormUi } from './login-form.ui';
+// Import component dynamically in beforeEach so test-setup can resolve external templates first.
 import { AuthService } from '@services/auth.service';
 import { API_ROUTES } from '@config/api.routes';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -10,11 +10,29 @@ import { of, throwError } from 'rxjs';
 
 describe('LoginFormUi', () => {
   let fixture: any;
-  let component: LoginFormUi;
+  let component: any;
+  let LoginFormUi: any;
   let authService: AuthService;
   let http: HttpTestingController;
 
   beforeEach(async () => {
+    const mod = await import('./login-form.ui');
+    LoginFormUi = mod.LoginFormUi;
+
+    // After importing the component, ask Angular to resolve component resources
+    // (use internal ɵresolveComponentResources if needed) before configuring TestBed.
+    try {
+      const core: any = await import('@angular/core');
+      const resolveFn = core.resolveComponentResources || core.ɵresolveComponentResources || core['ɵresolveComponentResources'];
+      if (typeof resolveFn === 'function') {
+        // Prefer the global fetch (we polyfill it in test-setup to read local files).
+        await resolveFn((globalThis as any).fetch);
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn('Could not run resolveComponentResources from spec:', e && e.message ? e.message : e);
+    }
+
     await TestBed.configureTestingModule({
       imports: [LoginFormUi, ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule],
     }).compileComponents();
@@ -49,63 +67,56 @@ describe('LoginFormUi', () => {
     expect(btn.disabled).toBe(false);
   });
 
-  it('shows error banner on 401', fakeAsync(async () => {
+  it('shows error banner on 401', async () => {
     vi.spyOn(authService, 'login').mockReturnValue(
       throwError(() => ({ status: 401, error: {} })),
     );
     component.loginForm.setValue({ email: 'x@y.com', password: 'wrong', rememberMe: false });
 
     await component.onSubmit();
-    tick();
+    // let microtasks settle
+    await Promise.resolve();
     fixture.detectChanges();
 
     const banner: HTMLElement = fixture.nativeElement.querySelector('.error-banner');
     expect(banner).toBeTruthy();
     expect(banner.textContent).toContain('incorrectos');
-  }));
+  });
 
-  it('shows CORS error on status 0', fakeAsync(async () => {
+  it('shows CORS error on status 0', async () => {
     vi.spyOn(authService, 'login').mockReturnValue(
       throwError(() => ({ status: 0, error: {} })),
     );
     component.loginForm.setValue({ email: 'x@y.com', password: 'p', rememberMe: false });
-
     await component.onSubmit();
-    tick();
-
+    await Promise.resolve();
     expect(component.errorMessage()).toContain('CORS');
-  }));
+  });
 
-  it('emits loggedIn on success', fakeAsync(async () => {
+  it('emits loggedIn on success', async () => {
     vi.spyOn(authService, 'login').mockReturnValue(of({ token: 'tok' } as any));
     const emitSpy = vi.spyOn(component.loggedIn, 'emit');
     component.loginForm.setValue({ email: 'a@b.com', password: 'p', rememberMe: false });
-
     await component.onSubmit();
-    tick();
-
+    await Promise.resolve();
     expect(emitSpy).toHaveBeenCalled();
-  }));
+  });
 
-  it('loading resets to false after submit', fakeAsync(async () => {
+  it('loading resets to false after submit', async () => {
     vi.spyOn(authService, 'login').mockReturnValue(of({ token: 'tok' } as any));
     component.loginForm.setValue({ email: 'a@b.com', password: 'p', rememberMe: false });
-
     await component.onSubmit();
-    tick();
-
+    await Promise.resolve();
     expect(component.loading()).toBe(false);
-  }));
+  });
 
-  it('shows server error message for other status codes', fakeAsync(async () => {
+  it('shows server error message for other status codes', async () => {
     vi.spyOn(authService, 'login').mockReturnValue(
       throwError(() => ({ status: 500, error: { message: 'DB error' } })),
     );
     component.loginForm.setValue({ email: 'x@y.com', password: 'p', rememberMe: false });
-
     await component.onSubmit();
-    tick();
-
+    await Promise.resolve();
     expect(component.errorMessage()).toContain('DB error');
-  }));
+  });
 });
