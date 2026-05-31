@@ -44,7 +44,7 @@ export class AdminSecurityLogPage implements OnInit {
 
   load(): void {
     this.loading.set(true);
-    this.http.get<LogEntry[]>(`${API_ROUTES.logs}?cache=false`).subscribe({
+    this.http.get<LogEntry[]>(API_ROUTES.logs).subscribe({
       next: data => {
         this.entries.set(data ?? []);
         this.loading.set(false);

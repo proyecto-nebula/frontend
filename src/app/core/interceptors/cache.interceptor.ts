@@ -26,12 +26,11 @@ export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
 
   const isGetRequest = req.method === 'GET';
   const isApiRequest = req.url.includes('/api/v1/');
-  const shouldSkipCache = req.params.has('cache') && req.params.get('cache') === 'false';
   const isAdminList = req.params.has('all') && req.params.get('all') === 'true'; // NUNCA cachear listas de admin
   
-  // NUNCA cachear si tiene user_id, ?all=true, o está explícitamente desactivado
+  // NUNCA cachear si tiene user_id o es lista de admin
   const hasUserId = req.params.has('user_id');
-  if (!isApiRequest || shouldSkipCache || isAdminList) {
+  if (!isApiRequest || hasUserId || isAdminList) {
     return next(req);
   }
 

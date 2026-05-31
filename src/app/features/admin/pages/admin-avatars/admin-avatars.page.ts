@@ -66,7 +66,7 @@ export class AdminAvatarsPage implements OnInit {
   }
 
   loadList(): void {
-    this.http.get<AvatarItem[]>(`${API_ROUTES.avatars}?cache=false`).subscribe(data => this.items.set(data));
+    this.http.get<AvatarItem[]>(API_ROUTES.avatars).subscribe(data => this.items.set(data));
   }
 
   goCreate(): void {

@@ -102,7 +102,7 @@ export class AdminPlansPage implements OnInit {
   }
 
   loadList(): void {
-    this.http.get<Plan[]>(`${API_ROUTES.plans}?cache=false`).subscribe(data => this.items.set(data));
+    this.http.get<Plan[]>(API_ROUTES.plans).subscribe(data => this.items.set(data));
   }
 
   goCreate(): void {

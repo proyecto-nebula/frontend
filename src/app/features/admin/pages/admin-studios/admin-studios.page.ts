@@ -61,7 +61,7 @@ export class AdminStudiosPage implements OnInit {
   }
 
   loadList(): void {
-    this.http.get<Studio[]>(`${API_ROUTES.studios}?cache=false`).subscribe(data => this.items.set(data));
+    this.http.get<Studio[]>(API_ROUTES.studios).subscribe(data => this.items.set(data));
   }
 
   goCreate(): void {

@@ -66,7 +66,7 @@ export class AdminCategoriesPage implements OnInit {
   }
 
   loadList(): void {
-    this.http.get<CategoryItem[]>(`${API_ROUTES.categories}?cache=false`).subscribe(data => this.items.set(data));
+    this.http.get<CategoryItem[]>(API_ROUTES.categories).subscribe(data => this.items.set(data));
   }
 
   goCreate(): void {

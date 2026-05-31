@@ -67,7 +67,7 @@ export class AdminReportsPage implements OnInit {
   }
 
   loadList(): void {
-    this.http.get<Report[]>(`${API_ROUTES.reports}?cache=false`).subscribe(data => {
+    this.http.get<Report[]>(API_ROUTES.reports).subscribe(data => {
       const list = data ?? [];
       this.items.set(list);
       this.badge.set(list.filter(r => !r.isSolved).length);

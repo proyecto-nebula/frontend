@@ -135,7 +135,7 @@ export class AdminGamesPage implements OnInit {
   }
 
   loadList(): void {
-    this.http.get<Game[]>(`${API_ROUTES.games}?all=true&cache=false`).subscribe(data => this.items.set(data));
+    this.http.get<Game[]>(`${API_ROUTES.games}?all=true`).subscribe(data => this.items.set(data));
   }
 
   goCreate(): void {

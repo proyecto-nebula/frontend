@@ -131,7 +131,7 @@ export class AdminUsersPage implements OnInit {
   }
 
   loadList(): void {
-    this.http.get<User[]>(`${API_ROUTES.users}?list=1&cache=false`).subscribe(data => this.items.set(data ?? []));
+    this.http.get<User[]>(`${API_ROUTES.users}?list=1`).subscribe(data => this.items.set(data ?? []));
   }
 
   goCreate(): void { this.router.navigate(['/admin/users/new']); }
