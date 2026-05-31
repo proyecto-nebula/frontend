@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { API_ROUTES } from '@config/api.routes';
@@ -29,6 +29,15 @@ export class AdminHeaderUi implements OnInit {
     ),
     { initialValue: this.router.url.startsWith('/admin') },
   );
+
+  // Mostrar el nombre del rol en la barra (Admin o Editor)
+  readonly roleName = computed(() => {
+    const u = this.auth.user();
+    if (u?.role?.name) return u.role.name;
+    if (this.auth.isAdmin()) return 'Admin';
+    if (this.auth.isEditor()) return 'Editor';
+    return 'Admin';
+  });
 
   ngOnInit(): void {
     this.http.get<{ id: number }[]>(`${API_ROUTES.reports}?is_solved=0`).subscribe({

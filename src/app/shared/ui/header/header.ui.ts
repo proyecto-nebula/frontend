@@ -113,8 +113,10 @@ export class HeaderUi implements OnInit, OnDestroy {
       { label: 'Inicio', routerLink: '/' },
       { label: 'Descubrir', routerLink: '/discover' },
       { label: 'Próximos lanzamientos', routerLink: '/releases' },
-      { label: 'Mis Juegos', routerLink: '/my-games' },
-      { label: 'Mi suscripción', routerLink: '/settings/plan', requiresAuth: true },
+      // Mostrar 'Mis Juegos' solo a usuarios logueados
+      { label: 'Mis Juegos', routerLink: '/my-games', requiresAuth: true },
+      // 'Mi suscripción' debe estar visible aun cuando no estés logueado
+      { label: 'Mi suscripción', routerLink: '/settings/plan', requiresAuth: false },
     ];
 
     this.profileItems = [

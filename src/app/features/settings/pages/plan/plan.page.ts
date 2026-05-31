@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { RegistrationPaymentUi } from '@auth/ui/registration-payment/registration-payment.ui';
 import { RegistrationPlanUi } from '@auth/ui/registration-plan/registration-plan.ui';
 import { API_ROUTES } from '@config/api.routes';
@@ -15,7 +15,7 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-settings-plan-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RegistrationPlanUi, RegistrationPaymentUi],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, RegistrationPlanUi, RegistrationPaymentUi],
   templateUrl: './plan.page.html',
 })
 export class PlanPage implements OnInit {
@@ -25,7 +25,7 @@ export class PlanPage implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
 
-  private readonly currentUser = toSignal(this.authService.user$);
+  readonly currentUser = toSignal(this.authService.user$);
 
   readonly plans = signal<Plan[]>([]);
   readonly showPayment = signal(false);
