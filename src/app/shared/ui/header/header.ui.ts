@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, effect, inject, OnDestroy, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
 import { LoginFormUi } from '@auth/ui/login-form/login-form.ui';
@@ -59,6 +59,13 @@ export class HeaderUi implements OnInit, OnDestroy {
         this.showLoginModal = true;
       }
     });
+
+    // Rebuild profileItems whenever auth state changes
+    effect(() => {
+      this.auth.isAuthenticated(); // Track auth state
+      this.auth.isUser?.(); // Track role changes
+      this.buildProfileItems(); // Rebuild menu
+    });
   }
 
   // Quick search
@@ -74,6 +81,7 @@ export class HeaderUi implements OnInit, OnDestroy {
   drawerVisible = false;
   isScrolled = false;
   items: NavItem[] | undefined;
+  profileItems: MenuItem[] | undefined;
 
   @HostListener('window:scroll')
   onScroll(): void {
@@ -123,10 +131,12 @@ export class HeaderUi implements OnInit, OnDestroy {
       // Planes sólo para usuarios anónimos
       { label: 'Planes', routerLink: '/plans', onlyForAnon: true },
     ];
+    // Initial build of profile items
+    this.buildProfileItems();
   }
 
-  /**Construir dynamically profile items basado en estado de auth */
-  getProfileItems(): MenuItem[] {
+  /** Build profile items based on current auth state */
+  private buildProfileItems(): void {
     const items: MenuItem[] = [{ label: 'Mi Perfil', icon: 'pi pi-user' }];
     if (this.auth.isUser && this.auth.isUser()) {
       items.push({ label: 'Mi suscripción', icon: 'pi pi-credit-card', routerLink: '/settings/plan' });
@@ -134,7 +144,7 @@ export class HeaderUi implements OnInit, OnDestroy {
     items.push({ label: 'Ajustes', icon: 'pi pi-cog', routerLink: '/settings' });
     items.push({ separator: true });
     items.push({ label: 'Cerrar Sesión', icon: 'pi pi-power-off', command: () => this.logout() });
-    return items;
+    this.profileItems = items;
   }
 
   toggleDrawer(): void {

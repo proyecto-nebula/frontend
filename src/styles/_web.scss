@@ -1001,18 +1001,16 @@ body.is-admin .search-input-wrap {
 
 /* Play / CTA buttons */
 .btn-play {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-block;
   padding: 1rem 2.75rem;
-  border-radius: 8px;
-  font-size: 1rem;
+  border: none;
+  border-radius: var(--rounded-corners);
+  font-size: 1.05rem;
   font-weight: 700;
   cursor: pointer;
   transition:
     opacity 0.2s,
     transform 0.1s;
-  margin: 1rem 0 0.5rem;
 
   &:hover {
     opacity: 0.88;
@@ -1050,34 +1048,6 @@ body.is-admin .search-input-wrap {
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-}
-
-/* Play button loading state: fade text and show spinner */
-.btn-play {
-  position: relative;
-
-  .btn-text {
-    display: inline-block;
-    transition: opacity 0.22s ease;
-  }
-
-  &.loading .btn-text {
-    opacity: 0;
-  }
-
-  .btn-spinner {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    transition: opacity 0.18s ease;
-    pointer-events: none;
-  }
-
-  &.loading .btn-spinner {
-    opacity: 1;
   }
 }
 
