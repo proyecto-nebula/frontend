@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ActivatedRoute, Router } from '@angular/router';
 import { API_ROUTES } from '@config/api.routes';
 import { User } from '@models/user.model';
+import { MutationService } from '@services/mutation.service';
 import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { ToastService } from '@ui/toast/toast.service';
 import { TableModule } from 'primeng/table';
@@ -26,6 +27,7 @@ export class AdminUsersPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private toastSvc = inject(ToastService);
+  private mutations = inject(MutationService);
 
   items = signal<User[]>([]);
   editingId = signal<number | null>(null);
@@ -50,6 +52,15 @@ export class AdminUsersPage implements OnInit {
   ];
 
   form!: FormGroup;
+
+  constructor() {
+    // ✅ SUSCRIPCIÓN PERMANENTE: siempre activa
+    this.mutations.onMutation('users').subscribe(() => {
+      if (this.viewMode() === 'list') {
+        this.loadList();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -84,6 +95,7 @@ export class AdminUsersPage implements OnInit {
         this.editingId.set(null);
         this.viewMode.set('list');
         this.loadList();
+        // ✅ Nota: Suscripción permanente ya está en constructor
       }
     });
   }
@@ -119,7 +131,7 @@ export class AdminUsersPage implements OnInit {
   }
 
   loadList(): void {
-    this.http.get<User[]>(`${API_ROUTES.users}?list=1`).subscribe(data => this.items.set(data ?? []));
+    this.http.get<User[]>(`${API_ROUTES.users}?list=1&cache=false`).subscribe(data => this.items.set(data ?? []));
   }
 
   goCreate(): void { this.router.navigate(['/admin/users/new']); }

@@ -87,7 +87,7 @@
                     @for (game of searchResults; track game.id) {
                       <a [routerLink]="['/games', game.slug]" class="search-result" role="option" (click)="closeSearch()">
                         <div class="search-result__img">
-                          <img [src]="game.bannerUrl || game.coverUrl" [alt]="game.title" loading="lazy" />
+                          <img appLazyLoad [src]="game.bannerUrl || game.coverUrl" [alt]="game.title" [loading]="'lazy'" />
                         </div>
                         <div class="search-result__info">
                           <span class="search-result__name">{{ game.title }}</span>

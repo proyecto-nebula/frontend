@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { API_ROUTES } from '@config/api.routes';
 import { Report } from '@models/report.model';
+import { MutationService } from '@services/mutation.service';
 import { ReportsBadgeService } from '@services/reports-badge.service';
 import { ToastService } from '@ui/toast/toast.service';
 import { TableModule } from 'primeng/table';
@@ -22,6 +23,7 @@ export class AdminReportsPage implements OnInit {
   private router = inject(Router);
   private toast = inject(ToastService);
   private badge = inject(ReportsBadgeService);
+  private mutations = inject(MutationService);
 
   items = signal<Report[]>([]);
   viewMode = signal<'list' | 'form'>('list');
@@ -34,6 +36,15 @@ export class AdminReportsPage implements OnInit {
     3: 'Problema de audio',
     4: 'Otro',
   };
+
+  constructor() {
+    // ✅ SUSCRIPCIÓN PERMANENTE: siempre activa
+    this.mutations.onMutation('reports').subscribe(() => {
+      if (this.viewMode() === 'list') {
+        this.loadList();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -50,12 +61,13 @@ export class AdminReportsPage implements OnInit {
         this.editingItem.set(null);
         this.viewMode.set('list');
         this.loadList();
+        // ✅ Nota: Suscripción permanente ya está en constructor
       }
     });
   }
 
   loadList(): void {
-    this.http.get<Report[]>(API_ROUTES.reports).subscribe(data => {
+    this.http.get<Report[]>(`${API_ROUTES.reports}?cache=false`).subscribe(data => {
       const list = data ?? [];
       this.items.set(list);
       this.badge.set(list.filter(r => !r.isSolved).length);

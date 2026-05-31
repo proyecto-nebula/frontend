@@ -270,7 +270,7 @@
                 <!-- Banner -->
                 <div class="discover-card__banner">
                   @if (game.bannerUrl) {
-                    <img [src]="game.bannerUrl" [alt]="" loading="lazy" />
+                    <img appLazyLoad [src]="game.bannerUrl" [loading]="'lazy'" [alt]="" />
                   } @else {
                     <div class="discover-card__no-img"><i class="pi pi-image" aria-hidden="true"></i></div>
                   }

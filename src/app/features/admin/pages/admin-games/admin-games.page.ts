@@ -8,6 +8,7 @@ import { Game } from '@models/game.model';
 import { Pegi } from '@models/pegi.model';
 import { Studio } from '@models/studio.model';
 import { ToastService } from '@ui/toast/toast.service';
+import { MutationService } from '@services/mutation.service';
 import { TableModule } from 'primeng/table';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 import { catchError, forkJoin, of } from 'rxjs';
@@ -24,6 +25,7 @@ export class AdminGamesPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private toastSvc = inject(ToastService);
+  private mutations = inject(MutationService);
 
   // List
   items = signal<Game[]>([]);
@@ -46,6 +48,17 @@ export class AdminGamesPage implements OnInit {
     heroUrl: 'https://cdn.akamai.steamstatic.com/steam/apps/{id}/library_hero.jpg',
     logoUrl: 'https://cdn.akamai.steamstatic.com/steam/apps/{id}/logo.png',
   };
+
+  constructor() {
+    // ✅ SUSCRIPCIÓN PERMANENTE: siempre activa, no solo cuando ves la lista
+    this.mutations.onMutation('games').subscribe(() => {
+      console.log('🔄 Evento de mutación recibido en admin-games');
+      if (this.viewMode() === 'list') {
+        console.log('📋 Modo lista activo, recargando datos...');
+        this.loadList();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -77,6 +90,7 @@ export class AdminGamesPage implements OnInit {
         this.editingId.set(null);
         this.viewMode.set('list');
         this.loadList();
+        // ✅ Nota: Suscripción permanente ya está en constructor
       }
     });
   }
@@ -121,7 +135,7 @@ export class AdminGamesPage implements OnInit {
   }
 
   loadList(): void {
-    this.http.get<Game[]>(`${API_ROUTES.games}?all=true`).subscribe(data => this.items.set(data));
+    this.http.get<Game[]>(`${API_ROUTES.games}?all=true&cache=false`).subscribe(data => this.items.set(data));
   }
 
   goCreate(): void {

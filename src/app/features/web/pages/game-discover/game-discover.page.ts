@@ -9,6 +9,7 @@ import { Category } from '@models/category.model';
 import { Game } from '@models/game.model';
 import { Pegi } from '@models/pegi.model';
 import { Studio } from '@models/studio.model';
+import { LazyLoadDirective } from '@directives/lazy-load.directive';
 import { catchError, forkJoin, of } from 'rxjs';
 
 type PublishedPeriod = 'any' | 'year' | 'month' | 'week';
@@ -42,7 +43,7 @@ const PAGE_SIZE = 20;
 @Component({
   selector: 'app-game-discover',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, LazyLoadDirective],
   templateUrl: './game-discover.page.html',
 })
 export class GameDiscoverPage implements OnInit {

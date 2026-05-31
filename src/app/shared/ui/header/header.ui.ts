@@ -7,6 +7,7 @@ import { Game } from '@models/game.model';
 import { AuthService } from '@services/auth.service';
 import { GameService } from '@services/game.service';
 import { LoginModalService } from '@services/login-modal.service';
+import { LazyLoadDirective } from '@directives/lazy-load.directive';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -30,6 +31,7 @@ interface NavItem extends MenuItem {
     LoginFormUi,
     ModalComponent,
     LogoComponent,
+    LazyLoadDirective,
   ],
   templateUrl: './header.ui.html',
 })
@@ -203,8 +205,10 @@ export class HeaderUi implements OnInit, OnDestroy {
     this.searchResults = [];
     clearTimeout(this.searchTimer);
     if (value.length < 3) return;
+    
     this.searchLoading = true;
     this.searchTimer = setTimeout(() => {
+      // Debounce completado: hacer búsqueda
       this.gameService.searchGames(value).subscribe({
         next: results => {
           this.searchResults = results;

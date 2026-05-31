@@ -4,6 +4,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { API_ROUTES } from '@config/api.routes';
+import { MutationService } from '@services/mutation.service';
 import { TableModule } from 'primeng/table';
 
 interface AvatarItem {
@@ -23,12 +24,22 @@ export class AdminAvatarsPage implements OnInit {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private mutations = inject(MutationService);
 
   items = signal<AvatarItem[]>([]);
   editingId = signal<number | null>(null);
   saving = signal(false);
   viewMode = signal<'list' | 'form'>('list');
   form!: FormGroup;
+
+  constructor() {
+    // ✅ SUSCRIPCIÓN PERMANENTE: siempre activa
+    this.mutations.onMutation('avatars').subscribe(() => {
+      if (this.viewMode() === 'list') {
+        this.loadList();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -49,12 +60,13 @@ export class AdminAvatarsPage implements OnInit {
         this.editingId.set(null);
         this.viewMode.set('list');
         this.loadList();
+        // ✅ Nota: Suscripción permanente ya está en constructor
       }
     });
   }
 
   loadList(): void {
-    this.http.get<AvatarItem[]>(API_ROUTES.avatars).subscribe(data => this.items.set(data));
+    this.http.get<AvatarItem[]>(`${API_ROUTES.avatars}?cache=false`).subscribe(data => this.items.set(data));
   }
 
   goCreate(): void {
