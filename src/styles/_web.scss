@@ -1,5 +1,35 @@
 /* Consolidated styles for feature: web */
 
+/* Layout: make the web body a column flex container so footer can sit
+   at the bottom even on short pages. The override for `.app-footer`
+   removes the large top margin coming from the base styles. */
+body.web {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+body.web main#main-content {
+  flex: 1 0 auto;
+}
+
+body.web .app-footer {
+  margin-top: 0;
+}
+
+/* Ensure the layout component that actually contains header/main/footer
+   is a column flex container. app-web-layout is the component rendered by
+   the web routes and is the direct parent of the header/main/footer. */
+app-web-layout {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+app-web-layout main#main-content {
+  flex: 1 0 auto;
+}
+
 // Estilos básicos para enlaces (puedes ajustarlos luego)
 a {
   text-decoration: none;
@@ -2929,5 +2959,143 @@ $card-banner-w-xs: 72px;
     min-width: 30px;
     height: 30px;
     font-size: 0.8rem;
+  }
+}
+
+// ─── Releases Page ────────────────────────────────────────────────────────────
+
+.releases-page {
+  padding-bottom: 3rem;
+}
+
+.releases-header {
+  margin-bottom: 2rem;
+
+  &__title {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+}
+
+.releases-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 5rem 2rem;
+  text-align: center;
+  opacity: 0.5;
+
+  &__icon {
+    font-size: 3rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+.releases-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.release-month {
+  &__title {
+    margin: 0 0 1rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    letter-spacing: 0.02em;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+.release-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 400px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.release-item {
+  &__link {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--rounded-corners);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition:
+      background 150ms,
+      border-color 150ms,
+      transform 150ms;
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-2px);
+      opacity: 1;
+    }
+  }
+
+  &__cover {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.3);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 300ms ease;
+    }
+  }
+
+  &__link:hover &__cover img {
+    transform: scale(1.05);
+  }
+
+  &__info {
+    padding: 0.6rem 0.75rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  &__title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.3;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  &__date {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: 500;
   }
 }

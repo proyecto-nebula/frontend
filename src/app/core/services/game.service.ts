@@ -67,6 +67,10 @@ export class GameService {
     return this.getCollection('recommended', { userId, limit });
   }
 
+  getUpcomingReleases(limit = 200) {
+    return this.getCollection('upcoming_releases', { limit });
+  }
+
   // Game-specific collections
   getSimilarGames(slug: string, limit = DEFAULT_LIMIT) {
     return this.getCollection('similar', { slug, limit });

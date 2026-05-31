@@ -24,7 +24,11 @@
     <!-- Primary actions -->
     <div class="game-hero__actions">
       @if (mode === 'detail') {
-        @if (!isLoggedIn) {
+        @if (!game?.isActive) {
+          <button type="button" class="btn-play btn-play--restricted" disabled>
+            Juego no disponible
+          </button>
+        } @else if (!isLoggedIn) {
           <a routerLink="/auth/join" class="btn-play btn-play--register">Regístrate ahora para jugar</a>
         } @else if (!hasPlan) {
           <a routerLink="/settings/plan" class="btn-play btn-play--premium">Hazte premium para jugar</a>

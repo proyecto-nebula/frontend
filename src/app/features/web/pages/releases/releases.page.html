@@ -1,0 +1,43 @@
+<div class="releases-page">
+  <header class="releases-header">
+    <h1 class="releases-header__title">Próximos lanzamientos</h1>
+  </header>
+
+  @if (isLoading()) {
+    <div class="page-spinner"><i class="pi pi-spin pi-spinner"></i></div>
+  } @else if (groups().length === 0) {
+    <div class="releases-empty">
+      <i class="pi pi-calendar releases-empty__icon"></i>
+      <p>No hay lanzamientos próximos disponibles.</p>
+    </div>
+  } @else {
+    <div class="releases-body">
+      @for (group of groups(); track group.monthLabel) {
+        <section class="release-month" [attr.aria-labelledby]="'month-' + group.monthLabel">
+          <h2 class="release-month__title" [id]="'month-' + group.monthLabel">
+            {{ group.monthLabel }}
+          </h2>
+          <ul class="release-list" role="list">
+            @for (game of group.games; track game.id) {
+              <li class="release-item">
+                <a class="release-item__link" [routerLink]="['/games', game.slug]">
+                  <div class="release-item__cover">
+                    <img
+                      [src]="game.coverUrl || game.bannerUrl"
+                      [alt]="game.title"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="release-item__info">
+                    <span class="release-item__title">{{ game.title }}</span>
+                    <span class="release-item__date">{{ game.dayLabel }}</span>
+                  </div>
+                </a>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+  }
+</div>
