@@ -1,27 +1,23 @@
 /* Consolidated styles for feature: web */
 
-/* Layout: use CSS Grid on the layout component to make the footer sticky.
-   This is more robust than relying on flexbox on the body and avoids
-   layout quirks on mobile/embedded contexts. */
-body.web,
-app-web-layout {
-  min-height: 100dvh;
+/* Layout: standard vertical flow with fixed header
+   Header is position:fixed, document scrolls normally.
+   Sticky elements (sidebar) calculate against document scroll. */
+body.web {
+  /* scroll normally with header offset */
+  padding-top: var(--header-height);
 }
 
-/* The layout component contains header / main / footer in that order. */
 app-web-layout {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  min-height: 100dvh;
-  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Ensure the main content sits in the middle row and can scroll internally. */
+/* Header is outside the flow (fixed), so layout is header/main/footer in flex */
 app-web-layout > main#main-content {
-  grid-row: 2;
-  min-height: 0; /* allow children to shrink and enable internal scrolling */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  /* Let document scroll, don't create internal scroll container */
 }
 
 // Estilos básicos para enlaces (puedes ajustarlos luego)
