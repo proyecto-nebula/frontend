@@ -1681,6 +1681,13 @@ body.is-admin .drawer-panel {
   .search-close {
     display: none;
   }
+  
+  @media (max-width: 768px) {
+    /* Show close on mobile only */
+    .search-close {
+      display: inline-flex;
+    }
+  }
 
   /* When the search is open on desktop, show the close button inside the field */
   &.open .search-close {
@@ -1690,14 +1697,26 @@ body.is-admin .drawer-panel {
 }
 
 .search-input {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(108, 92, 231, 0.3);
   border-radius: var(--rounded-corners);
   color: #fff;
-  padding: 6px 12px;
+  padding: 8px 12px;
   font-size: 0.9rem;
   outline: none;
   width: 260px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(108, 92, 231, 0.5);
+  }
+  
+  &:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #6c5ce7;
+    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+  }
   box-sizing: border-box;
 
   &::placeholder {
@@ -2214,6 +2233,25 @@ $card-banner-w-xs: 72px;
 
 .sidebar-close {
   display: none;
+}
+
+// ─── Plans page styling ───────────────────────────────────────────────────────
+
+.plans-intro--centered {
+  text-align: center;
+  max-width: 600px;
+  margin: 1.5rem auto 2rem;
+  padding: 0 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.plans-cta--centered {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  padding: 2rem 1rem;
 }
 
 // ─── Filter sections ──────────────────────────────────────────────────────────
@@ -2871,7 +2909,7 @@ $card-banner-w-xs: 72px;
   }
 
   .sidebar-close {
-    display: inline-flex;
+    display: none;
   }
 
   .meta-pub-mobile {

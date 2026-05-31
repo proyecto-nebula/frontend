@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, effect, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, effect, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
 import { LoginFormUi } from '@auth/ui/login-form/login-form.ui';
@@ -13,7 +13,7 @@ import { ModalComponent } from '@ui/modal/modal.component';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
-import { TieredMenuModule } from 'primeng/tieredmenu';
+import { TieredMenu, TieredMenuModule } from 'primeng/tieredmenu';
 
 interface NavItem extends MenuItem {
   requiresAuth?: boolean;
@@ -47,6 +47,7 @@ export class HeaderUi implements OnInit, OnDestroy {
   private elRef = inject(ElementRef<HTMLElement>);
 
   private hamburgerBtn: HTMLElement | null = null;
+  @ViewChild('menuPerfil') menuPerfil?: TieredMenu;
 
   constructor() {
     // loginModal subscription created here so takeUntilDestroyed has the injection context.
@@ -173,6 +174,12 @@ export class HeaderUi implements OnInit, OnDestroy {
   }
 
   logout() {
+    // Close menus before logout
+    if (this.menuPerfil) {
+      this.menuPerfil.hide();
+    }
+    this.closeDrawer();
+    this.closeSearch();
     this.auth.logout();
     this.router.navigate(['/']);
   }
