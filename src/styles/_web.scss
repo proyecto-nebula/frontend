@@ -1,16 +1,19 @@
-/* Consolidated styles for feature: web */
+/* Consolidated styles for feature: web, settings, info */
 
 /* Layout: standard vertical flow with fixed header
    Header is position:fixed, document scrolls normally.
-   Sticky elements (sidebar) calculate against document scroll. */
+   Sticky elements (sidebar) calculate against document scroll.
+   Footer sticks to bottom of viewport when content is short. */
 body.web,
-body.settings {
+body.settings,
+body.info {
   /* scroll normally with header offset */
   padding-top: var(--header-height);
 }
 
 app-web-layout,
-app-settings-layout {
+app-settings-layout,
+app-info-layout {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -18,7 +21,8 @@ app-settings-layout {
 
 /* Header is outside the flow (fixed), so layout is header/main/footer in flex */
 app-web-layout > main#main-content,
-app-settings-layout > main {
+app-settings-layout > main,
+app-info-layout > main {
   flex: 1;
   /* Let document scroll, don't create internal scroll container */
 }
