@@ -19,6 +19,8 @@ interface NavItem extends MenuItem {
   requiresAuth?: boolean;
   /** Mostrar solo a usuarios 'normales' (no Admin/Editor) */
   onlyForUser?: boolean;
+  /** Mostrar solo a usuarios anónimos */
+  onlyForAnon?: boolean;
 }
 
 @Component({
@@ -115,12 +117,12 @@ export class HeaderUi implements OnInit, OnDestroy {
       { label: 'Inicio', routerLink: '/' },
       { label: 'Descubrir', routerLink: '/discover' },
       { label: 'Próximos lanzamientos', routerLink: '/releases' },
-      // Mostrar 'Mis Juegos' solo a usuarios logueados
-      { label: 'Mis Juegos', routerLink: '/my-games', requiresAuth: true },
+      // Mostrar 'Mis Juegos' solo a usuarios normales (no admin/editor)
+      { label: 'Mis Juegos', routerLink: '/my-games', onlyForUser: true },
       // 'Mi suscripción' solo para usuarios normales (no Admin/Editor)
       { label: 'Mi suscripción', routerLink: '/settings/plan', requiresAuth: true, onlyForUser: true },
-      // Planes al final del menú
-      { label: 'Planes', routerLink: '/plans' },
+      // Planes sólo para usuarios anónimos
+      { label: 'Planes', routerLink: '/plans', onlyForAnon: true },
     ];
 
     // Construir profile menu; incluir 'Mi suscripción' solo para usuarios normales

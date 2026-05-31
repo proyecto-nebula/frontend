@@ -21,7 +21,7 @@
       <nav class="desktop-nav" aria-label="Navegación principal">
         <ul class="nav-list">
           @for (it of items; track it.label) {
-            @if ((!it.requiresAuth || auth.isAuthenticated()) && (!it.onlyForUser || (auth.isAuthenticated() && auth.isUser()))) {
+            @if ((!it.requiresAuth || auth.isAuthenticated()) && (!it.onlyForUser || (auth.isAuthenticated() && auth.isUser())) && (!it.onlyForAnon || !auth.isAuthenticated())) {
               <li class="nav-item" [ngClass]="it.styleClass">
                 <a
                   [routerLink]="it.routerLink"
@@ -158,8 +158,8 @@
   >
     <nav aria-label="Menú móvil">
       <ul class="drawer-list">
-        @for (it of items; track it.label) {
-          @if ((!it.requiresAuth || auth.isAuthenticated()) && (!it.onlyForUser || (auth.isAuthenticated() && auth.isUser()))) {
+            @for (it of items; track it.label) {
+              @if ((!it.requiresAuth || auth.isAuthenticated()) && (!it.onlyForUser || (auth.isAuthenticated() && auth.isUser())) && (!it.onlyForAnon || !auth.isAuthenticated())) {
             <li class="drawer-item">
               <a
                 [routerLink]="it.routerLink"

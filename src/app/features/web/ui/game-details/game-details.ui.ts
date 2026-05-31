@@ -93,6 +93,11 @@ export class GameDetailsUi implements OnChanges {
     return u != null && u.planId != null && Number(u.planId) > 0;
   });
 
+  readonly isAdminOrEditor = computed(() => {
+    const u = this.currentUser();
+    return !!u && (u.roleId === 1 || u.roleId === 2);
+  });
+
   readonly ageRestricted = computed(() => {
     const user = this.currentUser();
     const game = this.game();
