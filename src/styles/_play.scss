@@ -1,5 +1,79 @@
 /* Styles for play feature */
 
+/* (Old overlay removed) */
+
+/* Layout: sticky footer for play page */
+app-play-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+app-play-layout > main {
+  flex: 1;
+  /* Main grows to fill available space */
+}
+
+// ─── Play cinema bars + controls ─────────────────────────────────────────────
+.play-top-block {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5vh;
+  background: #000;
+  z-index: 10050; /* above youtube iframes */
+  pointer-events: auto;
+}
+
+.play-top-inner {
+  margin: 0 auto;
+  height: 100%;
+  position: relative;
+}
+
+.play-close-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 64px;
+  height: 64px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  border: none;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+  z-index: 10051;
+  pointer-events: none;
+}
+
+.play-top-block:hover .play-close-btn,
+.play-close-btn:focus {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.play-bottom-block {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 5vh;
+  background: #000;
+  z-index: 10050;
+  pointer-events: none;
+}
+
 // ─── app-play-game-page ───────────────────────────────────────────────────────
 app-play-game-page {
   display: block;

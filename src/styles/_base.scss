@@ -77,14 +77,16 @@ body.is-admin {
 
 body main {
   padding-inline: var(--page-width);
-  padding-top: var(--padding-main);
+  //padding-top: var(--padding-main);
 }
 
 h1 {
-  margin: 0 0 1rem 0;
-  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1.1;
+  color: rgb(103, 99, 224, 0.5);
   text-align: center;
-  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 // ─── Global buttons ──────────────────────────────────────────────
@@ -336,8 +338,8 @@ h1 {
   border-top: 1px solid rgba(255, 255, 255, 0.04);
   padding: 1.25rem 0;
   font-size: 0.95rem;
-  margin-top: 6rem;
   padding-inline: var(--page-width);
+  margin-top: 2rem; /* Sticky footer in flex layouts */
 
   .footer-inner {
     display: flex;

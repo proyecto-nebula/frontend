@@ -1,25 +1,30 @@
-/* Consolidated styles for feature: web */
+/* Consolidated styles for feature: web, settings, info */
 
-/* Layout: use CSS Grid on the layout component to make the footer sticky.
-   This is more robust than relying on flexbox on the body and avoids
-   layout quirks on mobile/embedded contexts. */
+/* Layout: standard vertical flow with fixed header
+   Header is position:fixed, document scrolls normally.
+   Sticky elements (sidebar) calculate against document scroll.
+   Footer sticks to bottom of viewport when content is short. */
 body.web,
-app-web-layout {
-  min-height: 100dvh;
+body.settings,
+body.info {
+  /* scroll normally with header offset */
+  padding-top: var(--header-height);
 }
 
-/* The layout component contains header / main / footer in that order. */
-app-web-layout {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  min-height: 100dvh;
+app-web-layout,
+app-settings-layout,
+app-info-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Ensure the main content sits in the middle row and can scroll internally. */
-app-web-layout > main#main-content {
-  grid-row: 2;
-  min-height: 0; /* allow children to shrink and enable internal scrolling */
-  overflow: auto;
+/* Header is outside the flow (fixed), so layout is header/main/footer in flex */
+app-web-layout > main#main-content,
+app-settings-layout > main,
+app-info-layout > main {
+  flex: 1;
+  /* Let document scroll, don't create internal scroll container */
 }
 
 // Estilos básicos para enlaces (puedes ajustarlos luego)
@@ -64,19 +69,6 @@ a {
 }
 
 /* Scrollbar styles for WebKit browsers (non-essential visual tweak) */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-}
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.12);
@@ -271,7 +263,7 @@ $featured-wipe-softness: 22% !default;
 }
 
 body.hero main {
-  padding-top: 0;
+  margin-top: calc(var(--header-height) * -1);
 }
 
 /* Game hero - shared component (featured slider + game detail) */
@@ -1011,6 +1003,7 @@ body.is-admin .search-input-wrap {
 .btn-play {
   display: inline-block;
   padding: 1rem 2.75rem;
+  border: none;
   border-radius: var(--rounded-corners);
   font-size: 1.05rem;
   font-weight: 700;
@@ -1688,6 +1681,13 @@ body.is-admin .drawer-panel {
   .search-close {
     display: none;
   }
+  
+  @media (max-width: 768px) {
+    /* Show close on mobile only */
+    .search-close {
+      display: inline-flex;
+    }
+  }
 
   /* When the search is open on desktop, show the close button inside the field */
   &.open .search-close {
@@ -1697,14 +1697,26 @@ body.is-admin .drawer-panel {
 }
 
 .search-input {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(108, 92, 231, 0.3);
   border-radius: var(--rounded-corners);
   color: #fff;
-  padding: 6px 12px;
+  padding: 8px 12px;
   font-size: 0.9rem;
   outline: none;
   width: 260px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(108, 92, 231, 0.5);
+  }
+  
+  &:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #6c5ce7;
+    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+  }
   box-sizing: border-box;
 
   &::placeholder {
@@ -2119,18 +2131,14 @@ $card-banner-w-xs: 72px;
 // ─── Toolbar ─────────────────────────────────────────────────────────────────
 
 .discover-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.5rem;
 
   &__title {
-    margin: 0;
-    font-size: 1.6rem;
-    font-weight: 700;
+    align-self: start;
   }
-
+  top: calc(var(--header-height, 4rem) + 1rem);
+  z-index: 2;
+  will-change: top;
   &__right {
     display: flex;
     align-items: center;
@@ -2142,6 +2150,7 @@ $card-banner-w-xs: 72px;
   font-size: 0.9rem;
   opacity: 0.6;
   white-space: nowrap;
+  display: none;
 }
 
 .discover-filter-btn {
@@ -2224,6 +2233,25 @@ $card-banner-w-xs: 72px;
 
 .sidebar-close {
   display: none;
+}
+
+// ─── Plans page styling ───────────────────────────────────────────────────────
+
+.plans-intro--centered {
+  text-align: center;
+  max-width: 600px;
+  margin: 1.5rem auto 2rem;
+  padding: 0 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.plans-cta--centered {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  padding: 2rem 1rem;
 }
 
 // ─── Filter sections ──────────────────────────────────────────────────────────
@@ -2881,7 +2909,7 @@ $card-banner-w-xs: 72px;
   }
 
   .sidebar-close {
-    display: inline-flex;
+    display: none;
   }
 
   .meta-pub-mobile {
@@ -2971,12 +2999,6 @@ $card-banner-w-xs: 72px;
 
 .releases-header {
   margin-bottom: 2rem;
-
-  &__title {
-    margin: 0;
-    font-size: 1.6rem;
-    font-weight: 700;
-  }
 }
 
 .releases-empty {
@@ -3012,8 +3034,8 @@ $card-banner-w-xs: 72px;
     font-weight: 700;
     text-transform: capitalize;
     letter-spacing: 0.02em;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 }
 

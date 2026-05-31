@@ -9,8 +9,19 @@ import { FooterUi } from '@ui/footer/footer.ui';
   templateUrl: './play.layout.html',
 })
 export class PlayLayout implements OnDestroy {
-  private body = document.body.classList.add('play');
+  constructor() {
+    document.body.classList.add('play');
+  }
+
   ngOnDestroy(): void {
     document.body.classList.remove('play');
+  }
+
+  onClose(): void {
+    try {
+      window.history.back();
+    } catch {
+      // noop
+    }
   }
 }

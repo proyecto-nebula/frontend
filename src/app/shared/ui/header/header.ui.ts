@@ -1,24 +1,26 @@
 import { CommonModule } from '@angular/common';
+import { Component, ElementRef, HostListener, effect, inject, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy, NgZone, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { LoginFormUi } from '@auth/ui/login-form/login-form.ui';
+import { LazyLoadDirective } from '@directives/lazy-load.directive';
 import { Game } from '@models/game.model';
 import { AuthService } from '@services/auth.service';
 import { GameService } from '@services/game.service';
 import { LoginModalService } from '@services/login-modal.service';
-import { LazyLoadDirective } from '@directives/lazy-load.directive';
+import { LogoComponent } from '@ui/logo/logo.component';
+import { ModalComponent } from '@ui/modal/modal.component';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
-import { TieredMenuModule } from 'primeng/tieredmenu';
-import { LogoComponent } from '@ui/logo/logo.component';
-import { ModalComponent } from '@ui/modal/modal.component';
+import { TieredMenu, TieredMenuModule } from 'primeng/tieredmenu';
 
 interface NavItem extends MenuItem {
   requiresAuth?: boolean;
   /** Mostrar solo a usuarios 'normales' (no Admin/Editor) */
   onlyForUser?: boolean;
+  /** Mostrar solo a usuarios anónimos */
+  onlyForAnon?: boolean;
 }
 
 @Component({
@@ -36,6 +38,7 @@ interface NavItem extends MenuItem {
     LazyLoadDirective,
   ],
   templateUrl: './header.ui.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderUi implements OnInit, OnDestroy {
   public auth = inject(AuthService);
@@ -43,8 +46,10 @@ export class HeaderUi implements OnInit, OnDestroy {
   private loginModal = inject(LoginModalService);
   private gameService = inject(GameService);
   private elRef = inject(ElementRef<HTMLElement>);
+  private ngZone = inject(NgZone);
 
   private hamburgerBtn: HTMLElement | null = null;
+  @ViewChild('menuPerfil') menuPerfil?: TieredMenu;
 
   constructor() {
     // loginModal subscription created here so takeUntilDestroyed has the injection context.
@@ -57,13 +62,20 @@ export class HeaderUi implements OnInit, OnDestroy {
         this.showLoginModal = true;
       }
     });
+
+    // Rebuild profileItems whenever auth state changes
+    effect(() => {
+      this.auth.isAuthenticated(); // Track auth state
+      this.auth.isUser?.(); // Track role changes
+      this.buildProfileItems(); // Rebuild menu
+    });
   }
 
   // Quick search
   searchOpen = false;
   searchQuery = '';
   searchResults: Game[] = [];
-  searchLoading = false;
+  searchLoading = signal(false);
   private searchTimer?: ReturnType<typeof setTimeout>;
 
   // modal state for login
@@ -112,26 +124,30 @@ export class HeaderUi implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.items = [
-      { label: 'Inicio', routerLink: '/' },
+      //{ label: 'Inicio', routerLink: '/' },
       { label: 'Descubrir', routerLink: '/discover' },
       { label: 'Próximos lanzamientos', routerLink: '/releases' },
-      // Mostrar 'Mis Juegos' solo a usuarios logueados
-      { label: 'Mis Juegos', routerLink: '/my-games', requiresAuth: true },
+      // Mostrar 'Mis Juegos' solo a usuarios normales (no admin/editor)
+      { label: 'Mis Juegos', routerLink: '/my-games', onlyForUser: true },
       // 'Mi suscripción' solo para usuarios normales (no Admin/Editor)
       { label: 'Mi suscripción', routerLink: '/settings/plan', requiresAuth: true, onlyForUser: true },
-      // Planes al final del menú
-      { label: 'Planes', routerLink: '/plans' },
+      // Planes sólo para usuarios anónimos
+      { label: 'Planes', routerLink: '/plans', onlyForAnon: true },
     ];
+    // Initial build of profile items
+    this.buildProfileItems();
+  }
 
-    // Construir profile menu; incluir 'Mi suscripción' solo para usuarios normales
-    this.profileItems = [{ label: 'Mi Perfil', icon: 'pi pi-user' }];
+  /** Build profile items based on current auth state */
+  private buildProfileItems(): void {
+    const items: MenuItem[] = [{ label: 'Mi Perfil', icon: 'pi pi-user' }];
     if (this.auth.isUser && this.auth.isUser()) {
-      this.profileItems.push({ label: 'Mi suscripción', icon: 'pi pi-credit-card', routerLink: '/settings/plan' });
+      items.push({ label: 'Mi suscripción', icon: 'pi pi-credit-card', routerLink: '/settings/plan' });
     }
-    this.profileItems.push({ label: 'Ajustes', icon: 'pi pi-cog', routerLink: '/settings' });
-    this.profileItems.push({ separator: true });
-    this.profileItems.push({ label: 'Cerrar Sesión', icon: 'pi pi-power-off', command: () => this.logout() });
-
+    items.push({ label: 'Ajustes', icon: 'pi pi-cog', routerLink: '/settings' });
+    items.push({ separator: true });
+    items.push({ label: 'Cerrar Sesión', icon: 'pi pi-power-off', command: () => this.logout() });
+    this.profileItems = items;
   }
 
   toggleDrawer(): void {
@@ -160,6 +176,12 @@ export class HeaderUi implements OnInit, OnDestroy {
   }
 
   logout() {
+    // Close menus before logout
+    if (this.menuPerfil) {
+      this.menuPerfil.hide();
+    }
+    this.closeDrawer();
+    this.closeSearch();
     this.auth.logout();
     this.router.navigate(['/']);
   }
@@ -208,17 +230,21 @@ export class HeaderUi implements OnInit, OnDestroy {
     this.searchResults = [];
     clearTimeout(this.searchTimer);
     if (value.length < 3) return;
-    
-    this.searchLoading = true;
+
+    this.searchLoading.set(true);
     this.searchTimer = setTimeout(() => {
       // Debounce completado: hacer búsqueda
       this.gameService.searchGames(value).subscribe({
         next: results => {
-          this.searchResults = results;
-          this.searchLoading = false;
+          this.ngZone.run(() => {
+            this.searchResults = results;
+            this.searchLoading.set(false);
+          });
         },
         error: () => {
-          this.searchLoading = false;
+          this.ngZone.run(() => {
+            this.searchLoading.set(false);
+          });
         },
       });
     }, 300);

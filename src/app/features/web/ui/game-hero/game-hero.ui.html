@@ -30,6 +30,9 @@
           </button>
         } @else if (!isLoggedIn) {
           <a routerLink="/auth/join" class="btn-play btn-play--register">Regístrate ahora para jugar</a>
+        } @else if (isAdminOrEditor) {
+          <!-- Admins/Editors can always play regardless of plan or age -->
+          <a [routerLink]="['/play', slug]" class="btn-play btn-play--play">▶ Jugar ahora</a>
         } @else if (!hasPlan) {
           <a routerLink="/settings/plan" class="btn-play btn-play--premium">Hazte premium para jugar</a>
         } @else if (ageRestricted) {
@@ -63,7 +66,7 @@
           <i class="pi pi-share-alt"></i>
           <span>Compartir</span>
         </button>
-        @if (game?.isActive) {
+        @if (game?.isActive && isLoggedIn) {
           <button type="button" class="btn-secondary-action" (click)="openReport()">
             <i class="pi pi-flag"></i>
             <span>Informar de un problema</span>

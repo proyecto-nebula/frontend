@@ -1,5 +1,21 @@
 /* Styles for auth feature (consolidated) */
 
+/* Layout: similar to web but auth-specific */
+app-auth-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+app-auth-layout > main {
+  flex: 1;
+  /* Main grows to fill available space, footer sticks to bottom */
+}
+
+body.auth {
+  padding-top: var(--header-height);
+}
+
 .login-container {
   //n-height: 100vh;
   //splay: flex;
