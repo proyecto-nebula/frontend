@@ -13,13 +13,15 @@ app-web-layout {
   display: grid;
   grid-template-rows: auto 1fr auto;
   min-height: 100dvh;
+  height: 100dvh;
 }
 
 /* Ensure the main content sits in the middle row and can scroll internally. */
 app-web-layout > main#main-content {
   grid-row: 2;
   min-height: 0; /* allow children to shrink and enable internal scrolling */
-  overflow: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 // Estilos básicos para enlaces (puedes ajustarlos luego)
@@ -2119,18 +2121,14 @@ $card-banner-w-xs: 72px;
 // ─── Toolbar ─────────────────────────────────────────────────────────────────
 
 .discover-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.5rem;
 
   &__title {
-    margin: 0;
-    font-size: 1.6rem;
-    font-weight: 700;
+    align-self: start;
   }
-
+  top: calc(var(--header-height, 4rem) + 1rem);
+  z-index: 2;
+  will-change: top;
   &__right {
     display: flex;
     align-items: center;
@@ -2142,6 +2140,7 @@ $card-banner-w-xs: 72px;
   font-size: 0.9rem;
   opacity: 0.6;
   white-space: nowrap;
+  display: none;
 }
 
 .discover-filter-btn {
@@ -2971,12 +2970,6 @@ $card-banner-w-xs: 72px;
 
 .releases-header {
   margin-bottom: 2rem;
-
-  &__title {
-    margin: 0;
-    font-size: 1.6rem;
-    font-weight: 700;
-  }
 }
 
 .releases-empty {
@@ -3012,8 +3005,8 @@ $card-banner-w-xs: 72px;
     font-weight: 700;
     text-transform: capitalize;
     letter-spacing: 0.02em;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 }
 
