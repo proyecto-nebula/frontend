@@ -1,7 +1,10 @@
-<div class="play-close-area" (click)="onClose()" role="button" tabindex="0" aria-label="Cerrar reproducción">
-  <button class="play-close-btn" (click)="$event.stopPropagation(); onClose()" aria-hidden="true">✕</button>
+<div class="play-top-block" role="region" aria-label="Controles de reproducción superior">
+  <div class="play-top-inner">
+    <button class="play-close-btn" (click)="$event.stopPropagation(); onClose()" aria-label="Cerrar reproducción">✕</button>
+  </div>
 </div>
 <main>
   <router-outlet />
 </main>
+<div class="play-bottom-block" aria-hidden="true"></div>
 <app-footer />
