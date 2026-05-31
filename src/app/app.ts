@@ -7,12 +7,11 @@ import { injectSpeedInsights } from '@vercel/speed-insights';
 import { AuthService } from '@services/auth.service';
 import { MaintenanceService } from '@services/maintenance.service';
 import { MaintenancePage } from '@shared/error/maintenance/maintenance.page';
-import { DebugPanelUi } from '@ui/debug-panel/debug-panel.ui';
 import { ToastComponent } from '@ui/toast/toast.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, DebugPanelUi, AdminHeaderUi, MaintenancePage, ToastComponent],
+  imports: [RouterOutlet, AdminHeaderUi, MaintenancePage, ToastComponent],
   templateUrl: './app.html',
 })
 export class App {

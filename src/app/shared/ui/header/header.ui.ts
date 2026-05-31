@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, effect, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, effect, inject, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy, NgZone, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
 import { LoginFormUi } from '@auth/ui/login-form/login-form.ui';
@@ -38,6 +38,7 @@ interface NavItem extends MenuItem {
     LazyLoadDirective,
   ],
   templateUrl: './header.ui.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderUi implements OnInit, OnDestroy {
   public auth = inject(AuthService);
@@ -45,6 +46,7 @@ export class HeaderUi implements OnInit, OnDestroy {
   private loginModal = inject(LoginModalService);
   private gameService = inject(GameService);
   private elRef = inject(ElementRef<HTMLElement>);
+  private ngZone = inject(NgZone);
 
   private hamburgerBtn: HTMLElement | null = null;
   @ViewChild('menuPerfil') menuPerfil?: TieredMenu;
@@ -73,7 +75,7 @@ export class HeaderUi implements OnInit, OnDestroy {
   searchOpen = false;
   searchQuery = '';
   searchResults: Game[] = [];
-  searchLoading = false;
+  searchLoading = signal(false);
   private searchTimer?: ReturnType<typeof setTimeout>;
 
   // modal state for login
@@ -229,16 +231,20 @@ export class HeaderUi implements OnInit, OnDestroy {
     clearTimeout(this.searchTimer);
     if (value.length < 3) return;
 
-    this.searchLoading = true;
+    this.searchLoading.set(true);
     this.searchTimer = setTimeout(() => {
       // Debounce completado: hacer búsqueda
       this.gameService.searchGames(value).subscribe({
         next: results => {
-          this.searchResults = results;
-          this.searchLoading = false;
+          this.ngZone.run(() => {
+            this.searchResults = results;
+            this.searchLoading.set(false);
+          });
         },
         error: () => {
-          this.searchLoading = false;
+          this.ngZone.run(() => {
+            this.searchLoading.set(false);
+          });
         },
       });
     }, 300);

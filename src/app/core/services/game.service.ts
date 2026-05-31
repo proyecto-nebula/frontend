@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { API_ROUTES } from '@config/api.routes';
 import { Game } from '@models/game.model';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, catchError, of, shareReplay } from 'rxjs';
 
 const DEFAULT_LIMIT = 20;
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
   private http = inject(HttpClient);
+  private searchCache = new Map<string, Observable<Game[]>>();
 
   getGames(): Observable<Game[]> {
     return this.http.get<Game[]>(API_ROUTES.games);
@@ -80,8 +81,26 @@ export class GameService {
   }
 
   searchGames(query: string, limit = 8): Observable<Game[]> {
-    return this.http
+    const cacheKey = `${query}:${limit}`;
+    
+    // Retornar del caché si existe
+    if (this.searchCache.has(cacheKey)) {
+      return this.searchCache.get(cacheKey)!;
+    }
+    
+    // Realizar búsqueda y cachear resultado con shareReplay
+    const search$ = this.http
       .get<Game[]>(API_ROUTES.games, { params: { search: query, limit: String(limit) } })
-      .pipe(catchError(() => of([])));
+      .pipe(
+        catchError(() => of([])),
+        shareReplay(1), // Compartir resultado entre múltiples suscriptores
+      );
+    
+    this.searchCache.set(cacheKey, search$);
+    return search$;
+  }
+  
+  clearSearchCache(): void {
+    this.searchCache.clear();
   }
 }

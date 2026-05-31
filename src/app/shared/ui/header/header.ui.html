@@ -72,12 +72,12 @@
                   role="listbox"
                   aria-label="Resultados de búsqueda"
                 >
-                  <div class="search-loader" [class.visible]="searchLoading" aria-hidden="true">
+                  <div class="search-loader" [class.visible]="searchLoading()" aria-hidden="true">
                     <i class="pi pi-spinner pi-spin"></i>
                   </div>
                   <div
                     class="search-results-body"
-                    [class.visible]="!searchLoading"
+                    [class.visible]="!searchLoading()"
                     aria-live="polite"
                     aria-atomic="false"
                   >
@@ -87,7 +87,7 @@
                     @for (game of searchResults; track game.id) {
                       <a [routerLink]="['/games', game.slug]" class="search-result" role="option" (click)="closeSearch()">
                         <div class="search-result__img">
-                          <img appLazyLoad [src]="game.bannerUrl || game.coverUrl" [alt]="game.title" [loading]="'lazy'" />
+                          <img appLazyLoad [src]="game.bannerUrl || game.coverUrl" [alt]="game.title" />
                         </div>
                         <div class="search-result__info">
                           <span class="search-result__name">{{ game.title }}</span>

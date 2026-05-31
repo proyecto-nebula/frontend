@@ -3,15 +3,14 @@ import { Directive, ElementRef, inject, OnInit } from '@angular/core';
 /**
  * Directiva para lazy loading de imágenes.
  * 
- * Uso: <img appLazyLoad [src]="imageUrl" [loading]="'lazy'" />
+ * Uso: <img appLazyLoad [src]="imageUrl" />
  * 
  * Beneficios:
  * - Solo carga imágenes cuando entran en viewport
  * - Reduce carga de datos inicial
  * - Mejora Core Web Vitals (LCP, CLS)
  * 
- * Implementación nativa: navegadores modernos usan loading="lazy"
- * Fallback: IntersectionObserver para navegadores antiguos
+ * Implementación: IntersectionObserver para máximo control
  */
 @Directive({
   selector: 'img[appLazyLoad]',
@@ -23,19 +22,15 @@ export class LazyLoadDirective implements OnInit {
   ngOnInit(): void {
     const img = this.el.nativeElement;
 
-    // Si ya tiene loading="lazy", dejar que el navegador lo maneje
-    if (img.loading === 'lazy') {
-      return;
-    }
-
-    // Fallback con IntersectionObserver
+    // Usar IntersectionObserver para lazy loading
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver(
         entries => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
               const imgElement = entry.target as HTMLImageElement;
-              imgElement.src = imgElement.dataset['src'] || imgElement.src;
+              const src = imgElement.dataset['src'] || imgElement.src;
+              imgElement.src = src;
               imgElement.classList.add('loaded');
               observer.unobserve(imgElement);
             }
@@ -45,7 +40,7 @@ export class LazyLoadDirective implements OnInit {
       );
       observer.observe(img);
     } else {
-      // Navegadores muy antiguos: cargar inmediatamente
+      // Fallback para navegadores muy antiguos
       img.src = img.dataset['src'] || img.src;
     }
   }
