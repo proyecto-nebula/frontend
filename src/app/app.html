@@ -1,5 +1,5 @@
 <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
-@if (authService.isAdminOrEditor()) {
+@if (showAdminHeader()) {
   <app-admin-header></app-admin-header>
 }
 @if (maintenanceSvc.isDown()) {

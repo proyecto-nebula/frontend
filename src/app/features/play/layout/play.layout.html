@@ -1,3 +1,6 @@
+<div class="play-close-area" (click)="onClose()" role="button" tabindex="0" aria-label="Cerrar reproducción">
+  <button class="play-close-btn" (click)="$event.stopPropagation(); onClose()" aria-hidden="true">✕</button>
+</div>
 <main>
   <router-outlet />
 </main>

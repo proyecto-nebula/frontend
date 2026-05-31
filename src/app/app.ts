@@ -1,6 +1,8 @@
 import { AdminHeaderUi } from '@admin/ui/admin-header/admin-header.ui';
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
+import { filter, map, startWith } from 'rxjs/operators';
 import { injectSpeedInsights } from '@vercel/speed-insights';
 import { AuthService } from '@services/auth.service';
 import { MaintenanceService } from '@services/maintenance.service';
@@ -17,6 +19,17 @@ export class App {
   protected readonly authService = inject(AuthService);
   protected readonly maintenanceSvc = inject(MaintenanceService);
   protected readonly router = inject(Router);
+
+  protected readonly isPlayRoute = toSignal(
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd),
+      map(() => this.router.url.startsWith('/play')),
+      startWith(this.router.url.startsWith('/play')),
+    ),
+    { initialValue: this.router.url.startsWith('/play') },
+  );
+
+  protected readonly showAdminHeader = computed(() => this.authService.isAdminOrEditor() && !this.isPlayRoute());
 
   constructor() {
     effect(() => {
