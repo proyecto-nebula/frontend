@@ -20,14 +20,13 @@ app-play-layout > main {
   top: 0;
   left: 0;
   right: 0;
-  height: 6vh;
+  height: 5vh;
   background: #000;
   z-index: 10050; /* above youtube iframes */
   pointer-events: auto;
 }
 
 .play-top-inner {
-  max-width: var(--page-max);
   margin: 0 auto;
   height: 100%;
   position: relative;
@@ -35,8 +34,8 @@ app-play-layout > main {
 
 .play-close-btn {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 20px;
+  left: 20px;
   width: 64px;
   height: 64px;
   display: inline-flex;
@@ -49,7 +48,9 @@ app-play-layout > main {
   border: none;
   opacity: 0;
   transform: translateY(-6px);
-  transition: opacity .18s ease, transform .18s ease;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
   z-index: 10051;
   pointer-events: none;
 }
@@ -67,7 +68,7 @@ app-play-layout > main {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 10vh;
+  height: 5vh;
   background: #000;
   z-index: 10050;
   pointer-events: none;

@@ -9,7 +9,7 @@ app-auth-layout {
 
 app-auth-layout > main {
   flex: 1;
-  /* Main grows to fill available space, keeping footer at bottom */
+  /* Main grows to fill available space, footer sticks to bottom */
 }
 
 body.auth {
