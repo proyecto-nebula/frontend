@@ -32,7 +32,18 @@
           <a routerLink="/auth/join" class="btn-play btn-play--register">Regístrate ahora para jugar</a>
         } @else if (isAdminOrEditor) {
           <!-- Admins/Editors can always play regardless of plan or age -->
-          <a [routerLink]="['/play', slug]" class="btn-play btn-play--play">▶ Jugar ahora</a>
+          <button
+            type="button"
+            class="btn-play btn-play--play"
+            [class.loading]="playLoading()"
+            (click)="handlePlayClick($any($event))"
+            [disabled]="playLoading()"
+          >
+            <span class="btn-text">▶ Jugar ahora</span>
+            @if (playLoading()) {
+              <i class="pi pi-spinner pi-spin btn-spinner" aria-hidden="true"></i>
+            }
+          </button>
         } @else if (!hasPlan) {
           <a routerLink="/settings/plan" class="btn-play btn-play--premium">Hazte premium para jugar</a>
         } @else if (ageRestricted) {
@@ -40,7 +51,18 @@
             🔞 Juego restringido por edad
           </button>
         } @else {
-          <a [routerLink]="['/play', slug]" class="btn-play btn-play--play">▶ Jugar ahora</a>
+          <button
+            type="button"
+            class="btn-play btn-play--play"
+            [class.loading]="playLoading()"
+            (click)="handlePlayClick($any($event))"
+            [disabled]="playLoading()"
+          >
+            <span class="btn-text">▶ Jugar ahora</span>
+            @if (playLoading()) {
+              <i class="pi pi-spinner pi-spin btn-spinner" aria-hidden="true"></i>
+            }
+          </button>
         }
         @if (isLoggedIn) {
           <button

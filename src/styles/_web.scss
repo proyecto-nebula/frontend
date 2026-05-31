@@ -69,19 +69,6 @@ a {
 }
 
 /* Scrollbar styles for WebKit browsers (non-essential visual tweak) */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-}
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.12);
@@ -276,7 +263,7 @@ $featured-wipe-softness: 22% !default;
 }
 
 body.hero main {
-  padding-top: 0;
+  margin-top: calc(var(--header-height) * -1);
 }
 
 /* Game hero - shared component (featured slider + game detail) */
@@ -1060,6 +1047,34 @@ body.is-admin .search-input-wrap {
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Play button loading state: fade text and show spinner */
+.btn-play {
+  position: relative;
+
+  .btn-text {
+    display: inline-block;
+    transition: opacity 0.22s ease;
+  }
+
+  &.loading .btn-text {
+    opacity: 0;
+  }
+
+  .btn-spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.18s ease;
+    pointer-events: none;
+  }
+
+  &.loading .btn-spinner {
+    opacity: 1;
   }
 }
 

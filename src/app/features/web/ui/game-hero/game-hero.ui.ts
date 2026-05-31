@@ -2,7 +2,7 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { API_ROUTES } from '@config/api.routes';
 import { Game } from '@models/game.model';
 import { ModalComponent } from '@shared/ui/modal/modal.component';
@@ -16,6 +16,9 @@ import { ToastService } from '@shared/ui/toast/toast.service';
 })
 export class GameHeroUi implements OnInit, OnDestroy {
   private readonly doc = inject(DOCUMENT);
+  private readonly router = inject(Router);
+  playLoading = signal(false);
+  private playTimer: ReturnType<typeof setTimeout> | null = null;
 
   ngOnInit(): void {
     this.doc.body.classList.add('hero');
@@ -23,6 +26,10 @@ export class GameHeroUi implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.doc.body.classList.remove('hero');
+    if (this.playTimer) {
+      clearTimeout(this.playTimer);
+      this.playTimer = null;
+    }
   }
 
   @Input() game: Game | null = null;
@@ -137,4 +144,17 @@ export class GameHeroUi implements OnInit, OnDestroy {
         },
       });
   }
+
+    handlePlayClick(ev?: MouseEvent): void {
+      ev?.preventDefault();
+      if (!this.slug || this.playLoading()) return;
+
+      this.playLoading.set(true);
+      this.playTimer = setTimeout(() => {
+        this.playTimer = null;
+        this.router.navigate(['/play', this.slug]).finally(() => {
+          this.playLoading.set(false);
+        });
+      }, 3000);
+    }
 }
