@@ -1001,8 +1001,10 @@ body.is-admin .search-input-wrap {
 
 /* Play / CTA buttons */
 .btn-play {
-  display: inline-block;
-  padding: 0.75rem 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2.75rem;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 700;

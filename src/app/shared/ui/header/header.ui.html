@@ -118,7 +118,7 @@
           (click)="menuPerfil.toggle($event)"
           (keydown.enter)="menuPerfil.toggle($event)"
         ></p-avatar>
-        <p-tieredMenu #menuPerfil [model]="profileItems" [popup]="true" appendTo="body"></p-tieredMenu>
+        <p-tieredMenu #menuPerfil [model]="getProfileItems()" [popup]="true" appendTo="body"></p-tieredMenu>
       } @else {
         <div class="header-auth-btns">
           <a class="btn ghost" href="/auth/login" (click)="openLoginModal(); $event.preventDefault()">Login</a>

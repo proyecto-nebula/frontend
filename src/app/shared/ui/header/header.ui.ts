@@ -1,19 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
 import { LoginFormUi } from '@auth/ui/login-form/login-form.ui';
+import { LazyLoadDirective } from '@directives/lazy-load.directive';
 import { Game } from '@models/game.model';
 import { AuthService } from '@services/auth.service';
 import { GameService } from '@services/game.service';
 import { LoginModalService } from '@services/login-modal.service';
-import { LazyLoadDirective } from '@directives/lazy-load.directive';
+import { LogoComponent } from '@ui/logo/logo.component';
+import { ModalComponent } from '@ui/modal/modal.component';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { TieredMenuModule } from 'primeng/tieredmenu';
-import { LogoComponent } from '@ui/logo/logo.component';
-import { ModalComponent } from '@ui/modal/modal.component';
 
 interface NavItem extends MenuItem {
   requiresAuth?: boolean;
@@ -74,7 +74,6 @@ export class HeaderUi implements OnInit, OnDestroy {
   drawerVisible = false;
   isScrolled = false;
   items: NavItem[] | undefined;
-  profileItems: MenuItem[] | undefined;
 
   @HostListener('window:scroll')
   onScroll(): void {
@@ -114,7 +113,7 @@ export class HeaderUi implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.items = [
-      { label: 'Inicio', routerLink: '/' },
+      //{ label: 'Inicio', routerLink: '/' },
       { label: 'Descubrir', routerLink: '/discover' },
       { label: 'Próximos lanzamientos', routerLink: '/releases' },
       // Mostrar 'Mis Juegos' solo a usuarios normales (no admin/editor)
@@ -124,16 +123,18 @@ export class HeaderUi implements OnInit, OnDestroy {
       // Planes sólo para usuarios anónimos
       { label: 'Planes', routerLink: '/plans', onlyForAnon: true },
     ];
+  }
 
-    // Construir profile menu; incluir 'Mi suscripción' solo para usuarios normales
-    this.profileItems = [{ label: 'Mi Perfil', icon: 'pi pi-user' }];
+  /**Construir dynamically profile items basado en estado de auth */
+  getProfileItems(): MenuItem[] {
+    const items: MenuItem[] = [{ label: 'Mi Perfil', icon: 'pi pi-user' }];
     if (this.auth.isUser && this.auth.isUser()) {
-      this.profileItems.push({ label: 'Mi suscripción', icon: 'pi pi-credit-card', routerLink: '/settings/plan' });
+      items.push({ label: 'Mi suscripción', icon: 'pi pi-credit-card', routerLink: '/settings/plan' });
     }
-    this.profileItems.push({ label: 'Ajustes', icon: 'pi pi-cog', routerLink: '/settings' });
-    this.profileItems.push({ separator: true });
-    this.profileItems.push({ label: 'Cerrar Sesión', icon: 'pi pi-power-off', command: () => this.logout() });
-
+    items.push({ label: 'Ajustes', icon: 'pi pi-cog', routerLink: '/settings' });
+    items.push({ separator: true });
+    items.push({ label: 'Cerrar Sesión', icon: 'pi pi-power-off', command: () => this.logout() });
+    return items;
   }
 
   toggleDrawer(): void {
@@ -210,7 +211,7 @@ export class HeaderUi implements OnInit, OnDestroy {
     this.searchResults = [];
     clearTimeout(this.searchTimer);
     if (value.length < 3) return;
-    
+
     this.searchLoading = true;
     this.searchTimer = setTimeout(() => {
       // Debounce completado: hacer búsqueda
