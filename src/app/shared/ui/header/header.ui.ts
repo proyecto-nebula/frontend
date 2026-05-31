@@ -17,6 +17,8 @@ import { ModalComponent } from '@ui/modal/modal.component';
 
 interface NavItem extends MenuItem {
   requiresAuth?: boolean;
+  /** Mostrar solo a usuarios 'normales' (no Admin/Editor) */
+  onlyForUser?: boolean;
 }
 
 @Component({
@@ -112,24 +114,22 @@ export class HeaderUi implements OnInit, OnDestroy {
     this.items = [
       { label: 'Inicio', routerLink: '/' },
       { label: 'Descubrir', routerLink: '/discover' },
+      { label: 'Planes', routerLink: '/plans' },
       { label: 'Próximos lanzamientos', routerLink: '/releases' },
       // Mostrar 'Mis Juegos' solo a usuarios logueados
       { label: 'Mis Juegos', routerLink: '/my-games', requiresAuth: true },
-      // 'Mi suscripción' debe estar visible aun cuando no estés logueado
-      { label: 'Mi suscripción', routerLink: '/settings/plan', requiresAuth: false },
+      // 'Mi suscripción' solo para usuarios normales (no Admin/Editor)
+      { label: 'Mi suscripción', routerLink: '/settings/plan', requiresAuth: true, onlyForUser: true },
     ];
 
-    this.profileItems = [
-      { label: 'Mi Perfil', icon: 'pi pi-user' },
-      { label: 'Mi suscripción', icon: 'pi pi-credit-card', routerLink: '/settings/plan' },
-      { label: 'Ajustes', icon: 'pi pi-cog', routerLink: '/settings' },
-      { separator: true },
-      {
-        label: 'Cerrar Sesión',
-        icon: 'pi pi-power-off',
-        command: () => this.logout(),
-      },
-    ];
+    // Construir profile menu; incluir 'Mi suscripción' solo para usuarios normales
+    this.profileItems = [{ label: 'Mi Perfil', icon: 'pi pi-user' }];
+    if (this.auth.isUser && this.auth.isUser()) {
+      this.profileItems.push({ label: 'Mi suscripción', icon: 'pi pi-credit-card', routerLink: '/settings/plan' });
+    }
+    this.profileItems.push({ label: 'Ajustes', icon: 'pi pi-cog', routerLink: '/settings' });
+    this.profileItems.push({ separator: true });
+    this.profileItems.push({ label: 'Cerrar Sesión', icon: 'pi pi-power-off', command: () => this.logout() });
 
   }
 

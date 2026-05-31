@@ -1,0 +1,27 @@
+<div class="plans-page">
+  <h1>Planes</h1>
+
+  <p class="plans-intro">
+    Nuestros planes te dan acceso a contenidos premium, juego en la nube y soporte prioritario.
+    Aquí puedes ver las opciones disponibles. Para contratar un plan regístrate en la plataforma.
+  </p>
+
+  <div class="plans-list">
+    @for (plan of plans(); track plan.id) {
+      <article class="plan-card">
+        <h3 class="plan-name">{{ plan.name }}</h3>
+        <p class="plan-price">{{ plan.price != null ? (plan.price | currency) : 'Gratis' }}</p>
+        <ul class="plan-features">
+          @if (plan.quality) { <li>Calidad: {{ plan.quality }}</li> }
+          @if (plan.gpu) { <li>GPU: {{ plan.gpu }}</li> }
+          @if (plan.fps) { <li>FPS objetivo: {{ plan.fps }}</li> }
+          @if (plan.priority) { <li>Prioridad: {{ plan.priority }}</li> }
+        </ul>
+      </article>
+    }
+  </div>
+
+  <div class="plans-cta">
+    <a class="btn" [routerLink]="['/auth/join']">Regístrate</a>
+  </div>
+</div>
