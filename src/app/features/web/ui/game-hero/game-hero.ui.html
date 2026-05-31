@@ -63,10 +63,12 @@
           <i class="pi pi-share-alt"></i>
           <span>Compartir</span>
         </button>
-        <button type="button" class="btn-secondary-action" (click)="openReport()">
-          <i class="pi pi-flag"></i>
-          <span>Informar de un problema</span>
-        </button>
+        @if (game?.isActive) {
+          <button type="button" class="btn-secondary-action" (click)="openReport()">
+            <i class="pi pi-flag"></i>
+            <span>Informar de un problema</span>
+          </button>
+        }
       </div>
 
     <!-- Share modal -->

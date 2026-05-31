@@ -23,7 +23,7 @@
                 <a class="release-item__link" [routerLink]="['/games', game.slug]">
                   <div class="release-item__cover">
                     <img
-                      [src]="game.coverUrl || game.bannerUrl"
+                      [src]="game.bannerUrl || game.coverUrl"
                       [alt]="game.title"
                       loading="lazy"
                     />
