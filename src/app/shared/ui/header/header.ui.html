@@ -21,7 +21,7 @@
       <nav class="desktop-nav" aria-label="Navegación principal">
         <ul class="nav-list">
           @for (it of items; track it.label) {
-            @if (!it.requiresAuth || auth.isAuthenticated()) {
+            @if ((!it.requiresAuth || auth.isAuthenticated()) && (!it.onlyForUser || (auth.isAuthenticated() && auth.isUser()))) {
               <li class="nav-item" [ngClass]="it.styleClass">
                 <a
                   [routerLink]="it.routerLink"
@@ -87,7 +87,7 @@
                     @for (game of searchResults; track game.id) {
                       <a [routerLink]="['/games', game.slug]" class="search-result" role="option" (click)="closeSearch()">
                         <div class="search-result__img">
-                          <img [src]="game.bannerUrl || game.coverUrl" [alt]="game.title" loading="lazy" />
+                          <img appLazyLoad [src]="game.bannerUrl || game.coverUrl" [alt]="game.title" [loading]="'lazy'" />
                         </div>
                         <div class="search-result__info">
                           <span class="search-result__name">{{ game.title }}</span>
@@ -159,7 +159,7 @@
     <nav aria-label="Menú móvil">
       <ul class="drawer-list">
         @for (it of items; track it.label) {
-          @if (!it.requiresAuth || auth.isAuthenticated()) {
+          @if ((!it.requiresAuth || auth.isAuthenticated()) && (!it.onlyForUser || (auth.isAuthenticated() && auth.isUser()))) {
             <li class="drawer-item">
               <a
                 [routerLink]="it.routerLink"

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { API_ROUTES } from '@config/api.routes';
+import { MutationService } from '@services/mutation.service';
 import { ToastService } from '@ui/toast/toast.service';
 import { TableModule } from 'primeng/table';
 
@@ -24,10 +25,18 @@ interface LogEntry {
 export class AdminSecurityLogPage implements OnInit {
   private http = inject(HttpClient);
   private toast = inject(ToastService);
+  private mutations = inject(MutationService);
 
   entries = signal<LogEntry[]>([]);
   loading = signal(false);
   clearing = signal(false);
+
+  constructor() {
+    // ✅ SUSCRIPCIÓN PERMANENTE: siempre activa
+    this.mutations.onMutation('logs').subscribe(() => {
+      this.load();
+    });
+  }
 
   ngOnInit(): void {
     this.load();

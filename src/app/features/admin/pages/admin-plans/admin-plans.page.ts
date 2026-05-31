@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { API_ROUTES } from '@config/api.routes';
 import { Plan } from '@models/plan.model';
+import { MutationService } from '@services/mutation.service';
 import { TableModule } from 'primeng/table';
 
 @Component({
@@ -18,6 +19,7 @@ export class AdminPlansPage implements OnInit {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private mutations = inject(MutationService);
 
   items = signal<Plan[]>([]);
   editingId = signal<number | null>(null);
@@ -53,6 +55,15 @@ export class AdminPlansPage implements OnInit {
   readonly modsOptions = ['No disponible', 'Básico (Workshop)', 'Avanzado'];
   readonly audioOptions = ['Estéreo 2.0', 'Envolvente 5.1', 'Dolby Atmos 7.1'];
 
+  constructor() {
+    // ✅ SUSCRIPCIÓN PERMANENTE: siempre activa
+    this.mutations.onMutation('plans').subscribe(() => {
+      if (this.viewMode() === 'list') {
+        this.loadList();
+      }
+    });
+  }
+
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
@@ -85,6 +96,7 @@ export class AdminPlansPage implements OnInit {
         this.editingId.set(null);
         this.viewMode.set('list');
         this.loadList();
+        // ✅ Nota: Suscripción permanente ya está en constructor
       }
     });
   }

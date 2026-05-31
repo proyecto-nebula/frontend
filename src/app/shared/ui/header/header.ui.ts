@@ -7,6 +7,7 @@ import { Game } from '@models/game.model';
 import { AuthService } from '@services/auth.service';
 import { GameService } from '@services/game.service';
 import { LoginModalService } from '@services/login-modal.service';
+import { LazyLoadDirective } from '@directives/lazy-load.directive';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -16,6 +17,8 @@ import { ModalComponent } from '@ui/modal/modal.component';
 
 interface NavItem extends MenuItem {
   requiresAuth?: boolean;
+  /** Mostrar solo a usuarios 'normales' (no Admin/Editor) */
+  onlyForUser?: boolean;
 }
 
 @Component({
@@ -30,6 +33,7 @@ interface NavItem extends MenuItem {
     LoginFormUi,
     ModalComponent,
     LogoComponent,
+    LazyLoadDirective,
   ],
   templateUrl: './header.ui.html',
 })
@@ -109,23 +113,24 @@ export class HeaderUi implements OnInit, OnDestroy {
   ngOnInit() {
     this.items = [
       { label: 'Inicio', routerLink: '/' },
-      { label: 'Juegos', routerLink: '/games' },
       { label: 'Descubrir', routerLink: '/discover' },
-      { label: 'Mis Juegos', routerLink: '/my-games' },
-      { label: 'Mi suscripción', routerLink: '/settings/plan', requiresAuth: true },
+      { label: 'Próximos lanzamientos', routerLink: '/releases' },
+      // Mostrar 'Mis Juegos' solo a usuarios logueados
+      { label: 'Mis Juegos', routerLink: '/my-games', requiresAuth: true },
+      // 'Mi suscripción' solo para usuarios normales (no Admin/Editor)
+      { label: 'Mi suscripción', routerLink: '/settings/plan', requiresAuth: true, onlyForUser: true },
+      // Planes al final del menú
+      { label: 'Planes', routerLink: '/plans' },
     ];
 
-    this.profileItems = [
-      { label: 'Mi Perfil', icon: 'pi pi-user' },
-      { label: 'Mi suscripción', icon: 'pi pi-credit-card', routerLink: '/settings/plan' },
-      { label: 'Ajustes', icon: 'pi pi-cog', routerLink: '/settings' },
-      { separator: true },
-      {
-        label: 'Cerrar Sesión',
-        icon: 'pi pi-power-off',
-        command: () => this.logout(),
-      },
-    ];
+    // Construir profile menu; incluir 'Mi suscripción' solo para usuarios normales
+    this.profileItems = [{ label: 'Mi Perfil', icon: 'pi pi-user' }];
+    if (this.auth.isUser && this.auth.isUser()) {
+      this.profileItems.push({ label: 'Mi suscripción', icon: 'pi pi-credit-card', routerLink: '/settings/plan' });
+    }
+    this.profileItems.push({ label: 'Ajustes', icon: 'pi pi-cog', routerLink: '/settings' });
+    this.profileItems.push({ separator: true });
+    this.profileItems.push({ label: 'Cerrar Sesión', icon: 'pi pi-power-off', command: () => this.logout() });
 
   }
 
@@ -203,8 +208,10 @@ export class HeaderUi implements OnInit, OnDestroy {
     this.searchResults = [];
     clearTimeout(this.searchTimer);
     if (value.length < 3) return;
+    
     this.searchLoading = true;
     this.searchTimer = setTimeout(() => {
+      // Debounce completado: hacer búsqueda
       this.gameService.searchGames(value).subscribe({
         next: results => {
           this.searchResults = results;

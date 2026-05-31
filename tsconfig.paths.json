@@ -21,6 +21,7 @@
       "@shared/*": ["./src/app/shared/*"],
       "@ui/*": ["./src/app/shared/ui/*"],
       "@pipes/*": ["./src/app/shared/pipes/*"],
+      "@directives/*": ["./src/app/shared/directives/*"],
       // SRC
       "@env/*": ["./src/environments/*"],
       "@styles/*": ["./src/styles/*"],

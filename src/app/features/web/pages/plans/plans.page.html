@@ -1,0 +1,33 @@
+<div class="plans-page">
+  <h1>Planes</h1>
+
+  <p class="plans-intro">
+    Nuestros planes te dan acceso a contenidos premium, juego en la nube y soporte prioritario.
+    Aquí puedes ver las opciones disponibles. Para contratar un plan regístrate en la plataforma.
+  </p>
+
+  <div class="registration-plan">
+    <div class="plan-list">
+      @for (plan of plans(); track plan.id) {
+        <div class="plan-item" role="article" tabindex="0">
+          <div class="plan-name">{{ plan.name }}</div>
+          <div class="plan-specs">
+            @if (plan.quality) { <div class="plan-spec"><span class="plan-spec__icon">🎞</span><span>{{ plan.quality }}</span></div> }
+            @if (plan.fps) { <div class="plan-spec"><span class="plan-spec__icon">⚡</span><span>{{ plan.fps }} fps</span></div> }
+            @if (plan.gpu) { <div class="plan-spec"><span class="plan-spec__icon">🖥</span><span>{{ plan.gpu }}</span></div> }
+            @if (plan.priority) { <div class="plan-spec"><span class="plan-spec__icon">🚀</span><span>{{ plan.priority }}</span></div> }
+            @if (plan.session_limit != null) { <div class="plan-spec"><span class="plan-spec__icon">⏱</span><span>{{ plan.session_limit }}h por sesión</span></div> } @else { <div class="plan-spec"><span class="plan-spec__icon">⏱</span><span>Sin límite de sesión</span></div> }
+            @if (plan.storage) { <div class="plan-spec"><span class="plan-spec__icon">💾</span><span>{{ plan.storage }} GB SSD</span></div> }
+            @if (plan.mods) { <div class="plan-spec"><span class="plan-spec__icon">🔧</span><span>{{ plan.mods }}</span></div> }
+            @if (plan.audio) { <div class="plan-spec"><span class="plan-spec__icon">🔊</span><span>{{ plan.audio }}</span></div> }
+          </div>
+          <div class="plan-price">{{ plan.price != null ? (plan.price | currency) : 'Gratis' }}</div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="plans-cta">
+    <a class="btn" [routerLink]="['/auth/join']">Regístrate</a>
+  </div>
+</div>

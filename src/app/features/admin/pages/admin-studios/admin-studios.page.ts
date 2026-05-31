@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { API_ROUTES } from '@config/api.routes';
 import { Studio } from '@models/studio.model';
+import { MutationService } from '@services/mutation.service';
 import { TableModule } from 'primeng/table';
 
 @Component({
@@ -18,12 +19,22 @@ export class AdminStudiosPage implements OnInit {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private mutations = inject(MutationService);
 
   items = signal<Studio[]>([]);
   editingId = signal<number | null>(null);
   saving = signal(false);
   viewMode = signal<'list' | 'form'>('list');
   form!: FormGroup;
+
+  constructor() {
+    // ✅ SUSCRIPCIÓN PERMANENTE: siempre activa
+    this.mutations.onMutation('studios').subscribe(() => {
+      if (this.viewMode() === 'list') {
+        this.loadList();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -44,6 +55,7 @@ export class AdminStudiosPage implements OnInit {
         this.editingId.set(null);
         this.viewMode.set('list');
         this.loadList();
+        // ✅ Nota: Suscripción permanente ya está en constructor
       }
     });
   }

@@ -1,27 +1,39 @@
 <div class="plan-page">
   <h1>Mi suscripción</h1>
-
-  @if (!hasPlan()) {
-    <p class="plan-page__status">Actualmente no tienes ninguna suscripción. Elige un plan para acceder a todos los contenidos:</p>
-  } @else {
+  @if (!currentUser()) {
     <p class="plan-page__status">
-      Plan actual: <strong>{{ currentPlanName() }}</strong>. Puedes cambiar tu plan seleccionando una opción:
+      Nuestros planes te permiten acceder a contenidos premium, jugar en la nube y obtener soporte prioritario. Elige
+      el que mejor se adapte a ti y regístrate para comenzar.
     </p>
-  }
 
-  <auth-registration-plan-ui [group]="planGroup" [plans]="plans()"></auth-registration-plan-ui>
+    <auth-registration-plan-ui [group]="planGroup" [plans]="plans()"></auth-registration-plan-ui>
 
-  @if (canPay && !showPayment()) {
-    <button class="btn" (click)="pay()">Pagar</button>
-  }
-
-  @if (showPayment()) {
-    <div id="payment-section" class="plan-page__payment">
-      <h2>Datos de pago</h2>
-      <auth-registration-payment-ui [group]="paymentGroup"></auth-registration-payment-ui>
-      <button class="btn" (click)="confirmPayment()" [disabled]="saving()">
-        {{ saving() ? 'Procesando...' : 'Confirmar pago' }}
-      </button>
+    <div class="plan-page__cta">
+      <a class="btn" [routerLink]="['/auth/join']">Regístrate</a>
     </div>
+  } @else {
+    @if (!hasPlan()) {
+      <p class="plan-page__status">Actualmente no tienes ninguna suscripción. Elige un plan para acceder a todos los contenidos:</p>
+    } @else {
+      <p class="plan-page__status">
+        Plan actual: <strong>{{ currentPlanName() }}</strong>. Puedes cambiar tu plan seleccionando una opción:
+      </p>
+    }
+
+    <auth-registration-plan-ui [group]="planGroup" [plans]="plans()"></auth-registration-plan-ui>
+
+    @if (canPay && !showPayment()) {
+      <button class="btn" (click)="pay()">Pagar</button>
+    }
+
+    @if (showPayment()) {
+      <div id="payment-section" class="plan-page__payment">
+        <h2>Datos de pago</h2>
+        <auth-registration-payment-ui [group]="paymentGroup"></auth-registration-payment-ui>
+        <button class="btn" (click)="confirmPayment()" [disabled]="saving()">
+          {{ saving() ? 'Procesando...' : 'Confirmar pago' }}
+        </button>
+      </div>
+    }
   }
 </div>

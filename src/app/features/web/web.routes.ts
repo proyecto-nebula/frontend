@@ -12,10 +12,6 @@ export const WEB_ROUTES: Routes = [
         loadComponent: () => import('./pages/home/home.page').then(m => m.HomePage),
       },
       {
-        path: 'games',
-        loadComponent: () => import('./pages/game-all/game-all.page').then(m => m.GameAllPage),
-      },
-      {
         path: 'games/:slug',
         loadComponent: () => import('./pages/game-view/game-view.page').then(m => m.GameViewPage),
       },
@@ -27,6 +23,14 @@ export const WEB_ROUTES: Routes = [
       {
         path: 'discover',
         loadComponent: () => import('./pages/game-discover/game-discover.page').then(m => m.GameDiscoverPage),
+      },
+      {
+        path: 'plans',
+        loadComponent: () => import('./pages/plans/plans.page').then(m => m.PlansPage),
+      },
+      {
+        path: 'releases',
+        loadComponent: () => import('./pages/releases/releases.page').then(m => m.ReleasesPage),
       },
     ],
   },

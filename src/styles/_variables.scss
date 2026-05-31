@@ -40,6 +40,7 @@ $carousel-hover-dim: 0.45;
     radial-gradient(at 9% 96%, hsla(225, 30%, 20%, 0.7), transparent 50%);
   //--font-type: 'Google Sans', 'Akt', 'Raleway', 'Chakra Petch', 'Rajdhani', 'Jura', 'Saira', 'Oxanium', sans-serif;
   --font-type: 'Chakra Petch', 'Rajdhani', 'Jura', 'Saira', 'Oxanium', sans-serif;
+  --font-type-body: sans-serif;
   --font-color: #f0f6fc;
   --font-lineheight: 1.6;
 
@@ -53,7 +54,7 @@ $carousel-hover-dim: 0.45;
   --page-gutter: 5%;
   --page-width: max(var(--page-gutter), calc((100% - var(--page-max)) / 2));
   --admin-header-height: 3rem;
-  --header-height: 4rem;
+  --header-height: 5rem;
   --padding-main: 5rem;
 
   --hero-top: calc((var(--header-height) + var(--padding-main)) * -1);
