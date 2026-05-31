@@ -114,12 +114,13 @@ export class HeaderUi implements OnInit, OnDestroy {
     this.items = [
       { label: 'Inicio', routerLink: '/' },
       { label: 'Descubrir', routerLink: '/discover' },
-      { label: 'Planes', routerLink: '/plans' },
       { label: 'Próximos lanzamientos', routerLink: '/releases' },
       // Mostrar 'Mis Juegos' solo a usuarios logueados
       { label: 'Mis Juegos', routerLink: '/my-games', requiresAuth: true },
       // 'Mi suscripción' solo para usuarios normales (no Admin/Editor)
       { label: 'Mi suscripción', routerLink: '/settings/plan', requiresAuth: true, onlyForUser: true },
+      // Planes al final del menú
+      { label: 'Planes', routerLink: '/plans' },
     ];
 
     // Construir profile menu; incluir 'Mi suscripción' solo para usuarios normales

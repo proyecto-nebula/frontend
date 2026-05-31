@@ -6,22 +6,22 @@
   </button>
 
   <nav class="admin-header__nav" [class.open]="menuOpen()">
-    @if (auth.isEditor()) {
-      <a routerLink="/admin/games" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Juegos</a>
-      <a routerLink="/admin/categories" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Categorías</a>
-      <a routerLink="/admin/studios" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Estudios</a>
-    }
     @if (auth.isAdmin()) {
+      <a routerLink="/admin/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Usuarios</a>
       <a routerLink="/admin/avatars" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Avatars</a>
-      <a routerLink="/admin/plans" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Planes</a>
       <a routerLink="/admin/reports" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">
         Reportes
         @if (badge.count() > 0) {
           <span class="admin-nav-badge">{{ badge.count() }}</span>
         }
       </a>
-      <a routerLink="/admin/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Usuarios</a>
       <a routerLink="/admin/logs" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Logs</a>
+    }
+    @if (auth.isEditor()) {
+      <a routerLink="/admin/games" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Juegos</a>
+      <a routerLink="/admin/studios" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Estudios</a>
+      <a routerLink="/admin/categories" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Categorías</a>
+      <a routerLink="/admin/plans" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Planes</a>
     }
   </nav>
 

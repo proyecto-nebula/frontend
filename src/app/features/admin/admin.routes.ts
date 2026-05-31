@@ -70,12 +70,12 @@ export const ADMIN_ROUTES: Routes = [
       { path: 'avatars/:id', canMatch: [adminOnlyGuard], loadComponent: adminAvatars },
       { path: 'avatars/:id', loadComponent: forbidden },
 
-      // ── Admin-only: plans ─────────────────────────────────────────────
-      { path: 'plans',     canMatch: [adminOnlyGuard], loadComponent: adminPlans },
+      // ── Editor: plans (moved from admin to editor) ─────────────────────────
+      { path: 'plans',     canMatch: [editorGuard], loadComponent: adminPlans },
       { path: 'plans',     loadComponent: forbidden },
-      { path: 'plans/new', canMatch: [adminOnlyGuard], loadComponent: adminPlans },
+      { path: 'plans/new', canMatch: [editorGuard], loadComponent: adminPlans },
       { path: 'plans/new', loadComponent: forbidden },
-      { path: 'plans/:id', canMatch: [adminOnlyGuard], loadComponent: adminPlans },
+      { path: 'plans/:id', canMatch: [editorGuard], loadComponent: adminPlans },
       { path: 'plans/:id', loadComponent: forbidden },
 
       // ── Admin-only: reports ───────────────────────────────────────────
