@@ -3,19 +3,22 @@
 /* Layout: standard vertical flow with fixed header
    Header is position:fixed, document scrolls normally.
    Sticky elements (sidebar) calculate against document scroll. */
-body.web {
+body.web,
+body.settings {
   /* scroll normally with header offset */
   padding-top: var(--header-height);
 }
 
-app-web-layout {
+app-web-layout,
+app-settings-layout {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
 /* Header is outside the flow (fixed), so layout is header/main/footer in flex */
-app-web-layout > main#main-content {
+app-web-layout > main#main-content,
+app-settings-layout > main {
   flex: 1;
   /* Let document scroll, don't create internal scroll container */
 }

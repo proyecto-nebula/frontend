@@ -1,5 +1,17 @@
 /* Styles for play feature */
 
+/* Layout: sticky footer for play page */
+app-play-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+app-play-layout > main {
+  flex: 1;
+  /* Main grows to fill available space */
+}
+
 // ─── app-play-game-page ───────────────────────────────────────────────────────
 app-play-game-page {
   display: block;
