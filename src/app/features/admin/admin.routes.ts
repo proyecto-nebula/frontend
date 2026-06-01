@@ -23,6 +23,8 @@ const adminUsers = () =>
   import('./pages/admin-users/admin-users.page').then(m => m.AdminUsersPage);
 const adminLogs = () =>
   import('./pages/admin-security-log/admin-security-log.page').then(m => m.AdminSecurityLogPage);
+const adminDashboard = () =>
+  import('./pages/admin-dashboard/admin-dashboard.page').then(m => m.AdminDashboardPage);
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -33,10 +35,14 @@ export const ADMIN_ROUTES: Routes = [
         path: '',
         redirectTo: () => {
           const auth = inject(AuthService);
-          return auth.isAdmin() ? 'logs' : 'games';
+          return 'dashboard';
         },
         pathMatch: 'full',
       },
+
+      // ── Dashboard (for all editors and admins) ─────────────────────────
+      { path: 'dashboard', canMatch: [editorGuard], loadComponent: adminDashboard },
+      { path: 'dashboard', loadComponent: forbidden },
 
       // ── Editor-only: games ────────────────────────────────────────────
       { path: 'games',     canMatch: [editorGuard], loadComponent: adminGames },

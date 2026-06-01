@@ -1,0 +1,60 @@
+<div class="dashboard-panel reports-panel">
+  <div class="panel-header">
+    <h3>Reportes</h3>
+    <span class="period-badge">Activos</span>
+  </div>
+
+  @if (loading()) {
+    <div class="loader-container">
+      <p-progressSpinner
+        [style]="{ width: '50px', height: '50px' }"
+        strokeWidth="4"
+        fill="transparent"
+        animationDuration=".8s"
+      />
+    </div>
+  } @else {
+    @if (stats(); as reportStats) {
+      <div class="report-stats">
+        <div class="stat-card pending">
+          <div class="stat-value">{{ reportStats.pending }}</div>
+          <div class="stat-label">Pendientes</div>
+        </div>
+
+        <div class="stat-card resolved">
+          <div class="stat-value">{{ reportStats.resolved }}</div>
+          <div class="stat-label">Resueltos</div>
+        </div>
+
+        <div class="stat-card total">
+          <div class="stat-value">{{ reportStats.total }}</div>
+          <div class="stat-label">Total</div>
+        </div>
+      </div>
+
+      @if (reportStats.byType && reportStats.byType.length > 0) {
+        <div class="report-breakdown">
+          <h4>Por tipo:</h4>
+          <div class="types-list">
+            @for (item of reportStats.byType; track item.type) {
+              <div class="type-item">
+                <div class="type-header">
+                  <span
+                    class="type-indicator"
+                    [style.background-color]="getReportTypeColor(item.type)"
+                  ></span>
+                  <span class="type-name">{{ getReportTypeLabel(item.type) }}</span>
+                </div>
+                <span class="type-count">{{ item.count }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    } @else {
+      <div class="empty-state">
+        <p>No hay datos disponibles</p>
+      </div>
+    }
+  }
+</div>

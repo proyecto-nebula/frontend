@@ -1,0 +1,36 @@
+<div class="dashboard-panel chart-panel">
+  <div class="panel-header">
+    <h3>👥 Usuarios Activos</h3>
+    <div class="period-tabs">
+      <button [class.active]="selectedPeriod() === 'day'" (click)="selectPeriod('day')">Hoy</button>
+      <button [class.active]="selectedPeriod() === 'week'" (click)="selectPeriod('week')">Semana</button>
+      <button [class.active]="selectedPeriod() === 'month'" (click)="selectPeriod('month')">Mes</button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loader-container">
+      <p-progressSpinner
+        [style]="{ width: '40px', height: '40px' }"
+        strokeWidth="4"
+        fill="transparent"
+        animationDuration=".8s"
+      />
+    </div>
+  } @else {
+    @if (chartData) {
+      <div class="chart-container">
+        <p-chart
+          type="line"
+          [data]="chartData"
+          [options]="chartOptions"
+          [style]="{ position: 'relative', height: '200px' }"
+        />
+      </div>
+    } @else {
+      <div class="empty-state">
+        <p>No hay datos para este período</p>
+      </div>
+    }
+  }
+</div>

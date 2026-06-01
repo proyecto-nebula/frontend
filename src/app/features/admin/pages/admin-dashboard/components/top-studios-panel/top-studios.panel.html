@@ -1,0 +1,33 @@
+<div class="dashboard-panel">
+  <div class="panel-header">
+    <h3>🏢 Studios Top</h3>
+  </div>
+
+  @if (loading()) {
+    <div class="loader-container">
+      <p-progressSpinner
+        [style]="{ width: '40px', height: '40px' }"
+        strokeWidth="4"
+        fill="transparent"
+        animationDuration=".8s"
+      />
+    </div>
+  } @else {
+    @if (studios().length > 0) {
+      <div class="studio-list">
+        @for (studio of studios(); track studio.id; let i = $index) {
+          <div class="studio-item">
+            <div class="rank">{{ i + 1 }}</div>
+            <div class="info">
+              <div class="name">{{ studio.name }}</div>
+              <div class="stats">{{ studio.gameCount }} juegos</div>
+            </div>
+            <div class="badge">{{ studio.gameCount }}</div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">Sin datos</div>
+    }
+  }
+</div>

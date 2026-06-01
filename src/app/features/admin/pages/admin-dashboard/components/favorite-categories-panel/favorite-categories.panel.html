@@ -1,0 +1,33 @@
+<div class="dashboard-panel">
+  <div class="panel-header">
+    <h3>❤️ Géneros Favoritos</h3>
+  </div>
+
+  @if (loading()) {
+    <div class="loader-container">
+      <p-progressSpinner
+        [style]="{ width: '40px', height: '40px' }"
+        strokeWidth="4"
+        fill="transparent"
+        animationDuration=".8s"
+      />
+    </div>
+  } @else {
+    @if (categories().length > 0) {
+      <div class="category-list">
+        @for (category of categories(); track category.id; let i = $index) {
+          <div class="category-item">
+            <div class="rank">{{ i + 1 }}</div>
+            <div class="info">
+              <div class="name">{{ category.name }}</div>
+              <div class="stats">{{ category.count }} favoritos</div>
+            </div>
+            <div class="count-badge">{{ category.count }}</div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">Sin datos</div>
+    }
+  }
+</div>

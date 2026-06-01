@@ -1,0 +1,104 @@
+.overview-bar {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  min-height: 72px;
+
+  .loader-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .kpi-divider {
+    width: 1px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  .kpi-card {
+    flex: 1;
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.2s;
+    border-radius: 8px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .kpi-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .kpi-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+
+      .kpi-value {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #f0f6fc;
+        line-height: 1;
+        letter-spacing: -0.02em;
+      }
+
+      .kpi-label {
+        font-size: 0.68rem;
+        color: rgba(240, 246, 252, 0.5);
+        text-transform: uppercase;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+      }
+    }
+
+    &.users .kpi-value { color: #60a5fa; }
+    &.games .kpi-value { color: #a78bfa; }
+    &.studios .kpi-value { color: #34d399; }
+    &.categories .kpi-value { color: #fbbf24; }
+    &.sessions .kpi-value { color: #f0f6fc; }
+    &.reports .kpi-value { color: #f87171; }
+  }
+}
+
+@media (max-width: 768px) {
+  .overview-bar {
+    padding: 0.75rem 1rem;
+    gap: 0.5rem;
+
+    .kpi-divider { display: none; }
+
+    .kpi-card {
+      flex: 1 1 calc(33% - 0.5rem);
+      min-width: 80px;
+      padding: 0.4rem 0.5rem;
+      gap: 0.5rem;
+
+      .kpi-icon { font-size: 1.1rem; }
+      .kpi-body .kpi-value { font-size: 1.1rem; }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .overview-bar .kpi-card {
+    flex: 1 1 calc(50% - 0.5rem);
+  }
+}

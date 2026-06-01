@@ -1,0 +1,70 @@
+<div class="overview-bar">
+  @if (loading()) {
+    <div class="loader-container">
+      <p-progressSpinner
+        [style]="{ width: '36px', height: '36px' }"
+        strokeWidth="4"
+        fill="transparent"
+        animationDuration=".8s"
+      />
+    </div>
+  } @else if (overview(); as data) {
+    <div class="kpi-card users">
+      <div class="kpi-icon">👤</div>
+      <div class="kpi-body">
+        <div class="kpi-value">{{ data.totalUsers | number }}</div>
+        <div class="kpi-label">Usuarios</div>
+      </div>
+    </div>
+
+    <div class="kpi-divider"></div>
+
+    <div class="kpi-card games">
+      <div class="kpi-icon">🎮</div>
+      <div class="kpi-body">
+        <div class="kpi-value">{{ data.totalGames | number }}</div>
+        <div class="kpi-label">Juegos</div>
+      </div>
+    </div>
+
+    <div class="kpi-divider"></div>
+
+    <div class="kpi-card studios">
+      <div class="kpi-icon">🏢</div>
+      <div class="kpi-body">
+        <div class="kpi-value">{{ data.totalStudios | number }}</div>
+        <div class="kpi-label">Studios</div>
+      </div>
+    </div>
+
+    <div class="kpi-divider"></div>
+
+    <div class="kpi-card categories">
+      <div class="kpi-icon">🏷️</div>
+      <div class="kpi-body">
+        <div class="kpi-value">{{ data.totalCategories | number }}</div>
+        <div class="kpi-label">Categorías</div>
+      </div>
+    </div>
+
+    <div class="kpi-divider"></div>
+
+    <div class="kpi-card sessions">
+      <div class="kpi-icon">⏱️</div>
+      <div class="kpi-body">
+        <div class="kpi-value">{{ data.totalSessions | number }}</div>
+        <div class="kpi-label">Sesiones</div>
+      </div>
+    </div>
+
+    <div class="kpi-divider"></div>
+
+    <div class="kpi-card reports">
+      <div class="kpi-icon">🚩</div>
+      <div class="kpi-body">
+        <div class="kpi-value">{{ data.pendingReports | number }}</div>
+        <div class="kpi-label">Reportes pendientes</div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,115 @@
+.dashboard-panel {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(10px);
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.5rem;
+
+    h3 {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #f0f6fc;
+    }
+  }
+
+  .retention-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    flex: 1;
+
+    .retention-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+
+      .period-label {
+        font-size: 0.7rem;
+        color: rgba(240, 246, 252, 0.6);
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .retention-value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #667eea;
+      }
+
+      .retention-percentage {
+        font-size: 0.75rem;
+        color: rgba(240, 246, 252, 0.5);
+      }
+    }
+  }
+
+  .loader-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+  }
+
+  .empty-state {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(240, 246, 252, 0.5);
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-panel {
+    padding: 0.8rem;
+
+    .panel-header {
+      margin-bottom: 0.6rem;
+
+      h3 {
+        font-size: 0.9rem;
+      }
+    }
+
+    .retention-grid {
+      gap: 0.6rem;
+
+      .retention-item {
+        padding: 0.6rem;
+        gap: 0.2rem;
+
+        .period-label {
+          font-size: 0.65rem;
+        }
+
+        .retention-value {
+          font-size: 1rem;
+        }
+
+        .retention-percentage {
+          font-size: 0.7rem;
+        }
+      }
+    }
+  }
+}

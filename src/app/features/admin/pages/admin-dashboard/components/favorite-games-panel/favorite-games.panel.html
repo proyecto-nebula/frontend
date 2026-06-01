@@ -1,0 +1,48 @@
+<div class="dashboard-panel">
+  <div class="panel-header">
+    <h3>Juegos Favoritos</h3>
+    <span class="period-badge">Top 10</span>
+  </div>
+
+  @if (loading()) {
+    <div class="loader-container">
+      <p-progressSpinner
+        [style]="{ width: '50px', height: '50px' }"
+        strokeWidth="4"
+        fill="transparent"
+        animationDuration=".8s"
+      />
+    </div>
+  } @else {
+    @if (games().length > 0) {
+      <div class="favorites-list">
+        @for (game of games(); track game.id; let i = $index) {
+          <div class="favorite-item" [class.top]="i < 3">
+            <div class="item-rank">
+              <span class="rank-badge">{{ i + 1 }}</span>
+            </div>
+
+            <div class="item-content">
+              <div class="game-info">
+                @if (game.coverUrl) {
+                  <img [src]="game.coverUrl" [alt]="game.title" class="game-banner" />
+                }
+                <div class="game-text">
+                  <div class="game-title">{{ game.title }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="item-stats">
+              <span class="stat-value">{{ game.uniqueUsers }} ❤️</span>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <p>No hay datos disponibles</p>
+      </div>
+    }
+  }
+</div>

@@ -1,0 +1,40 @@
+<div class="dashboard-panel">
+  <div class="panel-header">
+    <h3>⏱️ Sesiones</h3>
+  </div>
+
+  @if (loading()) {
+    <div class="loader-container">
+      <p-progressSpinner
+        [style]="{ width: '40px', height: '40px' }"
+        strokeWidth="4"
+        fill="transparent"
+        animationDuration=".8s"
+      />
+    </div>
+  } @else {
+    @if (stats(); as stat) {
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-icon">📊</div>
+          <div class="stat-label">Total Sesiones</div>
+          <div class="stat-value">{{ stat.totalSessions }}</div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon">👥</div>
+          <div class="stat-label">Usuarios</div>
+          <div class="stat-value">{{ stat.totalUsers }}</div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-label">Promedio</div>
+          <div class="stat-value">{{ formatMinutes(stat.averageDuration) }}</div>
+        </div>
+      </div>
+    } @else {
+      <div class="empty-state">Sin datos</div>
+    }
+  }
+</div>

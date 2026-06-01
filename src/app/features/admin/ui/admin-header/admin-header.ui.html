@@ -6,6 +6,8 @@
   </button>
 
   <nav class="admin-header__nav" [class.open]="menuOpen()">
+    <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()" class="admin-nav-dashboard">📊 Dashboard</a>
+    
     @if (auth.isAdmin()) {
       <a routerLink="/admin/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Usuarios</a>
       <a routerLink="/admin/avatars" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" (click)="closeMenu()">Avatars</a>
