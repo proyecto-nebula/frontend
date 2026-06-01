@@ -1,0 +1,286 @@
+<div class="reg-account" [formGroup]="group">
+  <!-- Email -->
+  <div class="reg-field" [class.is-error]="emailCtrl?.invalid && emailCtrl?.touched">
+    <label class="reg-label" for="reg-email">Correo electrónico</label>
+    <div class="reg-input-wrap">
+      <input
+        id="reg-email"
+        class="reg-input"
+        type="email"
+        formControlName="email"
+        placeholder="tu@email.com"
+        autocomplete="email"
+      />
+      @if (emailChecking) {
+        <i class="pi pi-spin pi-spinner reg-input-icon spin" aria-hidden="true"></i>
+      } @else if (emailCtrl?.valid && !emailTaken) {
+        <i class="pi pi-check-circle reg-input-icon ok" aria-hidden="true"></i>
+      }
+    </div>
+    @if (emailCtrl?.touched) {
+      @if (emailCtrl?.hasError('required')) {
+        <div class="reg-error" role="alert">
+          <i class="pi pi-exclamation-circle" aria-hidden="true"></i> El email es obligatorio
+        </div>
+      } @else if (emailCtrl?.hasError('email')) {
+        <div class="reg-error" role="alert">
+          <i class="pi pi-exclamation-circle" aria-hidden="true"></i> Introduce un email válido
+        </div>
+      } @else if (emailCtrl?.hasError('emailTaken')) {
+        <div class="reg-error" role="alert">
+          <i class="pi pi-exclamation-circle" aria-hidden="true"></i> Este email ya está registrado
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Contraseña Actual -->
+  <div class="reg-field" [class.is-error]="oldPasswordCtrl?.invalid && oldPasswordCtrl?.touched">
+    <label class="reg-label" for="reg-old-password">Contraseña actual</label>
+    <div class="reg-input-wrap">
+      <input
+        id="reg-old-password"
+        class="reg-input"
+        [type]="showOldPassword ? 'text' : 'password'"
+        formControlName="oldPassword"
+        placeholder="Tu contraseña actual"
+        autocomplete="current-password"
+      />
+      <button
+        type="button"
+        class="reg-input-icon toggle-pw"
+        (click)="toggleOldPassword()"
+        tabindex="0"
+        [attr.aria-label]="showOldPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        [attr.aria-pressed]="showOldPassword"
+      >
+        <i class="pi" [class.pi-eye]="!showOldPassword" [class.pi-eye-slash]="showOldPassword" aria-hidden="true"></i>
+      </button>
+    </div>
+    @if (oldPasswordCtrl?.invalid && oldPasswordCtrl?.touched) {
+      <div class="reg-error" role="alert">
+        <i class="pi pi-exclamation-circle" aria-hidden="true"></i> Contraseña requerida
+      </div>
+    }
+  </div>
+
+  <!-- Nueva Contraseña -->
+  <div class="reg-field" [class.is-error]="passwordCtrl?.invalid && passwordCtrl?.touched">
+    <label class="reg-label" for="reg-new-password">Nueva contraseña</label>
+    <div class="reg-input-wrap">
+      <input
+        id="reg-new-password"
+        class="reg-input"
+        [type]="showNewPassword ? 'text' : 'password'"
+        formControlName="password"
+        placeholder="Mínimo 6 caracteres"
+        autocomplete="new-password"
+        [attr.aria-describedby]="(passwordCtrl?.value && passwordValidationEnabled) ? 'reg-pw-checks' : null"
+      />
+      <button
+        type="button"
+        class="reg-input-icon toggle-pw"
+        (click)="toggleNewPassword()"
+        tabindex="0"
+        [attr.aria-label]="showNewPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        [attr.aria-pressed]="showNewPassword"
+      >
+        <i class="pi" [class.pi-eye]="!showNewPassword" [class.pi-eye-slash]="showNewPassword" aria-hidden="true"></i>
+      </button>
+    </div>
+    @if (passwordCtrl?.value && passwordValidationEnabled) {
+      <div class="pw-checks">
+        @for (c of passwordStrengthChecks; track c.label) {
+          <div class="pw-check" [class.ok]="c.ok">
+            <i class="pi pw-check__icon" [class.pi-check-circle]="c.ok" [class.pi-times-circle]="!c.ok" aria-hidden="true"></i>
+            <span>{{ c.label }}</span>
+          </div>
+        }
+        <div id="reg-pw-checks" class="pw-strength pw-strength--{{ passwordStrengthLevel }}">
+          <div class="pw-strength__bar"></div>
+          <div class="pw-strength__bar"></div>
+          <div class="pw-strength__bar"></div>
+          <span class="pw-strength__label">
+            {{
+              passwordStrengthLevel === 'strong'
+                ? 'Segura'
+                : passwordStrengthLevel === 'medium'
+                  ? 'Moderada'
+                  : 'Débil'
+            }}
+          </span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Confirmar Contraseña -->
+  <div class="reg-field" [class.is-error]="passwordConfirmCtrl?.invalid && passwordConfirmCtrl?.touched">
+    <label class="reg-label" for="reg-password-confirm">Confirmar contraseña</label>
+    <div class="reg-input-wrap">
+      <input
+        id="reg-password-confirm"
+        class="reg-input"
+        type="password"
+        formControlName="passwordConfirm"
+        placeholder="Repite tu contraseña"
+        autocomplete="new-password"
+      />
+    </div>
+    @if (passwordConfirmCtrl?.invalid && passwordConfirmCtrl?.touched) {
+      @if (passwordConfirmCtrl?.hasError('required')) {
+        <div class="reg-error" role="alert">
+          <i class="pi pi-exclamation-circle" aria-hidden="true"></i> Confirmación requerida
+        </div>
+      } @else if (group.hasError('passwordMismatch')) {
+        <div class="reg-error" role="alert">
+          <i class="pi pi-exclamation-circle" aria-hidden="true"></i> Las contraseñas no coinciden
+        </div>
+      }
+    }
+  </div>
+</div>
+
+<style scoped>
+  .reg-account {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .reg-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .reg-field.is-error .reg-input {
+    border-color: var(--red-600);
+  }
+
+  .reg-label {
+    font-weight: 500;
+    color: var(--text-color);
+  }
+
+  .reg-input-wrap {
+    position: relative;
+    display: flex;
+  }
+
+  .reg-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid var(--surface-border);
+    border-radius: 0.375rem;
+    font: inherit;
+    color: var(--text-color);
+    background: var(--surface-card);
+    transition: border-color 0.2s;
+  }
+
+  .reg-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
+  }
+
+  .reg-input-icon {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-color-secondary);
+    font-size: 1rem;
+  }
+
+  .reg-input-icon.spin {
+    animation: spin 1s linear infinite;
+  }
+
+  .reg-input-icon.ok {
+    color: var(--green-600);
+  }
+
+  .toggle-pw {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .toggle-pw:hover {
+    color: var(--text-color);
+  }
+
+  .reg-error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--red-600);
+    font-size: 0.875rem;
+  }
+
+  .pw-checks {
+    margin-top: 0.75rem;
+  }
+
+  .pw-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-color-secondary);
+  }
+
+  .pw-check.ok {
+    color: var(--green-600);
+  }
+
+  .pw-check__icon {
+    font-size: 1rem;
+  }
+
+  .pw-strength {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .pw-strength__bar {
+    height: 0.25rem;
+    flex: 1;
+    background-color: var(--surface-200);
+  }
+
+  .pw-strength--strong .pw-strength__bar {
+    background-color: var(--green-600);
+  }
+
+  .pw-strength--medium .pw-strength__bar:nth-child(-n + 2) {
+    background-color: var(--yellow-600);
+  }
+
+  .pw-strength--weak .pw-strength__bar:first-child {
+    background-color: var(--red-600);
+  }
+
+  .pw-strength__label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  @keyframes spin {
+    from {
+      transform: translateY(-50%) rotate(0deg);
+    }
+    to {
+      transform: translateY(-50%) rotate(360deg);
+    }
+  }
+</style>

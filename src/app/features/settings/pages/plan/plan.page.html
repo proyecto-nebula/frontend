@@ -15,8 +15,8 @@
     @if (!hasPlan()) {
       <p class="plan-page__status">Actualmente no tienes ninguna suscripción. Elige un plan para acceder a todos los contenidos:</p>
     } @else {
-      <p class="plan-page__status">
-        Plan actual: <strong>{{ currentPlanName() }}</strong>. Puedes cambiar tu plan seleccionando una opción:
+      <p class="plan-page__status plan-page__status--current">
+        Plan actual: <strong>{{ currentPlanName() }}</strong> --- Puedes cambiar tu plan seleccionando una opción:
       </p>
     }
 
@@ -37,3 +37,32 @@
     }
   }
 </div>
+
+<style scoped>
+  .plan-page {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .plan-page__status {
+    margin-bottom: 2rem;
+    color: var(--text-color-secondary);
+    font-size: 1rem;
+  }
+
+  .plan-page__status--current {
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .plan-page__cta {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .plan-page__payment {
+    margin-top: 2rem;
+  }
+</style>

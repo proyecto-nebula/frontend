@@ -140,11 +140,11 @@ export class HeaderUi implements OnInit, OnDestroy {
 
   /** Build profile items based on current auth state */
   private buildProfileItems(): void {
-    const items: MenuItem[] = [{ label: 'Mi Perfil', icon: 'pi pi-user' }];
+    const items: MenuItem[] = [{ label: 'Mi Perfil', icon: 'pi pi-user', routerLink: '/settings/profile' }];
+    items.push({ label: 'Mi Cuenta', icon: 'pi pi-key', routerLink: '/settings/account' });
     if (this.auth.isUser && this.auth.isUser()) {
       items.push({ label: 'Mi suscripción', icon: 'pi pi-credit-card', routerLink: '/settings/plan' });
     }
-    items.push({ label: 'Ajustes', icon: 'pi pi-cog', routerLink: '/settings' });
     items.push({ separator: true });
     items.push({ label: 'Cerrar Sesión', icon: 'pi pi-power-off', command: () => this.logout() });
     this.profileItems = items;

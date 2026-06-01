@@ -69,6 +69,12 @@ export class AuthService {
     this.http.delete(API_ROUTES.auth).subscribe({ error: () => {} });
   }
 
+  /** Actualizar usuario en AuthService (ej: después de PATCH /users/{id}) */
+  setUser(user: User | null): void {
+    this._user.set(user);
+    this._userSubject.next(user);
+  }
+
   /** Debug-only: switch displayed user without changing JWT */
   debugSetUser(user: User): void {
     this._user.set(user);

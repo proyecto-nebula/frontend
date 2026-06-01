@@ -8,7 +8,15 @@ export const SETTINGS_ROUTES: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        loadComponent: () => import('./pages/settings/settings.page').then(m => m.SettingsPage),
+        redirectTo: 'account',
+      },
+      {
+        path: 'account',
+        loadComponent: () => import('./pages/account/account.page').then(m => m.AccountPage),
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./pages/profile/profile.page').then(m => m.ProfilePage),
       },
       {
         path: 'plan',
