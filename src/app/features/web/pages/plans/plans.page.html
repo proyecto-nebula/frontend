@@ -2,8 +2,8 @@
   <h1>Planes</h1>
 
   <p class="plans-intro plans-intro--centered">
-    Nuestros planes te dan acceso a contenidos premium, juego en la nube y soporte prioritario.
-    Aquí puedes ver las opciones disponibles. Para contratar un plan regístrate en la plataforma.
+    Nuestros planes te dan acceso a contenidos premium, juego en la nube y soporte prioritario. Aquí puedes ver las
+    opciones disponibles. Para contratar un plan regístrate en la plataforma.
   </p>
 
   <div class="registration-plan">
@@ -12,18 +12,93 @@
         <div class="plan-item" role="article" tabindex="0">
           <div class="plan-name">{{ plan.name }}</div>
           <div class="plan-specs">
-            @if (plan.quality) { <div class="plan-spec"><span class="plan-spec__icon">🎞</span><span>{{ plan.quality }}</span></div> }
-            @if (plan.fps) { <div class="plan-spec"><span class="plan-spec__icon">⚡</span><span>{{ plan.fps }} fps</span></div> }
-            @if (plan.gpu) { <div class="plan-spec"><span class="plan-spec__icon">🖥</span><span>{{ plan.gpu }}</span></div> }
-            @if (plan.priority) { <div class="plan-spec"><span class="plan-spec__icon">🚀</span><span>{{ plan.priority }}</span></div> }
-            @if (plan.session_limit != null) { <div class="plan-spec"><span class="plan-spec__icon">⏱</span><span>{{ plan.session_limit }}h por sesión</span></div> } @else { <div class="plan-spec"><span class="plan-spec__icon">⏱</span><span>Sin límite de sesión</span></div> }
-            @if (plan.storage) { <div class="plan-spec"><span class="plan-spec__icon">💾</span><span>{{ plan.storage }} GB SSD</span></div> }
-            @if (plan.mods) { <div class="plan-spec"><span class="plan-spec__icon">🔧</span><span>{{ plan.mods }}</span></div> }
-            @if (plan.audio) { <div class="plan-spec"><span class="plan-spec__icon">🔊</span><span>{{ plan.audio }}</span></div> }
+            @if (plan.quality) {
+              <div class="plan-spec">
+                <span class="plan-spec__icon">🎞</span>
+                <span>{{ plan.quality }}</span>
+              </div>
+            }
+            @if (plan.fps) {
+              <div class="plan-spec">
+                <span class="plan-spec__icon">⚡</span>
+                <span>{{ plan.fps }} fps</span>
+              </div>
+            }
+            @if (plan.gpu) {
+              <div class="plan-spec">
+                <span class="plan-spec__icon">🖥</span>
+                <span>{{ plan.gpu }}</span>
+              </div>
+            }
+            @if (plan.priority) {
+              <div class="plan-spec">
+                <span class="plan-spec__icon">🚀</span>
+                <span>{{ plan.priority }}</span>
+              </div>
+            }
+            @if (plan.session_limit != null) {
+              <div class="plan-spec">
+                <span class="plan-spec__icon">⏱</span>
+                <span>{{ plan.session_limit }}h por sesión</span>
+              </div>
+            } @else {
+              <div class="plan-spec">
+                <span class="plan-spec__icon">⏱</span>
+                <span>Sin límite de sesión</span>
+              </div>
+            }
+            @if (plan.storage) {
+              <div class="plan-spec">
+                <span class="plan-spec__icon">💾</span>
+                <span>{{ plan.storage }} GB SSD</span>
+              </div>
+            }
+            @if (plan.mods) {
+              <div class="plan-spec">
+                <span class="plan-spec__icon">🔧</span>
+                <span>{{ plan.mods }}</span>
+              </div>
+            }
+            @if (plan.audio) {
+              <div class="plan-spec">
+                <span class="plan-spec__icon">🔊</span>
+                <span>{{ plan.audio }}</span>
+              </div>
+            }
           </div>
           <div class="plan-price">{{ plan.price != null ? (plan.price | currency) : 'Gratis' }}</div>
         </div>
       }
+    </div>
+    <div class="plan-footnotes">
+      <p>
+        <sup>¹</sup>
+        <strong>Prioridad de acceso a servidores:</strong>
+        Los usuarios del Plan Oro disponen de slots dedicados en nuestros nodos, garantizando un tiempo de espera de 0
+        segundos. Los usuarios del Plan Plata saltan la cola general con un tiempo estimado de acceso inferior a 2
+        minutos, mientras que el Plan Bronce está sujeto a la disponibilidad del orden de llegada general en horas
+        punta.
+      </p>
+      <p>
+        <sup>²</sup>
+        <strong>Límite de sesión continua:</strong>
+        Para garantizar un uso justo de los recursos de computación y evitar servidores inactivos, las sesiones se
+        cerrarán automáticamente al alcanzar el límite indicado (3h o 6h). Recibirás una notificación en pantalla 15
+        minutos antes del cierre. Podrás iniciar una nueva sesión inmediatamente después sin penalización.
+      </p>
+      <p>
+        <sup>³</sup>
+        <strong>Almacenamiento SSD Virtual:</strong>
+        Espacio en disco asignado en nuestras cabinas de almacenamiento NVMe de alta velocidad para la instalación de
+        tus perfiles de configuración, datos de juego y almacenamiento de modificaciones locales.
+      </p>
+      <p>
+        <sup>⁴</sup>
+        <strong>Soporte para Modding:</strong>
+        El soporte básico permite la sincronización automática de contenido desde Steam Workshop. El soporte avanzado
+        (Plan Oro) permite la inyección de librerías de texturas de terceros, scripts de configuración personalizados y
+        acceso por consola de comandos al directorio del juego.
+      </p>
     </div>
   </div>
 

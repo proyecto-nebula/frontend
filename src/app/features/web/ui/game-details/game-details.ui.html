@@ -1,6 +1,4 @@
-@if (isLoading()) {
-  <div class="page-spinner"><i class="pi pi-spin pi-spinner"></i></div>
-} @else {
+@if (!isLoading()) {
   @if (error()) {
     <div class="error">{{ error() }}</div>
   } @else {

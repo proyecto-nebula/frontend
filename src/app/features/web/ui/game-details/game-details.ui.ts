@@ -32,6 +32,7 @@ import { GameScreenshotsUi } from '../game-screenshots/game-screenshots.ui';
 export class GameDetailsUi implements OnChanges {
   @Input() slug!: string;
   @Output() gameLoaded = new EventEmitter<Game>();
+  @Output() loadingDone = new EventEmitter<void>();
 
   readonly game = signal<Game | null>(null);
   readonly isLoading = signal(true);
@@ -193,10 +194,12 @@ export class GameDetailsUi implements OnChanges {
           this.gameLoaded.emit(g);
         }
         this.isLoading.set(false);
+        this.loadingDone.emit();
       },
       error: err => {
         this.error.set(err?.message || 'No se pudo cargar el juego');
         this.isLoading.set(false);
+        this.loadingDone.emit();
       },
     });
   }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, effect, inject, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy, NgZone, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, computed, inject, OnDestroy, OnInit, NgZone, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
 import { LoginFormUi } from '@auth/ui/login-form/login-form.ui';
@@ -10,16 +10,15 @@ import { GameService } from '@services/game.service';
 import { LoginModalService } from '@services/login-modal.service';
 import { LogoComponent } from '@ui/logo/logo.component';
 import { ModalComponent } from '@ui/modal/modal.component';
-import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
-import { ButtonModule } from 'primeng/button';
-import { TieredMenu, TieredMenuModule } from 'primeng/tieredmenu';
 
-interface NavItem extends MenuItem {
+interface NavItem {
+  label: string;
+  routerLink: string;
+  icon?: string;
+  styleClass?: string;
   requiresAuth?: boolean;
-  /** Mostrar solo a usuarios 'normales' (no Admin/Editor) */
   onlyForUser?: boolean;
-  /** Mostrar solo a usuarios anónimos */
   onlyForAnon?: boolean;
 }
 
@@ -30,15 +29,12 @@ interface NavItem extends MenuItem {
     CommonModule,
     RouterModule,
     AvatarModule,
-    TieredMenuModule,
-    ButtonModule,
     LoginFormUi,
     ModalComponent,
     LogoComponent,
     LazyLoadDirective,
   ],
   templateUrl: './header.ui.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderUi implements OnInit, OnDestroy {
   public auth = inject(AuthService);
@@ -49,10 +45,11 @@ export class HeaderUi implements OnInit, OnDestroy {
   private ngZone = inject(NgZone);
 
   private hamburgerBtn: HTMLElement | null = null;
-  @ViewChild('menuPerfil') menuPerfil?: TieredMenu;
+
+  readonly isLoggedIn = computed(() => !!this.auth.user());
+  readonly authIsUser = computed(() => this.auth.user()?.roleId === 3);
 
   constructor() {
-    // loginModal subscription created here so takeUntilDestroyed has the injection context.
     this.loginModal.open$.pipe(takeUntilDestroyed()).subscribe(returnUrl => {
       if (returnUrl === null) {
         this.showLoginModal = false;
@@ -61,13 +58,6 @@ export class HeaderUi implements OnInit, OnDestroy {
         this.loginReturnUrl = returnUrl || this.router.url || '/';
         this.showLoginModal = true;
       }
-    });
-
-    // Rebuild profileItems whenever auth state changes
-    effect(() => {
-      this.auth.isAuthenticated(); // Track auth state
-      this.auth.isUser?.(); // Track role changes
-      this.buildProfileItems(); // Rebuild menu
     });
   }
 
@@ -78,13 +68,15 @@ export class HeaderUi implements OnInit, OnDestroy {
   searchLoading = signal(false);
   private searchTimer?: ReturnType<typeof setTimeout>;
 
+  // Profile dropdown
+  profileMenuOpen = false;
+
   // modal state for login
   showLoginModal = false;
   loginReturnUrl: string | null = null;
   drawerVisible = false;
   isScrolled = false;
   items: NavItem[] | undefined;
-  profileItems: MenuItem[] | undefined;
 
   @HostListener('window:scroll')
   onScroll(): void {
@@ -93,11 +85,11 @@ export class HeaderUi implements OnInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    if (!this.drawerVisible) return;
     if (event.key === 'Escape') {
-      this.closeDrawer();
-      return;
+      if (this.profileMenuOpen) { this.profileMenuOpen = false; return; }
+      if (this.drawerVisible) { this.closeDrawer(); return; }
     }
+    if (!this.drawerVisible) return;
     if (event.key !== 'Tab') return;
     const drawer = this.elRef.nativeElement.querySelector('#mobile-drawer') as HTMLElement | null;
     if (!drawer) return;
@@ -110,44 +102,20 @@ export class HeaderUi implements OnInit, OnDestroy {
     const first = focusables[0];
     const last = focusables[focusables.length - 1];
     if (event.shiftKey) {
-      if (document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      }
+      if (document.activeElement === first) { event.preventDefault(); last.focus(); }
     } else {
-      if (document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
+      if (document.activeElement === last) { event.preventDefault(); first.focus(); }
     }
   }
 
   ngOnInit() {
     this.items = [
-      //{ label: 'Inicio', routerLink: '/' },
       { label: 'Descubrir', routerLink: '/discover' },
       { label: 'Próximos lanzamientos', routerLink: '/releases' },
-      // Mostrar 'Mis Juegos' solo a usuarios normales (no admin/editor)
       { label: 'Mis Juegos', routerLink: '/my-games', onlyForUser: true },
-      // 'Mi suscripción' solo para usuarios normales (no Admin/Editor)
       { label: 'Mi suscripción', routerLink: '/settings/plan', requiresAuth: true, onlyForUser: true },
-      // Planes sólo para usuarios anónimos
       { label: 'Planes', routerLink: '/plans', onlyForAnon: true },
     ];
-    // Initial build of profile items
-    this.buildProfileItems();
-  }
-
-  /** Build profile items based on current auth state */
-  private buildProfileItems(): void {
-    const items: MenuItem[] = [{ label: 'Mi Perfil', icon: 'pi pi-user', routerLink: '/settings/profile' }];
-    items.push({ label: 'Mi Cuenta', icon: 'pi pi-key', routerLink: '/settings/account' });
-    if (this.auth.isUser && this.auth.isUser()) {
-      items.push({ label: 'Mi suscripción', icon: 'pi pi-credit-card', routerLink: '/settings/plan' });
-    }
-    items.push({ separator: true });
-    items.push({ label: 'Cerrar Sesión', icon: 'pi pi-power-off', command: () => this.logout() });
-    this.profileItems = items;
   }
 
   toggleDrawer(): void {
@@ -175,27 +143,21 @@ export class HeaderUi implements OnInit, OnDestroy {
     setTimeout(() => this.hamburgerBtn?.focus(), 50);
   }
 
-  logout() {
-    // Close menus before logout
-    if (this.menuPerfil) {
-      this.menuPerfil.hide();
-    }
+  logout(): void {
+    this.profileMenuOpen = false;
     this.closeDrawer();
     this.closeSearch();
     this.auth.logout();
     this.router.navigate(['/']);
   }
 
-  openLoginModal() {
+  openLoginModal(): void {
     this.loginModal.open(this.router.url || '/');
   }
 
-  onLoginSuccess() {
-    // close modal; keep user on the same page (header/menu updates reactively)
+  onLoginSuccess(): void {
     this.showLoginModal = false;
-    // request-close the modal on the service so subscribers remain in sync
     this.loginModal.close();
-    // If a return URL was provided and it's different from current, navigate there.
     if (this.loginReturnUrl && this.loginReturnUrl !== this.router.url) {
       this.router.navigateByUrl(this.loginReturnUrl);
     }
@@ -205,6 +167,7 @@ export class HeaderUi implements OnInit, OnDestroy {
   @HostListener('document:click')
   onDocumentClick(): void {
     if (this.searchOpen) this.closeSearch();
+    if (this.profileMenuOpen) this.profileMenuOpen = false;
   }
 
   toggleSearch(): void {
@@ -233,7 +196,6 @@ export class HeaderUi implements OnInit, OnDestroy {
 
     this.searchLoading.set(true);
     this.searchTimer = setTimeout(() => {
-      // Debounce completado: hacer búsqueda
       this.gameService.searchGames(value).subscribe({
         next: results => {
           this.ngZone.run(() => {

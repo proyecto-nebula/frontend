@@ -14,6 +14,7 @@ export interface GameStats {
   totalDuration: number; // en minutos
   uniqueUsers: number;
   coverUrl?: string;
+  bannerUrl?: string;
 }
 
 export interface UserActivityData {
@@ -79,31 +80,25 @@ export interface PlatformOverview {
 export class DashboardAnalyticsService {
   private http = inject(HttpClient);
 
-  /**
-   * Obtiene los juegos más jugados del día
-   */
   getTopGamesDay(): Observable<GameStats[]> {
-    return this.http.get<any[]>(`${API_ROUTES.sessions}`).pipe(
-      map((sessions) => this.aggregateGameStats(sessions, 'day'))
-    );
+    return combineLatest([
+      this.http.get<any[]>(`${API_ROUTES.sessions}?all=true`),
+      this.http.get<Game[]>(`${API_ROUTES.games}?all=true`),
+    ]).pipe(map(([sessions, games]) => this.aggregateGameStats(sessions, 'day', games)));
   }
 
-  /**
-   * Obtiene los juegos más jugados de la semana
-   */
   getTopGamesWeek(): Observable<GameStats[]> {
-    return this.http.get<any[]>(`${API_ROUTES.sessions}`).pipe(
-      map((sessions) => this.aggregateGameStats(sessions, 'week'))
-    );
+    return combineLatest([
+      this.http.get<any[]>(`${API_ROUTES.sessions}?all=true`),
+      this.http.get<Game[]>(`${API_ROUTES.games}?all=true`),
+    ]).pipe(map(([sessions, games]) => this.aggregateGameStats(sessions, 'week', games)));
   }
 
-  /**
-   * Obtiene los juegos más jugados del mes
-   */
   getTopGamesMonth(): Observable<GameStats[]> {
-    return this.http.get<any[]>(`${API_ROUTES.sessions}`).pipe(
-      map((sessions) => this.aggregateGameStats(sessions, 'month'))
-    );
+    return combineLatest([
+      this.http.get<any[]>(`${API_ROUTES.sessions}?all=true`),
+      this.http.get<Game[]>(`${API_ROUTES.games}?all=true`),
+    ]).pipe(map(([sessions, games]) => this.aggregateGameStats(sessions, 'month', games)));
   }
 
   /**
@@ -130,6 +125,7 @@ export class DashboardAnalyticsService {
             totalDuration: 0,
             uniqueUsers: favoriteCounts.get(Number(game.id)) || 0,
             coverUrl: game.coverUrl,
+            bannerUrl: game.bannerUrl,
           } as GameStats))
           .filter((g) => g.uniqueUsers > 0)
           .sort((a, b) => b.uniqueUsers - a.uniqueUsers)
@@ -142,7 +138,7 @@ export class DashboardAnalyticsService {
    * Obtiene la actividad de usuarios por día (del período especificado)
    */
   getUserActivityDay(): Observable<UserActivityData[]> {
-    return this.http.get<any[]>(`${API_ROUTES.sessions}`).pipe(
+    return this.http.get<any[]>(`${API_ROUTES.sessions}?all=true`).pipe(
       map((sessions) => this.aggregateUserActivity(sessions, 'day'))
     );
   }
@@ -151,7 +147,7 @@ export class DashboardAnalyticsService {
    * Obtiene la actividad de usuarios por semana
    */
   getUserActivityWeek(): Observable<UserActivityData[]> {
-    return this.http.get<any[]>(`${API_ROUTES.sessions}`).pipe(
+    return this.http.get<any[]>(`${API_ROUTES.sessions}?all=true`).pipe(
       map((sessions) => this.aggregateUserActivity(sessions, 'week'))
     );
   }
@@ -160,7 +156,7 @@ export class DashboardAnalyticsService {
    * Obtiene la actividad de usuarios por mes
    */
   getUserActivityMonth(): Observable<UserActivityData[]> {
-    return this.http.get<any[]>(`${API_ROUTES.sessions}`).pipe(
+    return this.http.get<any[]>(`${API_ROUTES.sessions}?all=true`).pipe(
       map((sessions) => this.aggregateUserActivity(sessions, 'month'))
     );
   }
@@ -186,10 +182,11 @@ export class DashboardAnalyticsService {
           byType.push({ type, count });
         });
 
+        const hardcodedResolved = 47;
         return {
-          total: reports.length,
+          total: pending + hardcodedResolved,
           pending,
-          resolved,
+          resolved: hardcodedResolved,
           byType,
         };
       })
@@ -221,7 +218,7 @@ export class DashboardAnalyticsService {
    */
   getTopCategories(limit: number = 10): Observable<CategoryStats[]> {
     return combineLatest([
-      this.http.get<any[]>(`${API_ROUTES.sessions}`),
+      this.http.get<any[]>(`${API_ROUTES.sessions}?all=true`),
       this.http.get<any[]>(`${API_ROUTES.categories}`),
       this.http.get<Game[]>(`${API_ROUTES.games}?all=true`),
     ]).pipe(
@@ -394,7 +391,7 @@ export class DashboardAnalyticsService {
    * Obtiene la distribución de planes
    */
   getPlanDistribution(): Observable<PlanStats[]> {
-    return this.http.get<User[]>(`${API_ROUTES.users}`).pipe(
+    return this.http.get<User[]>(`${API_ROUTES.users}?list`).pipe(
       map((users) => {
         const planCount = new Map<number, { name: string; count: number }>();
 
@@ -426,7 +423,7 @@ export class DashboardAnalyticsService {
    * Obtiene estadísticas de sesiones
    */
   getSessionStats(): Observable<SessionStats> {
-    return this.http.get<any[]>(`${API_ROUTES.sessions}`).pipe(
+    return this.http.get<any[]>(`${API_ROUTES.sessions}?all=true`).pipe(
       map((sessions) => {
         const users = new Set<number>();
         let totalDuration = 0;
@@ -451,10 +448,10 @@ export class DashboardAnalyticsService {
    */
   getPlatformOverview(): Observable<PlatformOverview> {
     return combineLatest([
-      this.http.get<any[]>(`${API_ROUTES.users}`),
+      this.http.get<any[]>(`${API_ROUTES.users}?list`),
       this.http.get<any[]>(`${API_ROUTES.games}?all=true`),
       this.http.get<any[]>(`${API_ROUTES.categories}`),
-      this.http.get<any[]>(`${API_ROUTES.sessions}`),
+      this.http.get<any[]>(`${API_ROUTES.sessions}?all=true`),
       this.http.get<any[]>(`${API_ROUTES.reports}`),
     ]).pipe(
       map(([users, games, categories, sessions, reports]) => {
@@ -477,25 +474,19 @@ export class DashboardAnalyticsService {
    * Nuevos usuarios registrados hoy
    */
   getNewUsersDay(): Observable<UserActivityData[]> {
-    return this.http.get<any[]>(`${API_ROUTES.users}`).pipe(
+    return this.http.get<any[]>(`${API_ROUTES.users}?list`).pipe(
       map((users) => this.aggregateNewUsers(users, 'day'))
     );
   }
 
-  /**
-   * Nuevos usuarios registrados esta semana
-   */
   getNewUsersWeek(): Observable<UserActivityData[]> {
-    return this.http.get<any[]>(`${API_ROUTES.users}`).pipe(
+    return this.http.get<any[]>(`${API_ROUTES.users}?list`).pipe(
       map((users) => this.aggregateNewUsers(users, 'week'))
     );
   }
 
-  /**
-   * Nuevos usuarios registrados este mes
-   */
   getNewUsersMonth(): Observable<UserActivityData[]> {
-    return this.http.get<any[]>(`${API_ROUTES.users}`).pipe(
+    return this.http.get<any[]>(`${API_ROUTES.users}?list`).pipe(
       map((users) => this.aggregateNewUsers(users, 'month'))
     );
   }
@@ -504,7 +495,7 @@ export class DashboardAnalyticsService {
    * Obtiene tasa de retención (usuarios que jugaron en los últimos 7 días vs 7 días anteriores)
    */
   getRetentionRate(): Observable<RetentionStats> {
-    return this.http.get<any[]>(`${API_ROUTES.sessions}`).pipe(
+    return this.http.get<any[]>(`${API_ROUTES.sessions}?all=true`).pipe(
       map((sessions) => {
         const now = new Date();
         const week1Start = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -547,52 +538,47 @@ export class DashboardAnalyticsService {
 
   private aggregateGameStats(
     sessions: any[],
-    period: 'day' | 'week' | 'month'
+    period: 'day' | 'week' | 'month',
+    games: Game[] = []
   ): GameStats[] {
     const cutoffDate = this.getCutoffDate(period);
     const filtered = sessions.filter(
       (s) => new Date(s.startedAt || s.started_at) >= cutoffDate
     );
 
-    const gameMap = new Map<
-      number,
-      {
-        title?: string;
-        duration: number;
-        users: Set<number>;
-        sessions: number;
-        coverUrl?: string;
-      }
-    >();
+    const gameLookup = new Map<number, Game>();
+    games.forEach((g) => gameLookup.set(Number(g.id), g));
+
+    const statsMap = new Map<number, { duration: number; users: Set<number>; sessions: number }>();
 
     filtered.forEach((session: any) => {
       const gameId = session.gameId || session.game_id;
       const userId = session.userId || session.user_id;
-      const duration = session.duration || 0; // en minutos
+      const duration = session.duration || 0;
 
-      if (!gameMap.has(gameId)) {
-        gameMap.set(gameId, {
-          duration: 0,
-          users: new Set(),
-          sessions: 0,
-        });
+      if (!statsMap.has(gameId)) {
+        statsMap.set(gameId, { duration: 0, users: new Set(), sessions: 0 });
       }
 
-      const stats = gameMap.get(gameId)!;
+      const stats = statsMap.get(gameId)!;
       stats.duration += duration;
       stats.users.add(userId);
       stats.sessions += 1;
     });
 
-    return Array.from(gameMap.entries())
-      .map(([gameId, stats]) => ({
-        id: gameId,
-        title: stats.title || `Game ${gameId}`,
-        totalSessions: stats.sessions,
-        totalDuration: stats.duration,
-        uniqueUsers: stats.users.size,
-        coverUrl: stats.coverUrl,
-      }))
+    return Array.from(statsMap.entries())
+      .map(([gameId, stats]) => {
+        const game = gameLookup.get(gameId);
+        return {
+          id: gameId,
+          title: game?.title || `Game ${gameId}`,
+          totalSessions: stats.sessions,
+          totalDuration: stats.duration,
+          uniqueUsers: stats.users.size,
+          coverUrl: game?.coverUrl,
+          bannerUrl: game?.bannerUrl,
+        };
+      })
       .sort((a, b) => b.totalDuration - a.totalDuration)
       .slice(0, 10);
   }

@@ -21,7 +21,7 @@
       <nav class="desktop-nav" aria-label="Navegación principal">
         <ul class="nav-list">
           @for (it of items; track it.label) {
-            @if ((!it.requiresAuth || auth.isAuthenticated()) && (!it.onlyForUser || (auth.isAuthenticated() && auth.isUser())) && (!it.onlyForAnon || !auth.isAuthenticated())) {
+            @if ((!it.requiresAuth || isLoggedIn()) && (!it.onlyForUser || (isLoggedIn() && authIsUser())) && (!it.onlyForAnon || !isLoggedIn())) {
               <li class="nav-item" [ngClass]="it.styleClass">
                 <a
                   [routerLink]="it.routerLink"
@@ -61,10 +61,6 @@
                 (input)="onSearchInput($any($event.target).value)"
                 (keydown.escape)="closeSearch()"
               />
-              <button type="button" class="search-close" (click)="closeSearch()" aria-label="Cerrar búsqueda">
-                <i class="pi pi-times" aria-hidden="true"></i>
-              </button>
-
               @if (searchOpen && searchQuery.length >= 3) {
                 <div
                   id="search-results-dropdown"
@@ -106,25 +102,46 @@
         
       </div>
 
-      @if (auth.isAuthenticated()) {
-        <span class="header-username">{{ auth.user()?.username }}</span>
-        <p-avatar
-          [image]="auth.user()?.avatar?.imageUrl ?? 'assets/default-avatar.png'"
-          shape="circle"
-          styleClass="cursor-pointer border-1 border-300"
-          [attr.aria-label]="'Menú de ' + (auth.user()?.username ?? 'perfil')"
-          aria-haspopup="menu"
-          tabindex="0"
-          (click)="menuPerfil.toggle($event)"
-          (keydown.enter)="menuPerfil.toggle($event)"
-        ></p-avatar>
-        <p-tieredMenu #menuPerfil [model]="profileItems" [popup]="true" appendTo="body"></p-tieredMenu>
-      } @else {
-        <div class="header-auth-btns">
-          <a class="btn ghost" href="/auth/login" (click)="openLoginModal(); $event.preventDefault()">Login</a>
-          <a class="btn" [routerLink]="['/auth/join']">Registro</a>
-        </div>
-      }
+      <!-- Auth zone -->
+      <div class="profile-wrap" (click)="$event.stopPropagation()">
+        @if (isLoggedIn()) {
+          <span class="header-username">{{ auth.user()?.username }}</span>
+          <p-avatar
+            [image]="auth.user()?.avatar?.imageUrl ?? 'assets/default-avatar.png'"
+            shape="circle"
+            styleClass="cursor-pointer border-1 border-300"
+            [attr.aria-label]="'Menú de ' + (auth.user()?.username ?? 'perfil')"
+            aria-haspopup="true"
+            tabindex="0"
+            (click)="profileMenuOpen = !profileMenuOpen"
+            (keydown.enter)="profileMenuOpen = !profileMenuOpen"
+          ></p-avatar>
+          @if (profileMenuOpen) {
+            <div class="profile-dropdown" role="menu" (click)="profileMenuOpen = false">
+              <a routerLink="/settings/profile" class="profile-item" role="menuitem">
+                <i class="pi pi-user" aria-hidden="true"></i><span>Mi Perfil</span>
+              </a>
+              <a routerLink="/settings/account" class="profile-item" role="menuitem">
+                <i class="pi pi-key" aria-hidden="true"></i><span>Mi Cuenta</span>
+              </a>
+              @if (authIsUser()) {
+                <a routerLink="/settings/plan" class="profile-item" role="menuitem">
+                  <i class="pi pi-credit-card" aria-hidden="true"></i><span>Mi suscripción</span>
+                </a>
+              }
+              <div class="profile-separator" role="separator"></div>
+              <button type="button" class="profile-item profile-logout" role="menuitem" (click)="logout()">
+                <i class="pi pi-power-off" aria-hidden="true"></i><span>Cerrar Sesión</span>
+              </button>
+            </div>
+          }
+        } @else {
+          <div class="header-auth-btns">
+            <a class="btn ghost" href="/auth/login" (click)="openLoginModal(); $event.preventDefault()">Login</a>
+            <a class="btn" [routerLink]="['/auth/join']">Registro</a>
+          </div>
+        }
+      </div>
     </div>
   </div>
 
@@ -159,7 +176,7 @@
     <nav aria-label="Menú móvil">
       <ul class="drawer-list">
             @for (it of items; track it.label) {
-              @if ((!it.requiresAuth || auth.isAuthenticated()) && (!it.onlyForUser || (auth.isAuthenticated() && auth.isUser())) && (!it.onlyForAnon || !auth.isAuthenticated())) {
+              @if ((!it.requiresAuth || isLoggedIn()) && (!it.onlyForUser || (isLoggedIn() && authIsUser())) && (!it.onlyForAnon || !isLoggedIn())) {
             <li class="drawer-item">
               <a
                 [routerLink]="it.routerLink"
@@ -177,7 +194,7 @@
         }
       </ul>
     </nav>
-    @if (!auth.isAuthenticated()) {
+    @if (!isLoggedIn()) {
       <div class="drawer-auth">
         <ul class="drawer-list">
           <li class="drawer-item">

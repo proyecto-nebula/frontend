@@ -391,5 +391,16 @@ app-carousel {
       }
     }
   }
+
+  @media (max-width: 768px) {
+    .plan-list {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .plan-item {
+      max-width: 100%;
+    }
+  }
 }
 

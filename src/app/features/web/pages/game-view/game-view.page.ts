@@ -19,6 +19,7 @@ export class GameViewPage {
   private titleService = inject(Title);
 
   slug = signal<string>('');
+  readonly isLoading = signal(true);
   readonly similarGames    = signal<Game[] | null>(null);
   readonly developerGames  = signal<Game[] | null>(null);
   readonly developerName   = signal<string | null>(null);
@@ -27,10 +28,15 @@ export class GameViewPage {
     this.route.paramMap.subscribe(params => {
       const slug = params.get('slug') ?? '';
       this.slug.set(slug);
+      this.isLoading.set(true);
       this.similarGames.set(null);
       this.developerGames.set(null);
       this.developerName.set(null);
     });
+  }
+
+  onLoadingDone(): void {
+    this.isLoading.set(false);
   }
 
   onGameLoaded(game: Game): void {

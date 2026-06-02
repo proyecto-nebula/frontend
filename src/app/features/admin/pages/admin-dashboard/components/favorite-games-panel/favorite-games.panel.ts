@@ -22,7 +22,7 @@ export class FavoriteGamesPanelComponent implements OnInit {
 
   private loadGames(): void {
     this.loading.set(true);
-    this.analytics.getTopFavoriteGames(10).subscribe({
+    this.analytics.getTopFavoriteGames(5).subscribe({
       next: (data: GameStats[]) => {
         this.games.set(data);
         this.loading.set(false);

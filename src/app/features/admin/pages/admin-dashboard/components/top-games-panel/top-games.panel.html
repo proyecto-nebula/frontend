@@ -1,6 +1,6 @@
 <div class="dashboard-panel">
   <div class="panel-header">
-    <h3>🎮 Más Jugados</h3>
+    <h3>Más Jugados</h3>
     <div class="period-tabs">
       <button [class.active]="selectedPeriod() === 'day'" (click)="selectPeriod('day')">Hoy</button>
       <button [class.active]="selectedPeriod() === 'week'" (click)="selectPeriod('week')">Semana</button>
@@ -19,32 +19,29 @@
     </div>
   } @else {
     @if (games().length > 0) {
-      <div class="table-wrapper">
-        <table class="games-table">
-          <thead>
-            <tr>
-              <th>Juego</th>
-              <th class="text-center">Sesiones</th>
-              <th class="text-center">Horas</th>
-              <th class="text-center">Usuarios</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (game of games(); track game.id; let i = $index) {
-              <tr [class.highlight]="i === 0">
-                <td class="game-cell">
-                  @if (game.coverUrl) {
-                    <img [src]="game.coverUrl" [alt]="game.title" class="game-cover" />
-                  }
-                  <span>{{ game.title }}</span>
-                </td>
-                <td class="text-center">{{ game.totalSessions }}</td>
-                <td class="text-center">{{ formatDuration(game.totalDuration) }}</td>
-                <td class="text-center">{{ game.uniqueUsers }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
+      <div class="games-list">
+        @for (game of games(); track game.id; let i = $index) {
+          <div class="game-item" [class.top]="i < 3">
+            <div class="item-rank">
+              <span class="rank-badge">{{ i + 1 }}</span>
+            </div>
+
+            <div class="item-content">
+              <div class="game-info">
+                @if (game.bannerUrl || game.coverUrl) {
+                  <img [src]="game.bannerUrl || game.coverUrl" [alt]="game.title" class="game-banner" />
+                }
+                <div class="game-text">
+                  <div class="game-title">{{ game.title }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="item-stats">
+              <span class="stat-value">{{ formatDuration(game.totalDuration) }}</span>
+            </div>
+          </div>
+        }
       </div>
     } @else {
       <div class="empty-state">

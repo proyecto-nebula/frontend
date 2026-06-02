@@ -1,16 +1,25 @@
 <div class="game-view-page">
-  <app-game-details [slug]="slug()" (gameLoaded)="onGameLoaded($event)"></app-game-details>
+  @if (isLoading()) {
+    <div class="page-spinner"><i class="pi pi-spin pi-spinner"></i></div>
+  }
+  <app-game-details
+    [slug]="slug()"
+    (gameLoaded)="onGameLoaded($event)"
+    (loadingDone)="onLoadingDone()"
+  ></app-game-details>
 
-  <app-game-collection
-    title="Juegos similares"
-    [collection]="similarGames()"
-    emptyMessage="No se encontraron juegos similares"
-  ></app-game-collection>
-
-  @if (developerName() && developerGames()?.length) {
+  @if (!isLoading()) {
     <app-game-collection
-      [title]="'Otros juegos de ' + developerName()"
-      [collection]="developerGames()"
+      title="Juegos similares"
+      [collection]="similarGames()"
+      emptyMessage="No se encontraron juegos similares"
     ></app-game-collection>
+
+    @if (developerName() && developerGames()?.length) {
+      <app-game-collection
+        [title]="'Otros juegos de ' + developerName()"
+        [collection]="developerGames()"
+      ></app-game-collection>
+    }
   }
 </div>

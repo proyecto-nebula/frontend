@@ -1,8 +1,7 @@
 <div class="admin-dashboard">
   <div class="dashboard-header">
     <div class="header-content">
-      <h1>📊 Dashboard</h1>
-      <p class="subtitle">Estadísticas y análisis de la plataforma</p>
+      <h1>Dashboard</h1>
     </div>
   </div>
 
@@ -12,7 +11,18 @@
       <app-platform-overview-panel />
     </div>
 
-    <!-- Row 1: Juegos, Favoritos, Reportes -->
+    <!-- Row 1: Usuarios activos, Nuevos registros, Distribución de planes -->
+    <div class="grid-item">
+      <app-active-users-panel />
+    </div>
+    <div class="grid-item">
+      <app-new-users-panel />
+    </div>
+    <div class="grid-item">
+      <app-plan-distribution-panel />
+    </div>
+
+    <!-- Row 2: Más jugados, Juegos favoritos, Distribución PEGI -->
     <div class="grid-item">
       <app-top-games-panel />
     </div>
@@ -20,32 +30,21 @@
       <app-favorite-games-panel />
     </div>
     <div class="grid-item">
-      <app-pending-reports-panel />
+      <app-pegi-distribution-panel />
     </div>
 
-    <!-- Row 2: Actividad usuarios, Categorías -->
-    <div class="grid-item">
-      <app-active-users-panel />
-    </div>
+    <!-- Row 3: Géneros más jugados, Géneros favoritos, Studios top -->
     <div class="grid-item">
       <app-top-categories-panel />
     </div>
     <div class="grid-item">
       <app-favorite-categories-panel />
     </div>
-
-    <!-- Row 3: Studios y Distribuciones -->
     <div class="grid-item">
       <app-top-studios-panel />
     </div>
-    <div class="grid-item">
-      <app-pegi-distribution-panel />
-    </div>
-    <div class="grid-item">
-      <app-plan-distribution-panel />
-    </div>
 
-    <!-- Row 4: Sesiones, Retención, Nuevos registros -->
+    <!-- Row 4: Sesiones, Retención, Reportes -->
     <div class="grid-item">
       <app-session-stats-panel />
     </div>
@@ -53,7 +52,7 @@
       <app-retention-rate-panel />
     </div>
     <div class="grid-item">
-      <app-new-users-panel />
+      <app-pending-reports-panel />
     </div>
   </div>
 </div>
