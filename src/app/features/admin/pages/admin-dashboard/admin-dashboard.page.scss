@@ -23,10 +23,9 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
-    auto-rows: max-content;
 
     .grid-item {
-      grid-column: span 1;
+      min-width: 0;
 
       &.span-full {
         grid-column: span 3;
@@ -39,18 +38,12 @@
   }
 }
 
-/* Tablets and below */
 @media (max-width: 1024px) {
   .admin-dashboard {
     padding: 1.25rem 0.75rem;
 
     .dashboard-header {
       margin-bottom: 1.5rem;
-
-      .header-content {
-        h1 {
-        }
-      }
     }
 
     .dashboard-grid {
@@ -58,10 +51,7 @@
       gap: 0.9rem;
 
       .grid-item {
-        &.span-full {
-          grid-column: span 2;
-        }
-
+        &.span-full,
         &.span-2 {
           grid-column: span 2;
         }
@@ -70,7 +60,6 @@
   }
 }
 
-/* Mobile */
 @media (max-width: 640px) {
   .admin-dashboard {
     padding: 1rem 0.5rem;
@@ -78,13 +67,8 @@
     .dashboard-header {
       margin-bottom: 1.25rem;
 
-      .header-content {
-        h1 {
-        }
-
-        .subtitle {
-          font-size: 0.85rem;
-        }
+      .header-content .subtitle {
+        font-size: 0.85rem;
       }
     }
 
@@ -92,13 +76,10 @@
       grid-template-columns: 1fr;
       gap: 0.75rem;
 
-      .grid-item {
+      .grid-item,
+      .grid-item.span-full,
+      .grid-item.span-2 {
         grid-column: span 1;
-
-        &.span-full,
-        &.span-2 {
-          grid-column: span 1;
-        }
       }
     }
   }
