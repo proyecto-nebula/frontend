@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { API_ROUTES } from '@config/api.routes';
 import { Plan } from '@models/plan.model';
 import { MutationService } from '@services/mutation.service';
+import { ToastService } from '@ui/toast/toast.service';
 import { TableModule } from 'primeng/table';
 
 @Component({
@@ -20,6 +21,7 @@ export class AdminPlansPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private mutations = inject(MutationService);
+  private toast = inject(ToastService);
 
   items = signal<Plan[]>([]);
   editingId = signal<number | null>(null);
@@ -133,6 +135,7 @@ export class AdminPlansPage implements OnInit {
     req.subscribe({
       next: () => {
         this.saving.set(false);
+        this.toast.success(id ? 'Plan actualizado' : 'Plan creado');
         this.router.navigate(['/admin/plans']);
       },
       error: e => {

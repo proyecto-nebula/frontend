@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { API_ROUTES } from '@config/api.routes';
 import { MutationService } from '@services/mutation.service';
+import { ToastService } from '@ui/toast/toast.service';
 import { TableModule } from 'primeng/table';
 
 interface CategoryItem {
@@ -25,6 +26,7 @@ export class AdminCategoriesPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private mutations = inject(MutationService);
+  private toast = inject(ToastService);
 
   items = signal<CategoryItem[]>([]);
   editingId = signal<number | null>(null);
@@ -97,6 +99,7 @@ export class AdminCategoriesPage implements OnInit {
     req.subscribe({
       next: () => {
         this.saving.set(false);
+        this.toast.success(id ? 'Categoría actualizada' : 'Categoría creada');
         this.router.navigate(['/admin/categories']);
       },
       error: e => {

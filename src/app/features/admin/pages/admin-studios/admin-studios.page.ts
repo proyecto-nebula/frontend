@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { API_ROUTES } from '@config/api.routes';
 import { Studio } from '@models/studio.model';
 import { MutationService } from '@services/mutation.service';
+import { ToastService } from '@ui/toast/toast.service';
 import { TableModule } from 'primeng/table';
 
 @Component({
@@ -20,6 +21,7 @@ export class AdminStudiosPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private mutations = inject(MutationService);
+  private toast = inject(ToastService);
 
   items = signal<Studio[]>([]);
   editingId = signal<number | null>(null);
@@ -92,6 +94,7 @@ export class AdminStudiosPage implements OnInit {
     req.subscribe({
       next: () => {
         this.saving.set(false);
+        this.toast.success(id ? 'Estudio actualizado' : 'Estudio creado');
         this.router.navigate(['/admin/studios']);
       },
       error: e => {
