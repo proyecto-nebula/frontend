@@ -242,7 +242,8 @@ $featured-wipe-softness: 22% !default;
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  margin-top: 0.75rem;
+  margin-top: -3rem;
+  margin-bottom: 3rem;
 }
 .game-featured-dot {
   width: 28px;
@@ -610,10 +611,11 @@ body.is-admin .search-input-wrap {
 }
 
 .game-collection {
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
 
   header {
     margin-bottom: 1rem;
+    font-size: 1.25rem;
   }
 
   .c-track {

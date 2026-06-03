@@ -194,19 +194,21 @@ app-carousel {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  background: rgba(0, 0, 0, 0.75);
   transition: background 0.2s;
   padding: 0;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.5);
   }
 }
 
 .c-btn-prev {
-  left: -2rem;
+  left: 2rem;
 }
 .c-btn-next {
-  right: -2rem;
+  right: 2rem;
 }
 
 // ─── Gallery dialog (app-modal gallery mode) ──────────────────────────────────
@@ -427,4 +429,3 @@ app-carousel {
     }
   }
 }
-
