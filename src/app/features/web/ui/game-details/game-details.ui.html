@@ -16,6 +16,16 @@
           [favoriteLoading]="favoriteLoading()"
           (favToggle)="toggleFavorite()"
         ></app-game-hero>
+        @if (isAdminOrEditor() && game()) {
+          <button
+            class="edit-button-floating"
+            (click)="goToEditGame()"
+            title="Editar juego"
+            [attr.aria-label]="'Editar ' + game()?.title"
+          >
+            <i class="pi pi-pencil"></i>
+          </button>
+        }
       </div>
 
       <div class="game-content">

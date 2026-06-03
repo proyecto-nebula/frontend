@@ -33,6 +33,7 @@ export class AdminGamesPage implements OnInit {
   studios = signal<Studio[]>([]);
   pegiList = signal<Pegi[]>([]);
   editingId = signal<number | null>(null);
+  returnTo = signal<string | null>(null);
   saving = signal(false);
   previewUrl = signal<string | null>(null);
   viewMode = signal<'list' | 'form'>('list');
@@ -65,6 +66,9 @@ export class AdminGamesPage implements OnInit {
       const id = params.get('id');
       const isNew = this.router.url.includes('/new');
       const isView = this.route.snapshot.queryParamMap.get('view') === '1';
+      const returnTo = this.route.snapshot.queryParamMap.get('returnTo');
+      
+      this.returnTo.set(returnTo);
 
       if (id) {
         this.editingId.set(Number(id));
@@ -201,7 +205,8 @@ export class AdminGamesPage implements OnInit {
       next: () => {
         this.saving.set(false);
         this.toastSvc.success(id ? 'Juego actualizado' : 'Juego creado');
-        this.router.navigate(['/admin/games']);
+        const navigateTo = this.returnTo() || '/admin/games';
+        this.router.navigateByUrl(navigateTo);
       },
       error: e => {
         this.saving.set(false);

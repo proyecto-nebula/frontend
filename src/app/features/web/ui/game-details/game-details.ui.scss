@@ -1,0 +1,47 @@
+.game-header {
+  position: relative;
+
+  .edit-button-floating {
+    position: absolute;
+    top: 8rem;
+    right: 1.5rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    transition: all 0.3s ease;
+    z-index: 100000;
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(34, 197, 94, 0.6);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    i {
+      line-height: 1;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .game-header {
+    .edit-button-floating {
+      top: 1rem;
+      right: 1rem;
+      width: 44px;
+      height: 44px;
+      font-size: 1.1rem;
+    }
+  }
+}
