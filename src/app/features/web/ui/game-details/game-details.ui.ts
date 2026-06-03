@@ -12,7 +12,7 @@ import {
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Game } from '@models/game.model';
 import { AuthService } from '@services/auth.service';
 import { FavoritesService } from '@services/favorites.service';
@@ -28,6 +28,7 @@ import { GameScreenshotsUi } from '../game-screenshots/game-screenshots.ui';
   standalone: true,
   imports: [CommonModule, DatePipe, DecimalPipe, RouterModule, GameHeroUi, GameScreenshotsUi, SharedUiModule],
   templateUrl: './game-details.ui.html',
+  styleUrls: ['./game-details.ui.scss'],
 })
 export class GameDetailsUi implements OnChanges {
   @Input() slug!: string;
@@ -86,6 +87,7 @@ export class GameDetailsUi implements OnChanges {
   private readonly authService = inject(AuthService);
   private readonly favoritesService = inject(FavoritesService);
   private readonly toast = inject(ToastService);
+  private readonly router = inject(Router);
 
   private readonly currentUser = toSignal(this.authService.user$);
   readonly isLoggedIn = computed(() => !!this.currentUser());
@@ -273,5 +275,13 @@ export class GameDetailsUi implements OnChanges {
         },
       });
     }
+  }
+
+  goToEditGame(): void {
+    const game = this.game();
+    if (!game) return;
+    this.router.navigate(['/admin/games', game.id], {
+      queryParams: { returnTo: `/games/${this.slug}` },
+    });
   }
 }

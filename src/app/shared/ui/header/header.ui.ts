@@ -163,6 +163,13 @@ export class HeaderUi implements OnInit, OnDestroy {
     }
   }
 
+  onLoginModalClose(visible: boolean): void {
+    this.showLoginModal = visible;
+    if (!visible) {
+      this.loginModal.close();
+    }
+  }
+
   // ── Quick search ────────────────────────────────────────────────
   @HostListener('document:click')
   onDocumentClick(): void {

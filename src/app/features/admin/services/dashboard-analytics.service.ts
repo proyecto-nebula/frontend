@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, combineLatest, map } from 'rxjs';
+import { Observable, combineLatest, map, shareReplay } from 'rxjs';
 import { API_ROUTES } from '@core/config/api.routes';
 import { Game } from '@shared/models/game.model';
 import { User } from '@shared/models/user.model';
@@ -79,6 +79,10 @@ export interface PlatformOverview {
 @Injectable({ providedIn: 'root' })
 export class DashboardAnalyticsService {
   private http = inject(HttpClient);
+  
+  // ✅ CACHE: Limitar peticiones al servidor con límites y reutilizar resultados
+  private platformOverviewCache$?: Observable<PlatformOverview>;
+  private planDistributionCache$?: Observable<PlanStats[]>;
 
   getTopGamesDay(): Observable<GameStats[]> {
     return combineLatest([
@@ -391,32 +395,36 @@ export class DashboardAnalyticsService {
    * Obtiene la distribución de planes
    */
   getPlanDistribution(): Observable<PlanStats[]> {
-    return this.http.get<User[]>(`${API_ROUTES.users}?list`).pipe(
-      map((users) => {
-        const planCount = new Map<number, { name: string; count: number }>();
+    if (!this.planDistributionCache$) {
+      this.planDistributionCache$ = this.http.get<User[]>(`${API_ROUTES.users}?list`).pipe(
+        map((users) => {
+          const planCount = new Map<number, { name: string; count: number }>();
 
-        users.forEach((user) => {
-          const planId = user.planId || 1;
-          const current = planCount.get(Number(planId)) || {
-            name: user.plan?.name || `Plan ${planId}`,
-            count: 0,
-          };
-          current.count += 1;
-          planCount.set(Number(planId), current);
-        });
+          users.forEach((user) => {
+            const planId = user.planId || 1;
+            const current = planCount.get(Number(planId)) || {
+              name: user.plan?.name || `Plan ${planId}`,
+              count: 0,
+            };
+            current.count += 1;
+            planCount.set(Number(planId), current);
+          });
 
-        const total = users.length;
+          const total = users.length;
 
-        return Array.from(planCount.entries())
-          .map(([id, data]) => ({
-            id,
-            name: data.name,
-            count: data.count,
-            percentage: (data.count / total) * 100,
-          }))
-          .sort((a, b) => b.count - a.count);
-      })
-    );
+          return Array.from(planCount.entries())
+            .map(([id, data]) => ({
+              id,
+              name: data.name,
+              count: data.count,
+              percentage: (data.count / total) * 100,
+            }))
+            .sort((a, b) => b.count - a.count);
+        }),
+        shareReplay(1) // ✅ Cache resultado durante la sesión
+      );
+    }
+    return this.planDistributionCache$;
   }
 
   /**
@@ -447,27 +455,31 @@ export class DashboardAnalyticsService {
    * Obtiene métricas globales de la plataforma
    */
   getPlatformOverview(): Observable<PlatformOverview> {
-    return combineLatest([
-      this.http.get<any[]>(`${API_ROUTES.users}?list`),
-      this.http.get<any[]>(`${API_ROUTES.games}?all=true`),
-      this.http.get<any[]>(`${API_ROUTES.categories}`),
-      this.http.get<any[]>(`${API_ROUTES.sessions}?all=true`),
-      this.http.get<any[]>(`${API_ROUTES.reports}`),
-    ]).pipe(
-      map(([users, games, categories, sessions, reports]) => {
-        const studios = new Set(
-          games.filter((g) => g.developerId).map((g) => g.developerId)
-        );
-        return {
-          totalUsers: users.length,
-          totalGames: games.length,
-          totalStudios: studios.size,
-          totalCategories: categories.length,
-          totalSessions: sessions.length,
-          pendingReports: reports.filter((r: any) => !r.isSolved).length,
-        };
-      })
-    );
+    if (!this.platformOverviewCache$) {
+      this.platformOverviewCache$ = combineLatest([
+        this.http.get<any[]>(`${API_ROUTES.users}?list`),
+        this.http.get<any[]>(`${API_ROUTES.games}?all=true`),
+        this.http.get<any[]>(`${API_ROUTES.categories}`),
+        this.http.get<any[]>(`${API_ROUTES.sessions}?all=true`),
+        this.http.get<any[]>(`${API_ROUTES.reports}`),
+      ]).pipe(
+        map(([users, games, categories, sessions, reports]) => {
+          const studios = new Set(
+            games.filter((g) => g.developerId).map((g) => g.developerId)
+          );
+          return {
+            totalUsers: users.length,
+            totalGames: games.length,
+            totalStudios: studios.size,
+            totalCategories: categories.length,
+            totalSessions: sessions.length,
+            pendingReports: reports.filter((r: any) => !r.isSolved).length,
+          };
+        }),
+        shareReplay(1) // ✅ Cache resultado durante la sesión
+      );
+    }
+    return this.platformOverviewCache$;
   }
 
   /**
