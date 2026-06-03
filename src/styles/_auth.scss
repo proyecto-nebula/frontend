@@ -159,13 +159,10 @@ body.auth {
 // ─── auth-join-page ───────────────────────────────────────────────────────────
 body.auth main {
   display: block;
-  min-height: auto;
-  padding-top: 64px;
 }
 
 .join-page {
   width: 100%;
-  min-height: auto;
 }
 
 .join-root {
@@ -181,7 +178,7 @@ body.auth main {
   .phase {
     width: 20%;
     min-height: auto;
-    padding: 1.25rem 1rem;
+
     box-sizing: border-box;
     display: flex;
     flex-direction: column;

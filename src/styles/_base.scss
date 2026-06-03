@@ -46,6 +46,10 @@ body {
   height: 100%;
 }
 
+html {
+  font-size: 120%;
+}
+
 // Only clip horizontal overflow on body so window.scrollY stays reliable on all browsers
 body {
   background-color: var(--bg-color);
