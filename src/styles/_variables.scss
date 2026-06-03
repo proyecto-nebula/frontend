@@ -37,7 +37,10 @@ $carousel-hover-dim: 0.45;
     radial-gradient(at 49% 76%, hsla(235, 100%, 1%, 1), transparent 50%),
     radial-gradient(at 80% 87%, hsla(223, 40%, 25%, 0.7), transparent 50%),
     radial-gradient(at 7% 10%, hsla(240, 35%, 15%, 0.8), transparent 50%),
-    radial-gradient(at 9% 96%, hsla(225, 30%, 20%, 0.7), transparent 50%);
+    radial-gradient(at 9% 96%, hsla(225, 30%, 20%, 0.7), transparent 50%), url('/bg.png');
+
+  --bg-image: url('/bg.png');
+
   //--font-type: 'Google Sans', 'Akt', 'Raleway', 'Chakra Petch', 'Rajdhani', 'Jura', 'Saira', 'Oxanium', sans-serif;
   --font-type: 'Chakra Petch', 'Rajdhani', 'Jura', 'Saira', 'Oxanium', sans-serif;
   --font-type-body: 'Google Sans', sans-serif;
