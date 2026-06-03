@@ -55,7 +55,7 @@ $carousel-hover-dim: 0.45;
   --xxl: 1600px;
 
   --page-max: var(--xxl);
-  --page-gutter: 5%;
+  --page-gutter: 10%;
   --page-width: max(var(--page-gutter), calc((100% - var(--page-max)) / 2));
   --admin-header-height: 3rem;
   --header-height: 5rem;

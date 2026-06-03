@@ -212,7 +212,7 @@
     }
   </aside>
   <!-- Login modal (opened from header) -->
-  <app-modal [(visible)]="showLoginModal" [width]="'420px'">
+  <app-modal [(visible)]="showLoginModal" (visibleChange)="onLoginModalClose($event)" [width]="'420px'">
     <app-login-form (loggedIn)="onLoginSuccess()"></app-login-form>
   </app-modal>
 </header>
