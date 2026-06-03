@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit, inject } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { API_ROUTES } from '@config/api.routes';
 import { of } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -24,28 +24,28 @@ export class SettingsAccountUi implements OnInit {
   showOldPassword = false;
   showNewPassword = false;
 
-  get emailCtrl() {
-    return this.group.get('email');
+  get emailCtrl(): AbstractControl {
+    return this.group.get('email')!;
   }
-  get oldPasswordCtrl() {
-    return this.group.get('oldPassword');
+  get oldPasswordCtrl(): AbstractControl {
+    return this.group.get('oldPassword')!;
   }
-  get passwordCtrl() {
-    return this.group.get('password');
+  get passwordCtrl(): AbstractControl {
+    return this.group.get('password')!;
   }
-  get passwordConfirmCtrl() {
-    return this.group.get('passwordConfirm');
+  get passwordConfirmCtrl(): AbstractControl {
+    return this.group.get('passwordConfirm')!;
   }
 
   ngOnInit() {
     // Validación de email duplicado similar a RegistrationAccountUi
-    this.emailCtrl?.valueChanges
+    this.emailCtrl.valueChanges
       .pipe(
         debounceTime(600),
         distinctUntilChanged(),
         switchMap(val => {
           const ctrl = this.emailCtrl;
-          if (!ctrl || ctrl.hasError('required') || ctrl.hasError('email')) {
+          if (ctrl.hasError('required') || ctrl.hasError('email')) {
             this.emailTaken = false;
             this.emailChecking = false;
             return of([]);
@@ -61,7 +61,6 @@ export class SettingsAccountUi implements OnInit {
         const taken = Array.isArray(res) ? res.length > 0 : false;
         this.emailTaken = taken;
         const ctrl = this.emailCtrl;
-        if (!ctrl) return;
         const current = { ...(ctrl.errors ?? {}) };
         if (taken) {
           ctrl.setErrors({ ...current, emailTaken: true });
@@ -78,7 +77,7 @@ export class SettingsAccountUi implements OnInit {
 
   get passwordStrengthChecks(): { label: string; ok: boolean }[] {
     if (!this.passwordValidationEnabled) return [];
-    const pw = this.passwordCtrl?.value ?? '';
+    const pw = this.passwordCtrl.value ?? '';
     return [
       { label: 'Mínimo 6 caracteres', ok: pw.length >= 6 },
       { label: 'Al menos una mayúscula', ok: /[A-Z]/.test(pw) },

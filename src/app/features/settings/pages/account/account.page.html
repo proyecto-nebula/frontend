@@ -1,6 +1,6 @@
 <div class="settings-container">
   <div class="settings-card">
-    <h1 class="settings-title">Cambiar Cuenta</h1>
+    <h1>Cambiar Cuenta</h1>
 
     @if (error(); as err) {
       <div class="settings-alert alert-error" role="alert">
@@ -56,13 +56,6 @@
     border-radius: 0.5rem;
     padding: 2rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-  }
-
-  .settings-title {
-    margin: 0 0 1.5rem 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-color);
   }
 
   .settings-alert {
@@ -144,10 +137,6 @@
   @media (max-width: 640px) {
     .settings-card {
       padding: 1.5rem;
-    }
-
-    .settings-title {
-      font-size: 1.25rem;
     }
 
     .form-actions {

@@ -40,9 +40,23 @@
 
 <style scoped>
   .plan-page {
-    max-width: 400px;
+    max-width: 1180px;
     margin: 0 auto;
     padding: 2rem 1rem;
+  }
+
+  .plan-page auth-registration-plan-ui .plan-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .plan-page auth-registration-plan-ui .plan-item {
+    flex: 1 1 0;
+    max-width: none;
+    min-width: 0;
   }
 
   .plan-page__status {
@@ -64,5 +78,32 @@
 
   .plan-page__payment {
     margin-top: 2rem;
+  }
+
+  @media (max-width: 900px) {
+    .plan-page {
+      max-width: 680px;
+    }
+
+    .plan-page auth-registration-plan-ui .plan-list {
+      flex-wrap: wrap;
+    }
+
+    .plan-page auth-registration-plan-ui .plan-item {
+      flex: 1 1 280px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .plan-page {
+      max-width: 100%;
+      padding: 1rem 0.75rem;
+    }
+
+    .plan-page auth-registration-plan-ui .plan-list {
+      flex-direction: column;
+      flex-wrap: nowrap;
+      gap: 0.75rem;
+    }
   }
 </style>
