@@ -76,4 +76,13 @@ $carousel-hover-dim: 0.45;
   --rounded-corners: 8px;
 
   --carousel-hover-dim: 1;
+
+  // ── Featured carousel timing ──
+  // Tiempo entre cambios de slide (ms). Sincronizar con @Input autoplayInterval en game-featured.ui.ts
+  --featured-autoplay-interval: 10000;
 }
+
+// ── Featured slider SCSS variables ──────────────────────────────────────────
+$featured-wipe-duration: 2000ms; // duración del barrido. Sincronizar con clearPrevTimer en game-featured.ui.ts
+$featured-wipe-easing: ease-in-out;
+$featured-wipe-softness: 30%;

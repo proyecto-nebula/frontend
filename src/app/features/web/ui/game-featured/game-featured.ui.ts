@@ -19,7 +19,7 @@ import { GameHeroUi } from '../game-hero/game-hero.ui';
   templateUrl: './game-featured.ui.html',
 })
 export class GameFeaturedUi implements OnInit, OnDestroy {
-  @Input() autoplayInterval = 5000;
+  @Input() autoplayInterval = 8000;
 
   readonly games = signal<Game[]>([]);
   readonly paused = signal(false);
@@ -60,7 +60,7 @@ export class GameFeaturedUi implements OnInit, OnDestroy {
     this.currentPage.set(index);
     // limpia el slide saliente después de la animación
     if (this.clearPrevTimer !== null) clearTimeout(this.clearPrevTimer);
-    this.clearPrevTimer = setTimeout(() => this.prevPage.set(-1), 900);
+    this.clearPrevTimer = setTimeout(() => this.prevPage.set(-1), 2100);
   }
 
   private startAutoplay(): void {

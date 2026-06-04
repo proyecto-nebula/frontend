@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 /* Consolidated styles for feature: web, settings, info */
 
 /* Layout: standard vertical flow with fixed header
@@ -130,20 +132,7 @@ app-game-featured {
 
 // ─── Featured slider: fade-wipe ─────────────────────────────────────────────
 // Parámetros configurables:
-$featured-wipe-duration: 1400ms !default; // duración del barrido
-$featured-wipe-easing: ease-in-out !default;
-// $featured-wipe-softness: tamaño de la zona de fundido en el borde (0 = corte duro, 40% = borde muy suave)
-$featured-wipe-softness: 22% !default;
-
-// Técnica: mask-size: 200% + mask-position de 100%→0% (o 0%→100% para prev).
-//   pos=0%:   mitad negra del gradiente cubre el elemento → totalmente visible
-//   pos=100%: mitad transparente cubre el elemento → totalmente oculto
-//
-// Gradiente A (negro izquierda):  #000 (50%-s) → transparent (50%+s)
-// Gradiente B (transparente izq): transparent (50%-s) → #000 (50%+s)
-//
-// Nota: no se interpolan variables SCSS dentro de @keyframes → definimos los valores
-// directamente usando los valores por defecto de las variables arriba.
+// Parámetros configurables: ver $featured-wipe-duration / $featured-wipe-softness en _variables.scss
 // Si cambias $featured-wipe-softness, ajusta los stops en los @keyframes también:
 //   stop-negro      = 50% - $featured-wipe-softness  → con 22% = 28%
 //   stop-transparent = 50% + $featured-wipe-softness → con 22% = 72%
@@ -342,10 +331,11 @@ body.is-admin .search-input-wrap {
 
 .game-hero__summary {
   max-width: 640px;
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.2rem;
   line-height: 1.55;
   margin-bottom: 1rem;
+
   text-shadow:
     0 1px 8px rgba(0, 0, 0, 0.8),
     0 2px 16px rgba(0, 0, 0, 0.6);
