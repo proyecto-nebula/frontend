@@ -104,8 +104,11 @@ export class JoinPage {
       payment: this.fb.group({
         nameOnCard: ['John Doe', Validators.required],
         cardNumber: ['4111111111111111', Validators.required],
-        expiry: ['12/28', Validators.required],
-        cvc: ['123', Validators.required],
+        expiry: ['12/28', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)]],
+        cvc: ['123', [Validators.required, Validators.pattern(/^\d{3,4}$/)]],
+        billingEmail: ['john.doe@example.com', Validators.required],
+        billingCountry: ['ES', Validators.required],
+        postalCode: ['28001', Validators.required],
       }),
     });
 

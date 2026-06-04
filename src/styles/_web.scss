@@ -231,17 +231,19 @@ app-game-featured {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  margin-top: -3rem;
+  margin-top: -2rem;
   margin-bottom: 3rem;
+  z-index: 99999;
 }
 .game-featured-dot {
   width: 28px;
   height: 6px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.1);
   border: none;
   padding: 0;
   cursor: pointer;
+  z-index: 99999;
   transition:
     background 120ms ease,
     transform 120ms ease;
@@ -1452,6 +1454,7 @@ body.is-admin .header-wrapper {
   font-size: 1.25rem;
   position: relative;
   z-index: 1004;
+  cursor: pointer;
 }
 
 .mobile-logo {
