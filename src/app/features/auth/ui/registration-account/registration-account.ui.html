@@ -94,4 +94,19 @@
       <div class="reg-error" role="alert"><i class="pi pi-exclamation-circle" aria-hidden="true"></i> Introduce tu fecha de nacimiento completa</div>
     }
   </fieldset>
+
+  <div class="reg-consents">
+    <label class="reg-consent">
+      <input type="checkbox" />
+      <span>
+        Acepto las
+        <a href="#" (click)="$event.preventDefault()">condiciones de uso de Nebula</a>
+      </span>
+    </label>
+
+    <label class="reg-consent">
+      <input type="checkbox" />
+      <span>Quiero estar al dia de noticias, novedades y ofertas de la plataforma</span>
+    </label>
+  </div>
 </div>

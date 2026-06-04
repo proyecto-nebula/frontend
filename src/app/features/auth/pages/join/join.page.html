@@ -4,7 +4,7 @@
     <div class="phases" [style.transform]="'translateX(-' + phase * 20 + '%)'">
       <!-- Fase 0: Cuenta -->
       <section class="phase">
-        <h2 class="phase-title">Crea tu cuenta</h2>
+        <h1>Crea tu cuenta</h1>
         <auth-registration-account-ui
           [formGroup]="account"
           [showValidation]="showValidation"
@@ -14,13 +14,13 @@
 
       <!-- Fase 1: Verificación de email -->
       <section class="phase">
-        <h2 class="phase-title">Verifica tu correo</h2>
+        <h1>Verifica tu correo</h1>
         <auth-registration-verify-email-ui [email]="account.get('email')?.value"></auth-registration-verify-email-ui>
       </section>
 
       <!-- Fase 2: Perfil -->
       <section class="phase">
-        <h2 class="phase-title">Tu perfil</h2>
+        <h1>Tu perfil</h1>
         <auth-registration-profile-ui
           [formGroup]="profile"
           [avatars]="avatars"
@@ -30,20 +30,27 @@
 
       <!-- Fase 3: Plan -->
       <section class="phase">
-        <h2 class="phase-title">Elige tu plan</h2>
+        <h1>Elige tu plan</h1>
         <auth-registration-plan-ui [group]="plan" [plans]="plans"></auth-registration-plan-ui>
       </section>
 
       <!-- Fase 4: Pago -->
       <section class="phase">
-        <h2 class="phase-title">Datos de pago</h2>
-        <auth-registration-payment-ui [group]="payment"></auth-registration-payment-ui>
+        <h1>Datos de pago</h1>
+        @if (processingPayment || saving) {
+          <div class="join-processing" role="status" aria-live="polite" aria-busy="true">
+            <div class="join-processing__spinner" aria-hidden="true"></div>
+            <p class="join-processing__text">Procesando pago seguro...</p>
+          </div>
+        } @else {
+          <auth-registration-payment-ui [group]="payment"></auth-registration-payment-ui>
+        }
       </section>
     </div>
 
     <div class="controls">
-      <button class="btn ghost" (click)="back()" [disabled]="phase === 0">Atrás</button>
-      <button class="btn" (click)="next()">{{ nextLabel }}</button>
+      <button class="btn ghost" (click)="back()" [disabled]="phase === 0 || processingPayment || saving">Atrás</button>
+      <button class="btn" (click)="next()" [disabled]="processingPayment || saving">{{ nextLabel }}</button>
     </div>
   </div>
 </div>

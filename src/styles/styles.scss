@@ -1,7 +1,5 @@
 // ── Google Fonts ──────────────────────────────────────────────────
-// Variable: Google Sans (opsz+ital+wght), Akt (wght), Raleway (ital+wght),
-//           Jura (wght), Saira (ital+wght), Oxanium (wght)
-// Static:   Chakra Petch (ital×wght), Rajdhani (wght)
+// Active: Chakra Petch + Outfit
 
 @use 'variables' as *;
 @use 'base';
@@ -16,7 +14,7 @@
 @use 'play';
 @use '404' as notfound;
 
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,6..144,400..700;1,6..144,400..700&family=Akt:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Rajdhani:wght@300;400;500;600;700&family=Jura:wght@300..700&family=Saira:ital,wght@0,100..900;1,100..900&family=Oxanium:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Outfit:wght@100..900&display=swap');
 
 /* Gallery spinner keyframe — referenced by app-modal gallery overlay */
 @keyframes gallery-spin {
@@ -47,16 +45,16 @@
 
 /* ── Dark theme for all non-gallery p-dialog modals ─────────────────── */
 .p-dialog:not(.app-modal-gallery-dlg) {
-  background: #1e1a2e;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(18, 15, 31, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 14px;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
   color: #f0f6fc;
   max-width: 90%;
 
   .p-dialog-header {
-    background: #1e1a2e;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(18, 15, 31, 0.98);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 14px 14px 0 0;
     padding: 1.1rem 1.4rem;
     color: #f0f6fc;
@@ -84,7 +82,7 @@
   }
 
   .p-dialog-content {
-    background: #1e1a2e;
+    background: rgba(18, 15, 31, 0.98);
     color: #f0f6fc;
     padding: 1.2rem 1.4rem;
     border-radius: 0 0 14px 14px;

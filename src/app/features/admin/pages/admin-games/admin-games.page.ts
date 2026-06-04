@@ -202,11 +202,23 @@ export class AdminGamesPage implements OnInit {
     };
     const req = id ? this.http.put(`${API_ROUTES.games}?id=${id}`, body) : this.http.post(API_ROUTES.games, body);
     req.subscribe({
-      next: () => {
+      next: (response: any) => {
         this.saving.set(false);
         this.toastSvc.success(id ? 'Juego actualizado' : 'Juego creado');
-        const navigateTo = this.returnTo() || '/admin/games';
-        this.router.navigateByUrl(navigateTo);
+        
+        // Si es nuevo, redirigir al juego creado. Si es edición, redirigir a returnTo o lista
+        if (!id && response?.id) {
+          // Nuevo juego: ir a la página del juego
+          const slug = response.slug || response.id;
+          this.router.navigate(['/games', slug]);
+        } else if (id) {
+          // Edición: ir a returnTo o lista
+          const navigateTo = this.returnTo() || '/admin/games';
+          this.router.navigateByUrl(navigateTo);
+        } else {
+          // Fallback
+          this.router.navigate(['/admin/games']);
+        }
       },
       error: e => {
         this.saving.set(false);

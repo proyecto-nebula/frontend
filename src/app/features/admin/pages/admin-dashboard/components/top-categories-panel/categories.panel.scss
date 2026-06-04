@@ -1,9 +1,9 @@
 .dashboard-panel {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(18, 15, 31, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 8px;
   padding: 1rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.34);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -13,7 +13,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.75rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     padding-bottom: 0.5rem;
 
     h3 {
@@ -36,12 +36,12 @@
       align-items: center;
       gap: 0.6rem;
       padding: 0.5rem;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.028);
       border-radius: 6px;
       transition: background-color 0.2s;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.07);
+        background: rgba(255, 255, 255, 0.06);
       }
 
       .rank {
@@ -51,7 +51,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, rgba(155, 124, 255, 0.95) 0%, rgba(122, 91, 255, 0.95) 100%);
         color: white;
         border-radius: 6px;
         font-weight: 700;
@@ -82,15 +82,15 @@
         flex-shrink: 0;
         font-size: 0.72rem;
         font-weight: 600;
-        color: #8b9cf8;
+        color: #c4bbff;
         white-space: nowrap;
       }
 
       .count-badge {
         flex-shrink: 0;
-        background: rgba(102, 126, 234, 0.15);
-        border: 1px solid rgba(102, 126, 234, 0.35);
-        color: #8b9cf8;
+        background: rgba(155, 124, 255, 0.15);
+        border: 1px solid rgba(155, 124, 255, 0.28);
+        color: #c4bbff;
         padding: 0.15rem 0.45rem;
         border-radius: 10px;
         font-size: 0.7rem;
@@ -112,7 +112,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(240, 246, 252, 0.4);
+    color: rgba(240, 246, 252, 0.42);
     font-size: 0.85rem;
   }
 }

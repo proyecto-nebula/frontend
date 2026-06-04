@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SettingsAccountUi } from '@settings/ui/settings-account/settings-account.ui';
 import { API_ROUTES } from '@config/api.routes';
@@ -60,7 +60,7 @@ export class AccountPage implements OnInit {
     this.form.set(formGroup);
   }
 
-  private passwordStrengthValidator(control: FormGroup): { [key: string]: boolean } | null {
+  private passwordStrengthValidator(control: AbstractControl): { [key: string]: boolean } | null {
     const v: string = control.value ?? '';
     const errors: { [key: string]: boolean } = {};
     if (v.length < 6) errors['minLength'] = true;

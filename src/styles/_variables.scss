@@ -25,28 +25,38 @@ $carousel-hover-dim: 0.45;
 */
 
 :root {
-  --bg-color: #0a0c1a;
+  --bg-color: #0d0b1a;
   --bg-image:
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25)),
-    radial-gradient(at 16% 37%, hsla(222, 50%, 25%, 0.8), transparent 50%),
-    radial-gradient(at 26% 89%, hsla(230, 45%, 18%, 0.7), transparent 50%),
-    radial-gradient(at 71% 24%, hsla(220, 55%, 20%, 0.8), transparent 50%),
-    radial-gradient(at 68% 0%, hsla(210, 60%, 15%, 0.7), transparent 50%),
-    radial-gradient(at 72% 82%, hsla(216, 55%, 22%, 0.8), transparent 50%),
-    radial-gradient(at 40% 36%, hsla(225, 100%, 2%, 1), transparent 50%),
-    radial-gradient(at 49% 76%, hsla(235, 100%, 1%, 1), transparent 50%),
-    radial-gradient(at 80% 87%, hsla(223, 40%, 25%, 0.7), transparent 50%),
-    radial-gradient(at 7% 10%, hsla(240, 35%, 15%, 0.8), transparent 50%),
-    radial-gradient(at 9% 96%, hsla(225, 30%, 20%, 0.7), transparent 50%), url('/bg.png');
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.28)),
+    radial-gradient(at 16% 37%, hsla(260, 42%, 21%, 0.78), transparent 50%),
+    radial-gradient(at 26% 89%, hsla(280, 36%, 16%, 0.72), transparent 50%),
+    radial-gradient(at 71% 24%, hsla(248, 52%, 17%, 0.76), transparent 50%),
+    radial-gradient(at 68% 0%, hsla(270, 58%, 13%, 0.65), transparent 50%),
+    radial-gradient(at 72% 82%, hsla(285, 48%, 18%, 0.72), transparent 50%),
+    radial-gradient(at 40% 36%, hsla(255, 100%, 2%, 1), transparent 50%),
+    radial-gradient(at 49% 76%, hsla(260, 100%, 1%, 1), transparent 50%),
+    radial-gradient(at 80% 87%, hsla(266, 32%, 22%, 0.65), transparent 50%),
+    radial-gradient(at 7% 10%, hsla(272, 28%, 13%, 0.72), transparent 50%),
+    radial-gradient(at 9% 96%, hsla(252, 24%, 18%, 0.7), transparent 50%), url('/bg.png');
 
   --bg-color: #0d0b1a;
   --bg-image: url('/bg.png');
 
   //--font-type: 'Google Sans', 'Akt', 'Raleway', 'Chakra Petch', 'Rajdhani', 'Jura', 'Saira', 'Oxanium', sans-serif;
-  --font-type: 'Chakra Petch', 'Rajdhani', 'Jura', 'Saira', 'Oxanium', sans-serif;
-  --font-type-body: 'Google Sans', sans-serif;
+  --font-type: 'Chakra Petch', sans-serif;
+  --font-type-body: 'Outfit', sans-serif;
   --font-color: #f0f6fc;
   --font-lineheight: 1.6;
+  --surface-0: rgba(13, 11, 26, 0.98);
+  --surface-1: rgba(20, 16, 34, 0.96);
+  --surface-2: rgba(27, 21, 44, 0.92);
+  --surface-3: rgba(255, 255, 255, 0.045);
+  --surface-4: rgba(255, 255, 255, 0.075);
+  --border-soft: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(155, 124, 255, 0.2);
+  --accent-color: #9b7cff;
+  --accent-color-soft: rgba(155, 124, 255, 0.18);
+  --accent-color-strong: #b7a7ff;
 
   --sm: 576px;
   --md: 768px;
@@ -57,7 +67,7 @@ $carousel-hover-dim: 0.45;
   --page-max: var(--xxl);
   --page-gutter: 10%;
   --page-width: max(var(--page-gutter), calc((100% - var(--page-max)) / 2));
-  --admin-header-height: 3rem;
+  --admin-header-height: 4rem;
   --header-height: 5rem;
   --padding-main: 5rem;
 

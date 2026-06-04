@@ -1,9 +1,9 @@
 .overview-bar {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(18, 15, 31, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 10px;
   padding: 1rem 1.5rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.34);
   display: flex;
   align-items: center;
   gap: 0;
@@ -20,7 +20,7 @@
   .kpi-divider {
     width: 1px;
     height: 36px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.07);
     flex-shrink: 0;
     align-self: center;
   }
@@ -36,7 +36,7 @@
     border-radius: 8px;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.055);
     }
 
     .kpi-icon {
@@ -68,12 +68,12 @@
       }
     }
 
-    &.users .kpi-value { color: #60a5fa; }
-    &.games .kpi-value { color: #a78bfa; }
-    &.studios .kpi-value { color: #34d399; }
-    &.categories .kpi-value { color: #fbbf24; }
+    &.users .kpi-value { color: #7bb3ff; }
+    &.games .kpi-value { color: #c4bbff; }
+    &.studios .kpi-value { color: #7be0b9; }
+    &.categories .kpi-value { color: #ffd06b; }
     &.sessions .kpi-value { color: #f0f6fc; }
-    &.reports .kpi-value { color: #f87171; }
+    &.reports .kpi-value { color: #ff8a8a; }
   }
 }
 

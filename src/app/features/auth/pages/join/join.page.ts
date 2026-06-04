@@ -53,6 +53,7 @@ export class JoinPage {
   form: FormGroup;
   phase = 0; // 0-4
   showValidation = false;
+  processingPayment = false;
   // passwordValidationEnabled is now global via SettingsService
   avatars: Avatar[] = [];
   selectedAvatar: Avatar | null = null;
@@ -157,6 +158,7 @@ export class JoinPage {
   }
 
   get nextLabel(): string {
+    if (this.processingPayment || this.saving) return 'Procesando...';
     if (this.phase === 3) {
       const selected = this.form.get('plan.planId')?.value;
       return selected !== null && selected !== undefined ? 'Pagar' : 'Omitir';
@@ -166,7 +168,7 @@ export class JoinPage {
   }
 
   async next() {
-    if (this.phase > 4) return;
+    if (this.phase > 4 || this.saving || this.processingPayment) return;
 
     // Phase 1 — email verification (simulated, skip validation)
     if (this.phase === 1) {
@@ -196,6 +198,9 @@ export class JoinPage {
     this.showValidation = false;
 
     if (this.phase === 4) {
+      this.processingPayment = true;
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      this.processingPayment = false;
       await this.saveUser();
       return;
     }
@@ -204,6 +209,7 @@ export class JoinPage {
   }
 
   back() {
+    if (this.saving || this.processingPayment) return;
     this.phase = Math.max(0, this.phase - 1);
   }
 
