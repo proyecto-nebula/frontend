@@ -1,13 +1,5 @@
 ﻿import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, Input, OnDestroy, OnInit, signal } from '@angular/core';
 import { Game } from '@models/game.model';
 import { GameService } from '@services/game.service';
 import { GameHeroUi } from '../game-hero/game-hero.ui';
@@ -19,7 +11,7 @@ import { GameHeroUi } from '../game-hero/game-hero.ui';
   templateUrl: './game-featured.ui.html',
 })
 export class GameFeaturedUi implements OnInit, OnDestroy {
-  @Input() autoplayInterval = 8000;
+  @Input() autoplayInterval = 100000;
 
   readonly games = signal<Game[]>([]);
   readonly paused = signal(false);
@@ -60,7 +52,7 @@ export class GameFeaturedUi implements OnInit, OnDestroy {
     this.currentPage.set(index);
     // limpia el slide saliente después de la animación
     if (this.clearPrevTimer !== null) clearTimeout(this.clearPrevTimer);
-    this.clearPrevTimer = setTimeout(() => this.prevPage.set(-1), 2100);
+    this.clearPrevTimer = setTimeout(() => this.prevPage.set(-1), 3000);
   }
 
   private startAutoplay(): void {
@@ -99,4 +91,3 @@ export class GameFeaturedUi implements OnInit, OnDestroy {
     if (this.clearPrevTimer !== null) clearTimeout(this.clearPrevTimer);
   }
 }
-
