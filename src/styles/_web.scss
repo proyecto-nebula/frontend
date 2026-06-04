@@ -607,16 +607,6 @@ body.is-admin .search-input-wrap {
     margin-bottom: 1rem;
     font-size: 1.25rem;
   }
-  
-  .c-overflow {
-    overflow: visible;
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-  
-  .c-item {
-    overflow: visible;
-  }
 }
 
 /* Universal carousel hover: dim all sibling items, restore hovered one.
@@ -637,7 +627,6 @@ body.is-admin .search-input-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: visible;
 }
 
 .game-screenshots-carousel,
@@ -1079,11 +1068,11 @@ body.is-admin .search-input-wrap {
 }
 
 .game-card:hover {
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
-  transform: translateY(-8px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  transform: translateY(-4px);
 
   .game-cover-wrapper {
-    transform: scale(1.08);
+    transform: scale(1.05);
   }
 
   .game-shine {
