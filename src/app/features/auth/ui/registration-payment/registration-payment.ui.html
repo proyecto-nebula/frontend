@@ -2,7 +2,7 @@
 
   <div class="reg-field">
     <label class="reg-label" for="reg-cc-name">Nombre en la tarjeta</label>
-    <input id="reg-cc-name" class="reg-input" type="text" formControlName="nameOnCard" autocomplete="cc-name" />
+    <input id="reg-cc-name" class="reg-input" type="text" formControlName="nameOnCard" autocomplete="cc-name" placeholder="John Doe" />
   </div>
 
   <div class="reg-field">
@@ -27,12 +27,45 @@
   <div class="reg-row">
     <div class="reg-field">
       <label class="reg-label" for="reg-cc-exp">Caducidad</label>
-      <input id="reg-cc-exp" class="reg-input" type="text" formControlName="expiry" placeholder="MM/AA" autocomplete="cc-exp" />
+      <input id="reg-cc-exp" class="reg-input" type="text" formControlName="expiry" placeholder="12/26" autocomplete="cc-exp" (input)="onExpiryInput($event)" maxlength="5" />
     </div>
     <div class="reg-field">
       <label class="reg-label" for="reg-cc-cvc">CVC</label>
-      <input id="reg-cc-cvc" class="reg-input" type="text" formControlName="cvc" placeholder="123" autocomplete="cc-csc" maxlength="4" />
+      <input id="reg-cc-cvc" class="reg-input" type="text" formControlName="cvc" placeholder="123" autocomplete="cc-csc" (input)="onCvcInput($event)" maxlength="4" inputmode="numeric" />
     </div>
+  </div>
+
+  @if (group.get('billingEmail')) {
+    <div class="reg-field">
+      <label class="reg-label" for="reg-billing-email">Email de facturación</label>
+      <input id="reg-billing-email" class="reg-input" type="email" formControlName="billingEmail" autocomplete="email" placeholder="tu@email.com" />
+    </div>
+  }
+
+  <div class="reg-row">
+    @if (group.get('billingCountry')) {
+      <div class="reg-field">
+        <label class="reg-label" for="reg-billing-country">País</label>
+        <select id="reg-billing-country" class="reg-input" formControlName="billingCountry" autocomplete="country-name">
+          <option value="ES">España</option>
+          <option value="FR">Francia</option>
+          <option value="DE">Alemania</option>
+          <option value="IT">Italia</option>
+          <option value="PT">Portugal</option>
+          <option value="GB">Reino Unido</option>
+          <option value="NL">Países Bajos</option>
+          <option value="BE">Bélgica</option>
+          <option value="AT">Austria</option>
+          <option value="CH">Suiza</option>
+        </select>
+      </div>
+    }
+    @if (group.get('postalCode')) {
+      <div class="reg-field">
+        <label class="reg-label" for="reg-postal-code">Código postal</label>
+        <input id="reg-postal-code" class="reg-input" type="text" formControlName="postalCode" placeholder="28001" autocomplete="postal-code" />
+      </div>
+    }
   </div>
 
 </div>

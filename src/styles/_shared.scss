@@ -185,10 +185,10 @@ app-carousel {
   background: none;
   border: none;
   color: #fff;
-  font-size: 1.75rem;
+  font-size: 2rem;
   line-height: 1;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -205,10 +205,10 @@ app-carousel {
 }
 
 .c-btn-prev {
-  left: 2rem;
+  left: 1.5rem;
 }
 .c-btn-next {
-  right: 2rem;
+  right: 1.5rem;
 }
 
 // ─── Gallery dialog (app-modal gallery mode) ──────────────────────────────────

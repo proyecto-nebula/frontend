@@ -41,6 +41,10 @@ export class HomePage implements OnInit {
       this.showSuccess = true;
       this.successUsername = qp.get('username');
       this.successPlanName = qp.get('planName');
+    } else if (qp.has('planChanged')) {
+      this.showSuccess = true;
+      this.successUsername = 'Plan actualizado';
+      this.successPlanName = qp.get('planName');
     }
 
     this.gameService.getRecentlyPublished().subscribe(g => this.recentlyPublished.set(g));

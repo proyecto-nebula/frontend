@@ -39,6 +39,25 @@ export class RegistrationPaymentUi implements OnInit {
     }
   }
 
+  onExpiryInput(event: Event) {
+    const inp = event.target as HTMLInputElement;
+    let value = inp.value.replace(/\D/g, '');
+    if (value.length >= 2) {
+      const mm = value.slice(0, 2);
+      const yy = value.slice(2, 4);
+      inp.value = `${mm}/${yy}`;
+    } else {
+      inp.value = value;
+    }
+    this.group.get('expiry')?.setValue(inp.value, { emitEvent: false });
+  }
+
+  onCvcInput(event: Event) {
+    const inp = event.target as HTMLInputElement;
+    inp.value = inp.value.replace(/\D/g, '').slice(0, 4);
+    this.group.get('cvc')?.setValue(inp.value, { emitEvent: false });
+  }
+
   private syncCard() {
     this.group.get('cardNumber')?.setValue(this.cardGroups.join(''), { emitEvent: false });
   }

@@ -75,8 +75,12 @@ body.info main li {
 }
 
 body.is-admin {
-  // Admin zone: fixed admin bar at top
   padding-top: var(--admin-header-height);
+}
+
+body.web.is-admin {
+  // Admin zone: fixed admin bar at top
+  margin-top: var(--admin-header-height);
 }
 
 body main {

@@ -39,7 +39,8 @@
 }
 /* Re-enable pointer events on interactive children */
 .app-modal-gallery-dlg .p-dialog-content button,
-.app-modal-gallery-dlg .p-dialog-content img {
+.app-modal-gallery-dlg .p-dialog-content img,
+.app-modal-gallery-dlg .p-dialog-content iframe {
   pointer-events: auto;
 }
 

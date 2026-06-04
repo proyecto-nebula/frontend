@@ -30,6 +30,7 @@ export class PlanPage implements OnInit {
   readonly plans = signal<Plan[]>([]);
   readonly showPayment = signal(false);
   readonly saving = signal(false);
+  readonly processingPayment = signal(false);
 
   readonly hasPlan = computed(() => {
     const u = this.currentUser();
@@ -51,10 +52,13 @@ export class PlanPage implements OnInit {
 
     this.planGroup = this.fb.group({ planId: [userPlanId] });
     this.paymentGroup = this.fb.group({
-      nameOnCard: ['', Validators.required],
-      cardNumber: ['', Validators.required],
-      expiry: ['', Validators.required],
-      cvc: ['', Validators.required],
+      nameOnCard: ['John Doe', Validators.required],
+      cardNumber: ['4111111111111111', Validators.required],
+      expiry: ['12/28', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)]],
+      cvc: ['123', [Validators.required, Validators.pattern(/^\d{3,4}$/)]],
+      billingEmail: [this.currentUser()?.email ?? 'john.doe@example.com', Validators.required],
+      billingCountry: ['ES', Validators.required],
+      postalCode: ['28001', Validators.required],
     });
 
     this.selectedPlanId.set(userPlanId);
@@ -83,6 +87,10 @@ export class PlanPage implements OnInit {
       this.paymentGroup.markAllAsTouched();
       return;
     }
+    this.processingPayment.set(true);
+    // Simulate payment processing
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    this.processingPayment.set(false);
     this.saving.set(true);
     try {
       const planId = this.selectedPlanId();
@@ -91,13 +99,13 @@ export class PlanPage implements OnInit {
         await firstValueFrom(this.http.patch(`${API_ROUTES.users}/${user.id}`, { planId }));
       }
       const planName = this.plans().find(p => p.id === planId)?.name ?? '';
-      await this.router.navigate(['/settings'], {
+      await this.router.navigate(['/'], {
         queryParams: { planChanged: 1, planName },
       });
     } catch (e) {
       console.error(e);
-    } finally {
       this.saving.set(false);
     }
   }
 }
+

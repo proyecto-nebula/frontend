@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 /* Consolidated styles for feature: web, settings, info */
 
 /* Layout: standard vertical flow with fixed header
@@ -130,66 +132,53 @@ app-game-featured {
 
 // ─── Featured slider: fade-wipe ─────────────────────────────────────────────
 // Parámetros configurables:
-$featured-wipe-duration: 1400ms !default; // duración del barrido
-$featured-wipe-easing: ease-in-out !default;
-// $featured-wipe-softness: tamaño de la zona de fundido en el borde (0 = corte duro, 40% = borde muy suave)
-$featured-wipe-softness: 22% !default;
-
-// Técnica: mask-size: 200% + mask-position de 100%→0% (o 0%→100% para prev).
-//   pos=0%:   mitad negra del gradiente cubre el elemento → totalmente visible
-//   pos=100%: mitad transparente cubre el elemento → totalmente oculto
-//
-// Gradiente A (negro izquierda):  #000 (50%-s) → transparent (50%+s)
-// Gradiente B (transparente izq): transparent (50%-s) → #000 (50%+s)
-//
-// Nota: no se interpolan variables SCSS dentro de @keyframes → definimos los valores
-// directamente usando los valores por defecto de las variables arriba.
+// Parámetros configurables: ver $featured-wipe-duration / $featured-wipe-softness en _variables.scss
 // Si cambias $featured-wipe-softness, ajusta los stops en los @keyframes también:
 //   stop-negro      = 50% - $featured-wipe-softness  → con 22% = 28%
 //   stop-transparent = 50% + $featured-wipe-softness → con 22% = 72%
 
 @keyframes wipe-in-next {
-  // Entra desde izquierda (borde negro barre de izq a der): pos 100% → 0%
+  // Entra desde derecha (borde negro barre de der a izq): pos 0% → 100%
   from {
-    mask: linear-gradient(90deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
   }
   to {
-    mask: linear-gradient(90deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
   }
 }
 @keyframes wipe-out-next {
-  // Sale hacia izquierda: el lado izquierdo desaparece primero → pos 100% → 0%
+  // Sale hacia derecha: el lado derecho desaparece primero → pos 0% → 100%
   from {
-    mask: linear-gradient(90deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
   }
   to {
-    mask: linear-gradient(90deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
   }
 }
 @keyframes wipe-in-prev {
-  // Entra desde derecha (borde negro barre de der a izq): pos 0% → 100%
+  // Entra desde izquierda (borde negro barre de izq a der): pos 100% → 0%
   from {
-    mask: linear-gradient(90deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
   }
   to {
-    mask: linear-gradient(90deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
   }
 }
 @keyframes wipe-out-prev {
-  // Sale hacia derecha: el lado derecho desaparece primero → pos 0% → 100%
+  // Sale hacia izquierda: el lado izquierdo desaparece primero → pos 100% → 0%
   from {
-    mask: linear-gradient(90deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
   }
   to {
-    mask: linear-gradient(90deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
   }
 }
 
@@ -242,17 +231,19 @@ $featured-wipe-softness: 22% !default;
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  margin-top: -3rem;
+  margin-top: -2rem;
   margin-bottom: 3rem;
+  z-index: 99999;
 }
 .game-featured-dot {
   width: 28px;
   height: 6px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.1);
   border: none;
   padding: 0;
   cursor: pointer;
+  z-index: 99999;
   transition:
     background 120ms ease,
     transform 120ms ease;
@@ -342,10 +333,11 @@ body.is-admin .search-input-wrap {
 
 .game-hero__summary {
   max-width: 640px;
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.2rem;
   line-height: 1.55;
   margin-bottom: 1rem;
+
   text-shadow:
     0 1px 8px rgba(0, 0, 0, 0.8),
     0 2px 16px rgba(0, 0, 0, 0.6);
@@ -1462,6 +1454,7 @@ body.is-admin .header-wrapper {
   font-size: 1.25rem;
   position: relative;
   z-index: 1004;
+  cursor: pointer;
 }
 
 .mobile-logo {
