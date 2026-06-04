@@ -138,47 +138,47 @@ app-game-featured {
 //   stop-transparent = 50% + $featured-wipe-softness → con 22% = 72%
 
 @keyframes wipe-in-next {
-  // Entra desde izquierda (borde negro barre de izq a der): pos 100% → 0%
+  // Entra desde derecha (borde negro barre de der a izq): pos 0% → 100%
   from {
-    mask: linear-gradient(90deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
   }
   to {
-    mask: linear-gradient(90deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
   }
 }
 @keyframes wipe-out-next {
-  // Sale hacia izquierda: el lado izquierdo desaparece primero → pos 100% → 0%
+  // Sale hacia derecha: el lado derecho desaparece primero → pos 0% → 100%
   from {
-    mask: linear-gradient(90deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
   }
   to {
-    mask: linear-gradient(90deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
   }
 }
 @keyframes wipe-in-prev {
-  // Entra desde derecha (borde negro barre de der a izq): pos 0% → 100%
+  // Entra desde izquierda (borde negro barre de izq a der): pos 100% → 0%
   from {
-    mask: linear-gradient(90deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
   }
   to {
-    mask: linear-gradient(90deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, transparent 28%, #000 72%) 100% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, transparent 28%, #000 72%) 0% 0 / 200% 100% no-repeat;
   }
 }
 @keyframes wipe-out-prev {
-  // Sale hacia derecha: el lado derecho desaparece primero → pos 0% → 100%
+  // Sale hacia izquierda: el lado izquierdo desaparece primero → pos 100% → 0%
   from {
-    mask: linear-gradient(90deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
   }
   to {
-    mask: linear-gradient(90deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
-    -webkit-mask: linear-gradient(90deg, #000 28%, transparent 72%) 100% 0 / 200% 100% no-repeat;
+    mask: linear-gradient(270deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
+    -webkit-mask: linear-gradient(270deg, #000 28%, transparent 72%) 0% 0 / 200% 100% no-repeat;
   }
 }
 
