@@ -116,8 +116,8 @@ body.admin main {
 }
 
 .admin-form {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(18, 15, 31, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 10px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
@@ -149,8 +149,8 @@ body.admin main {
     input,
     select,
     textarea {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 6px;
       color: #fff;
       padding: 0.5rem 0.75rem;
@@ -161,10 +161,10 @@ body.admin main {
       transition: border-color 150ms;
 
       &:focus {
-        border-color: #7c5cff;
+        border-color: rgba(155, 124, 255, 0.65);
       }
       option {
-        background: #1a1a2e;
+        background: #130f22;
         color: #fff;
       }
     }
@@ -203,7 +203,7 @@ body.admin main {
 .admin-table-wrapper {
   overflow-x: auto;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 /* p-table search caption */
@@ -214,13 +214,13 @@ body.admin main {
   padding: 0.5rem 0;
 
   i {
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.38);
     font-size: 0.85rem;
   }
 
   input {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 6px;
     color: #fff;
     font-size: 0.88rem;
@@ -232,7 +232,7 @@ body.admin main {
       color: rgba(255, 255, 255, 0.35);
     }
     &:focus {
-      border-color: rgba(108, 92, 231, 0.6);
+      border-color: rgba(155, 124, 255, 0.62);
     }
   }
 }
@@ -240,14 +240,17 @@ body.admin main {
 /* p-table dark overrides */
 .p-datatable {
   .p-datatable-header {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-bottom: none;
     background: transparent;
     border: none;
     padding: 0.5rem 0;
   }
   .p-datatable-thead > tr > th {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.035);
     color: rgba(255, 255, 255, 0.5);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     font-size: 0.78rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -258,12 +261,12 @@ body.admin main {
     background: transparent;
     color: #fff;
     > td {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.055);
       padding: 0.65rem 1rem;
       font-size: 0.9rem;
     }
     &:hover > td {
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.028);
     }
     &:last-child > td {
       border-bottom: none;
@@ -271,7 +274,7 @@ body.admin main {
   }
   .p-paginator {
     background: transparent;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.055);
     color: rgba(255, 255, 255, 0.6);
     padding: 0.5rem 0.75rem;
 
@@ -288,7 +291,7 @@ body.admin main {
         color 150ms;
 
       &:hover:not(:disabled) {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.075);
         color: #fff;
       }
       &:disabled {
@@ -300,15 +303,15 @@ body.admin main {
     /* Active page */
     .p-paginator-page.p-highlight,
     .p-paginator-page[aria-current='page'] {
-      background: rgba(108, 92, 231, 0.2);
-      color: #a29bfe;
+      background: rgba(155, 124, 255, 0.18);
+      color: var(--accent-color-strong);
     }
 
     /* Rows-per-page select (PrimeNG 17: p-select / older: p-dropdown) */
     .p-select,
     .p-dropdown {
       background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 6px;
       color: #fff;
 
@@ -323,21 +326,21 @@ body.admin main {
       }
 
       &:hover {
-        border-color: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.22);
       }
     }
   }
   .p-sortable-column:not(.p-highlight):hover {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.03);
   }
   .p-sortable-column.p-highlight {
-    color: #a29bfe;
+    color: var(--accent-color-strong);
   }
   .p-sortable-column-icon {
     color: rgba(255, 255, 255, 0.3);
   }
   .p-highlight .p-sortable-column-icon {
-    color: #a29bfe;
+    color: var(--accent-color-strong);
   }
 }
 
@@ -354,7 +357,7 @@ body.admin main {
   }
 
   th {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.035);
     font-weight: 600;
     font-size: 0.78rem;
     text-transform: uppercase;
@@ -364,7 +367,7 @@ body.admin main {
   }
 
   tbody tr:hover {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.028);
   }
   tbody tr:last-child td {
     border-bottom: none;
@@ -485,7 +488,7 @@ body.admin main {
   &__section {
     margin-bottom: 1.25rem;
     padding-bottom: 1.25rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.055);
 
     &:last-of-type {
       border-bottom: none;
@@ -506,7 +509,7 @@ body.admin main {
       letter-spacing: 0;
       font-weight: 400;
       font-size: 0.75em;
-      color: rgba(255, 255, 255, 0.3);
+      color: rgba(255, 255, 255, 0.32);
     }
   }
 
@@ -528,11 +531,11 @@ body.admin main {
       border-left: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 0 5px 5px 0;
       padding: 0 0.6rem;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.035);
       color: rgba(255, 255, 255, 0.5);
 
       &:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.085);
         color: #fff;
       }
     }
@@ -615,6 +618,22 @@ body.admin main {
   --p-toggleswitch-width: 2.4rem;
   --p-toggleswitch-height: 1.25rem;
   --p-toggleswitch-handle-size: 1rem;
+  --p-toggleswitch-background: rgba(255, 255, 255, 0.12);
+  --p-toggleswitch-hover-background: rgba(255, 255, 255, 0.16);
+  --p-toggleswitch-checked-background: var(--accent-color);
+  --p-toggleswitch-checked-hover-background: var(--accent-color-strong);
+  --p-toggleswitch-border-radius: 999px;
+}
+
+.p-toggleswitch .p-toggleswitch-slider {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.p-toggleswitch.p-highlight .p-toggleswitch-slider,
+.p-toggleswitch[aria-checked='true'] .p-toggleswitch-slider {
+  background: var(--accent-color);
+  border-color: rgba(155, 124, 255, 0.35);
 }
 
 /* Responsive: hide button labels and "Acciones" heading on narrow screens */
@@ -644,13 +663,13 @@ body.admin main {
   gap: 1.5rem;
   padding-inline: var(--page-width);
   height: var(--admin-header-height);
-  background: #1a1a2e;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   font-size: 0.875rem;
 
   &__brand {
     font-weight: 700;
-    color: #a78bfa;
+    color: var(--accent-color-strong);
     white-space: nowrap;
   }
 
@@ -686,12 +705,12 @@ body.admin main {
         color 150ms;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.065);
         color: #fff;
       }
       &.active {
-        background: rgba(167, 139, 250, 0.15);
-        color: #a78bfa;
+        background: rgba(155, 124, 255, 0.16);
+        color: var(--accent-color-strong);
       }
     }
   }
@@ -735,7 +754,7 @@ body.admin main {
     align-items: center;
     gap: 0.4rem;
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 4px;
     color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
@@ -746,7 +765,7 @@ body.admin main {
       color 150ms;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
       color: #fff;
     }
 
@@ -782,8 +801,8 @@ body.admin main {
       left: 0;
       right: 0;
       flex-direction: column;
-      background: #1a1a2e;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(16, 13, 28, 0.98);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
       padding: 0.5rem 0;
       gap: 0;
 

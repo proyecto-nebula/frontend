@@ -45,16 +45,16 @@
 
 /* ── Dark theme for all non-gallery p-dialog modals ─────────────────── */
 .p-dialog:not(.app-modal-gallery-dlg) {
-  background: #1e1a2e;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(18, 15, 31, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 14px;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
   color: #f0f6fc;
   max-width: 90%;
 
   .p-dialog-header {
-    background: #1e1a2e;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(18, 15, 31, 0.98);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 14px 14px 0 0;
     padding: 1.1rem 1.4rem;
     color: #f0f6fc;
@@ -82,7 +82,7 @@
   }
 
   .p-dialog-content {
-    background: #1e1a2e;
+    background: rgba(18, 15, 31, 0.98);
     color: #f0f6fc;
     padding: 1.2rem 1.4rem;
     border-radius: 0 0 14px 14px;
