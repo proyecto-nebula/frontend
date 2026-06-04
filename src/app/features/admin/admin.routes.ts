@@ -1,5 +1,6 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
+import { adminGuard } from '@guards/admin.guard';
 import { adminOnlyGuard } from '@guards/admin-only.guard';
 import { editorGuard } from '@guards/editor.guard';
 import { AuthService } from '@services/auth.service';
@@ -41,7 +42,7 @@ export const ADMIN_ROUTES: Routes = [
       },
 
       // ── Dashboard (for all editors and admins) ─────────────────────────
-      { path: 'dashboard', canMatch: [editorGuard], loadComponent: adminDashboard },
+      { path: 'dashboard', canMatch: [adminGuard], loadComponent: adminDashboard },
       { path: 'dashboard', loadComponent: forbidden },
 
       // ── Editor-only: games ────────────────────────────────────────────
