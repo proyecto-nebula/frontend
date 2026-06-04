@@ -1076,7 +1076,7 @@ body.is-admin .search-input-wrap {
   }
 
   .game-shine {
-    animation: glass-shimmer 0.6s ease-in-out;
+    animation: glass-shimmer 0.5s ease-in-out;
   }
 }
 
@@ -1107,9 +1107,9 @@ body.is-admin .search-input-wrap {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.3) 30%,
-    rgba(255, 255, 255, 0.5) 50%,
-    rgba(255, 255, 255, 0.3) 70%,
+    rgba(255, 255, 255, 0.4) 25%,
+    rgba(155, 124, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.4) 75%,
     transparent 100%
   );
   pointer-events: none;
@@ -1123,7 +1123,7 @@ body.is-admin .search-input-wrap {
     opacity: 0;
   }
   50% {
-    opacity: 0.4;
+    opacity: 0.75;
   }
   100% {
     transform: translateX(100%) skewX(-20deg);
