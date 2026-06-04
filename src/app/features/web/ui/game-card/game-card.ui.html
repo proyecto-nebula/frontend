@@ -1,3 +1,6 @@
 <a class="game-card" [routerLink]="['/games', slug]">
-  <img [src]="coverUrl || bannerUrl" [alt]="title" class="game-cover" />
+  <div class="game-cover-wrapper">
+    <img [src]="coverUrl || bannerUrl" [alt]="title" class="game-cover" />
+    <div class="game-shine"></div>
+  </div>
 </a>

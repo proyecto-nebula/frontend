@@ -607,6 +607,16 @@ body.is-admin .search-input-wrap {
     margin-bottom: 1rem;
     font-size: 1.25rem;
   }
+  
+  .c-overflow {
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  
+  .c-item {
+    overflow: visible;
+  }
 }
 
 /* Universal carousel hover: dim all sibling items, restore hovered one.
@@ -621,6 +631,15 @@ body.is-admin .search-input-wrap {
   transition: opacity 0.15s ease;
 }
 
+.collection-item {
+  padding: 16px 0;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
 .game-screenshots-carousel,
 .game-videos-carousel {
   margin-bottom: 1rem;
@@ -631,11 +650,11 @@ body.is-admin .search-input-wrap {
   max-width: 100%;
   border-radius: var(--rounded-corners);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  position: relative;
 }
 
 /* ── Game View Page ──────────────────────────────────────────────── */
@@ -1060,21 +1079,67 @@ body.is-admin .search-input-wrap {
 }
 
 .game-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  transform: translateY(-8px);
 
-  .game-cover {
-    transform: scale(1.07);
+  .game-cover-wrapper {
+    transform: scale(1.08);
   }
+
+  .game-shine {
+    animation: glass-shimmer 0.6s ease-in-out;
+  }
+}
+
+.game-cover-wrapper {
+  position: relative;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 600 / 900;
+  overflow: hidden;
+  border-radius: var(--rounded-corners);
+  transition: transform 0.3s ease;
 }
 
 .game-cover {
   width: 100%;
-  height: auto;
-  aspect-ratio: 600 / 900; /* banner aspect ratio */
+  height: 100%;
   object-fit: cover;
   object-position: center;
+  display: block;
+}
 
-  transition: transform 0.3s ease;
+.game-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 30%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.3) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+@keyframes glass-shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-20deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateX(100%) skewX(-20deg);
+    opacity: 0;
+  }
 }
 
 .game-title {
